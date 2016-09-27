@@ -44,7 +44,7 @@ class JwtScheme extends BaseScheme {
    */
   _signToken (payload, options) {
     return new Promise((resolve) => {
-      jwt.sign({payload: payload}, this.options.secret, options, function (token) {
+      jwt.sign(payload, this.options.secret, options, function (token) {
         resolve(token)
       })
     })
@@ -80,7 +80,7 @@ class JwtScheme extends BaseScheme {
   * _getRequestUser () {
     try {
       const requestToken = yield this.decode()
-      const userId = requestToken.payload || null
+      const userId = requestToken[this.options.userKey] || null
       if (!userId) {
         return null
       }
@@ -93,22 +93,31 @@ class JwtScheme extends BaseScheme {
   /**
    * Generates a new JWT token for a given user. The user
    * needs to be an instance of model when serializer
-   * is Lucid
+   * is Lucid. You can pass additional data in the payload.
    *
    * @param  {Object} user
+   * @param  {Object} payload
    *
    * @return {String}
    */
-  * generate (user) {
+  * generate (user, payload) {
     if (!user) {
       throw new NE.InvalidArgumentException('user is required to generate a jwt token')
     }
     const primaryKey = this.serializer.primaryKey(this.options)
     const primaryValue = user[primaryKey]
+
     if (!primaryValue) {
       throw new NE.InvalidArgumentException(`Value for ${primaryKey} is null for given user.`)
     }
-    return this._signToken(primaryValue, this.jwtOptions)
+
+    if (!payload) {
+      payload = {}
+    }
+
+    payload[this.options.userKey] = primaryValue
+
+    return this._signToken(payload, this.jwtOptions)
   }
 
   /**
@@ -123,15 +132,21 @@ class JwtScheme extends BaseScheme {
   /**
    * Validates a user an returns the token
    * if credentials have been validated.
+   * Creates token's payload from the factory
+   * which takes the authenticated user.
    *
-   * @param  {String} uid
-   * @param  {String} password
+   * @param  {String}   uid
+   * @param  {String}   password
+   * @param  {Function} payloadFactory
    *
    * @return {String}
    */
-  * attempt (uid, password) {
+  * attempt (uid, password, payloadFactory) {
+    if (!payloadFactory) {
+      payloadFactory = () => ({})
+    }
     const user = yield this.validate(uid, password, true)
-    return yield this.generate(user)
+    return yield this.generate(user, payloadFactory(user))
   }
 
 }
