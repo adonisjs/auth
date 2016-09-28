@@ -38,7 +38,8 @@ const jwtConfig = {
   serializer: 'Lucid',
   model: DummyModel,
   scheme: 'jwt',
-  secret: 'bubblegum'
+  secret: 'bubblegum',
+  userKey: 'samsepi0l'
 }
 
 const Config = {

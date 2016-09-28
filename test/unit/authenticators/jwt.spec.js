@@ -26,6 +26,7 @@ const Config = function (model, options) {
     password: 'password',
     scheme: 'jwt',
     secret: 'bubblegum',
+    userKey: 'Wh1teR0se',
     options: options
   }
 }
@@ -101,7 +102,9 @@ describe('Authenticators', function () {
       }
       const request = {
         header: function () {
-          return 'Bearer ' + jwt.sign({payload: 1}, Config(User).secret)
+          const payload = {};
+          payload[Config(User).userKey] = 1;
+          return 'Bearer ' + jwt.sign(payload, Config(User).secret)
         }
       }
       sinon.spy(User, 'find')
@@ -123,7 +126,9 @@ describe('Authenticators', function () {
       }
       const request = {
         header: function () {
-          return 'Bearer ' + jwt.sign({payload: 1}, Config(User).secret)
+          const payload = {};
+          payload[Config(User).userKey] = 1;
+          return 'Bearer ' + jwt.sign(payload, Config(User).secret)
         }
       }
       sinon.spy(User, 'find')
@@ -149,7 +154,9 @@ describe('Authenticators', function () {
           return null
         },
         input: function () {
-          return jwt.sign({payload: 1}, Config(User).secret)
+          const payload = {};
+          payload[Config(User).userKey] = 1;
+          return jwt.sign(payload, Config(User).secret)
         }
       }
       sinon.spy(User, 'find')
@@ -172,7 +179,9 @@ describe('Authenticators', function () {
       }
       const request = {
         header: function () {
-          return 'Bearer ' + jwt.sign({payload: 1}, Config(User).secret)
+          const payload = {};
+          payload[Config(User).userKey] = 1;
+          return 'Bearer ' + jwt.sign(payload, Config(User).secret)
         }
       }
       const jwtAuth = new JwtScheme(request, this.serializer, Config(User))
@@ -220,7 +229,7 @@ describe('Authenticators', function () {
       }
       const jwtAuth = new JwtScheme(request, this.serializer, Config(User))
       const token = yield jwtAuth.generate({id: 1})
-      expect(jwt.verify(token, Config(User).secret).payload).to.equal(1)
+      expect(jwt.verify(token, Config(User).secret)[Config(User).userKey]).to.equal(1)
     })
 
     it('should be able to define issuer while generating a token', function * () {
@@ -232,7 +241,7 @@ describe('Authenticators', function () {
       const jwtAuth = new JwtScheme(request, this.serializer, Config(User, {issuer: 'adonisjs.com'}))
       const token = yield jwtAuth.generate({id: 1})
       const decoded = jwt.verify(token, Config(User).secret)
-      expect(decoded.payload).to.equal(1)
+      expect(decoded[Config(User).userKey]).to.equal(1)
       expect(decoded.iss).to.equal('adonisjs.com')
     })
 
@@ -330,7 +339,44 @@ describe('Authenticators', function () {
       sinon.spy(User, 'first')
       const token = yield sessionAuth.attempt('foo@bar.com', 'secret')
       const decoded = jwt.verify(token, Config(User).secret)
-      expect(decoded.payload).to.equal(1)
+      expect(decoded[Config(User).userKey]).to.equal(1)
+      User.query.restore()
+      User.where.restore()
+      User.first.restore()
+    })
+
+    it('should be able to define a payload in the token via generating', function * () {
+      class User {
+        static get primaryKey () {
+          return 'id'
+        }
+      }
+      const jwtAuth = new JwtScheme(request, this.serializer, Config(User))
+      const token = yield jwtAuth.generate({id: 1}, {roles: ['admin', 'user'], banned: false})
+      const decoded = jwt.verify(token, Config(User).secret)
+      expect(decoded[Config(User).userKey]).to.equal(1)
+      expect(decoded.roles).to.deep.equal(['admin', 'user'])
+      expect(decoded.banned).to.equal(false)
+    })
+
+    it('should be able to define a payload in the token during login attempt', function * () {
+      class User extends Model {
+        static get primaryKey () {
+          return 'id'
+        }
+
+        static * first () {
+          return {password: 'secret', id: 1, roles: ['admin', 'user']}
+        }
+      }
+      const sessionAuth = new JwtScheme(request, this.serializer, Config(User))
+      sinon.spy(User, 'query')
+      sinon.spy(User, 'where')
+      sinon.spy(User, 'first')
+      const token = yield sessionAuth.attempt('foo@bar.com', 'secret', (user) => ({roles: user.roles}))
+      const decoded = jwt.verify(token, Config(User).secret)
+      expect(decoded[Config(User).userKey]).to.equal(1)
+      expect(decoded.roles).to.deep.equal(['admin', 'user'])
       User.query.restore()
       User.where.restore()
       User.first.restore()
