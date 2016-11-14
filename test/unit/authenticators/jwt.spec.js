@@ -101,7 +101,7 @@ describe('Authenticators', function () {
       }
       const request = {
         header: function () {
-          return 'Bearer ' + jwt.sign({payload: 1}, Config(User).secret)
+          return 'Bearer ' + jwt.sign({payload: {identityId: 1}}, Config(User).secret)
         }
       }
       sinon.spy(User, 'find')
@@ -123,7 +123,7 @@ describe('Authenticators', function () {
       }
       const request = {
         header: function () {
-          return 'Bearer ' + jwt.sign({payload: 1}, Config(User).secret)
+          return 'Bearer ' + jwt.sign({payload: {identityId: 1}}, Config(User).secret)
         }
       }
       sinon.spy(User, 'find')
@@ -149,7 +149,7 @@ describe('Authenticators', function () {
           return null
         },
         input: function () {
-          return jwt.sign({payload: 1}, Config(User).secret)
+          return jwt.sign({payload: {identityId: 1}}, Config(User).secret)
         }
       }
       sinon.spy(User, 'find')
@@ -172,7 +172,7 @@ describe('Authenticators', function () {
       }
       const request = {
         header: function () {
-          return 'Bearer ' + jwt.sign({payload: 1}, Config(User).secret)
+          return 'Bearer ' + jwt.sign({payload: {identityId: 1}}, Config(User).secret)
         }
       }
       const jwtAuth = new JwtScheme(request, this.serializer, Config(User))
@@ -220,7 +220,18 @@ describe('Authenticators', function () {
       }
       const jwtAuth = new JwtScheme(request, this.serializer, Config(User))
       const token = yield jwtAuth.generate({id: 1})
-      expect(jwt.verify(token, Config(User).secret).payload).to.equal(1)
+      expect(jwt.verify(token, Config(User).secret).payload.identityId).to.equal(1)
+    })
+
+    it('should be able to generate a token for a given user with a custom payload', function * () {
+      class User {
+        static get primaryKey () {
+          return 'id'
+        }
+      }
+      const jwtAuth = new JwtScheme(request, this.serializer, Config(User))
+      const token = yield jwtAuth.generate({id: 1}, {name: 'test'})
+      expect(jwt.verify(token, Config(User).secret).payload.data).to.deep.equal({name: 'test'})
     })
 
     it('should be able to define issuer while generating a token', function * () {
@@ -232,7 +243,7 @@ describe('Authenticators', function () {
       const jwtAuth = new JwtScheme(request, this.serializer, Config(User, {issuer: 'adonisjs.com'}))
       const token = yield jwtAuth.generate({id: 1})
       const decoded = jwt.verify(token, Config(User).secret)
-      expect(decoded.payload).to.equal(1)
+      expect(decoded.payload.identityId).to.equal(1)
       expect(decoded.iss).to.equal('adonisjs.com')
     })
 
@@ -330,7 +341,7 @@ describe('Authenticators', function () {
       sinon.spy(User, 'first')
       const token = yield sessionAuth.attempt('foo@bar.com', 'secret')
       const decoded = jwt.verify(token, Config(User).secret)
-      expect(decoded.payload).to.equal(1)
+      expect(decoded.payload.identityId).to.equal(1)
       User.query.restore()
       User.where.restore()
       User.first.restore()
