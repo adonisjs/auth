@@ -80,7 +80,7 @@ class JwtScheme extends BaseScheme {
   * _getRequestUser () {
     try {
       const requestToken = yield this.decode()
-      const userId = requestToken.payload || null
+      const userId = requestToken.payload.identityId || null
       if (!userId) {
         return null
       }
@@ -99,7 +99,7 @@ class JwtScheme extends BaseScheme {
    *
    * @return {String}
    */
-  * generate (user) {
+  * generate (user, customPayload) {
     if (!user) {
       throw new NE.InvalidArgumentException('user is required to generate a jwt token')
     }
@@ -108,7 +108,11 @@ class JwtScheme extends BaseScheme {
     if (!primaryValue) {
       throw new NE.InvalidArgumentException(`Value for ${primaryKey} is null for given user.`)
     }
-    return this._signToken(primaryValue, this.jwtOptions)
+    let payload = {identityId: primaryValue}
+    if (customPayload) {
+        payload.data = typeof (customPayload.toJSON) == 'function' ? customPayload.toJSON() : customPayload
+    }
+    return this._signToken(payload, this.jwtOptions)
   }
 
   /**
