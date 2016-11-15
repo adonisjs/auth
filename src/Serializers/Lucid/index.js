@@ -181,12 +181,12 @@ class LucidSerializer {
    * @public
    */
   * revokeTokens (user, tokens, reverse) {
-    const userTokens = user.apiTokens().query()
+    const userTokens = user.apiTokens()
     if (tokens) {
       const method = reverse ? 'whereNotIn' : 'whereIn'
       userTokens[method]('token', tokens)
     }
-    return yield userTokens.update('is_revoked', true)
+    return yield userTokens.update({'is_revoked': true})
   }
 
   /**
