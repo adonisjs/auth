@@ -19,7 +19,7 @@ class AuthSetup extends Command {
     return 'auth:setup'
   }
 
-  get descriptions () {
+  get description () {
     return 'Setup migrations and models for authentication'
   }
 
