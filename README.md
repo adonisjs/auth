@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://adonisjs.com"><img src="https://cloud.githubusercontent.com/assets/2793951/21461625/8437d848-c953-11e6-8344-36a3d5b1922b.png" alt="AdonisJs Auth"></a>
+  <a href="http://adonisjs.com"><img src="https://cloud.githubusercontent.com/assets/2793951/21462223/c147cefe-c959-11e6-80db-36709c766f17.png" alt="AdonisJs Auth"></a>
 </p>
 
 <p align="center">
