@@ -25,7 +25,7 @@
     "co": "^4.6.0",
     "co-mocha": "^1.2.0",
     "coveralls": "^2.11.16",
-    "cz-conventional-changelog": "^1.2.0",
+    "cz-conventional-changelog": "^2.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "semver": "^5.3.0",
