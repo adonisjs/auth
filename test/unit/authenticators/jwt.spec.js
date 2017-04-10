@@ -368,5 +368,36 @@ describe('Authenticators', function () {
       User.where.restore()
       User.first.restore()
     })
+
+    it('should be able to generate a token when password matches with a custom payload', function * () {
+      class User extends Model {
+        static get primaryKey () {
+          return 'id'
+        }
+
+        static query () {
+          return this
+        }
+
+        static where () {
+          return this
+        }
+
+        static * first () {
+          return {password: 'secret', id: 1}
+        }
+      }
+      sinon.spy(User, 'query')
+      sinon.spy(User, 'where')
+      sinon.spy(User, 'first')
+      const sessionAuth = new JwtScheme(request, this.serializer, Config(User))
+      const token = yield sessionAuth.attempt('foo@bar.com', 'secret', {name: 'test'})
+      const verified = jwt.verify(token, Config(User).secret)
+      expect(verified.payload.uid).to.equal(1)
+      expect(verified.payload.data).to.deep.equal({name: 'test'})
+      User.query.restore()
+      User.where.restore()
+      User.first.restore()
+    })
   })
 })
