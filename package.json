@@ -45,7 +45,7 @@
     "co-functional": "^0.2.1",
     "harmony-reflect": "^1.5.1",
     "jsonwebtoken": "^7.3.0",
-    "ms": "^1.0.0",
+    "ms": "^2.0.0",
     "node-exceptions": "^1.0.3",
     "uuid": "^3.0.1"
   }
