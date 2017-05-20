@@ -74,7 +74,7 @@ class ApiScheme extends BaseScheme {
     }
     expiry = expiry || this.options.expiry
     expiry = expiry ? ms(expiry) : null
-    const token = uuid.v1().replace(/-/g, '')
+    const token = uuid.v4().replace(/-/g, '')
     return yield this.serializer.saveToken(user, token, this.options, expiry)
   }
 
