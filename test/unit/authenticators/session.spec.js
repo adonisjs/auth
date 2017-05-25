@@ -53,33 +53,6 @@ describe('Authenticators', function () {
     this.serializer = new LucidSerializer(Hash)
   })
   context('Session', function () {
-    it('should throw email not found error when serializer find results null', function * () {
-      class User extends Model {
-        static * first () {
-          return null
-        }
-      }
-      const sessionAuth = new SessionScheme(request, this.serializer, Config(User))
-      sinon.spy(User, 'query')
-      sinon.spy(User, 'where')
-      sinon.spy(User, 'first')
-      try {
-        yield sessionAuth.validate('foo@bar.com', 'secret')
-        expect(true).to.equal(false)
-      } catch (e) {
-        expect(e.name).to.equal('UserNotFoundException')
-        expect(e.message).to.match(/Unable to find user with foo@bar\.com email/)
-        expect(User.query.calledOnce).to.equal(true)
-        expect(User.where.calledOnce).to.equal(true)
-        expect(User.first.calledOnce).to.equal(true)
-        expect(User.where.calledWith('email', 'foo@bar.com')).to.equal(true)
-      } finally {
-        User.query.restore()
-        User.where.restore()
-        User.first.restore()
-      }
-    })
-
     it('should throw password mismatch error when serializer validateCredentials returns false', function * () {
       class User extends Model {
         static * first () {
