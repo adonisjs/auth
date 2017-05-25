@@ -269,41 +269,6 @@ describe('Authenticators', function () {
       expect(decoded.iss).to.equal('adonisjs.com')
     })
 
-    it('should throw UserNotFoundException when serializer find results null', function * () {
-      class User extends Model {
-        static query () {
-          return this
-        }
-
-        static where () {
-          return this
-        }
-
-        static * first () {
-          return null
-        }
-      }
-      const sessionAuth = new JwtScheme(request, this.serializer, Config(User))
-      sinon.spy(User, 'query')
-      sinon.spy(User, 'where')
-      sinon.spy(User, 'first')
-      try {
-        yield sessionAuth.validate('foo@bar.com', 'secret')
-        expect(true).to.equal(false)
-      } catch (e) {
-        expect(e.name).to.equal('UserNotFoundException')
-        expect(e.message).to.match(/Unable to find user with foo@bar\.com email/)
-        expect(User.query.calledOnce).to.equal(true)
-        expect(User.where.calledOnce).to.equal(true)
-        expect(User.first.calledOnce).to.equal(true)
-        expect(User.where.calledWith('email', 'foo@bar.com')).to.equal(true)
-      } finally {
-        User.query.restore()
-        User.where.restore()
-        User.first.restore()
-      }
-    })
-
     it('should throw PasswordMisMatch Exception when serializer passwords do not match', function * () {
       class User extends Model {
         static query () {

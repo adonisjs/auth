@@ -67,14 +67,10 @@ class BaseScheme {
    * @param  {Boolean} [returnUser]
    * @return {Boolean|Object}
    *
-   * @throws UserNotFoundException when unable to locate user
    * @throws PasswordMisMatchException when password does not match
    */
   * validate (uid, password, returnUser) {
     const user = yield this.serializer.findByCredentials(uid, this.options)
-    if (!user) {
-      throw new CE.UserNotFoundException(`Unable to find user with ${uid} ${this.options.uid}`)
-    }
     const isValid = yield this.serializer.validateCredentials(user, password, this.options)
     if (!isValid) {
       throw new CE.PasswordMisMatchException('Password does not match')

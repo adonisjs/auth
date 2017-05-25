@@ -232,6 +232,7 @@ class DatabaseSerializer {
    */
   * validateCredentials (user, password, options) {
     if (!user || !user[options.password]) {
+      yield this.hash.verify(password, 'dummypassword')
       return false
     }
     const actualPassword = user[options.password]
