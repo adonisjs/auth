@@ -57,7 +57,7 @@ class BasicAuthScheme extends BaseScheme {
 
     const credentials = auth(this._ctx.request.request)
     if (!credentials) {
-      throw CE.InvalidLoginException.missingBasicAuthCredentials()
+      throw CE.InvalidBasicAuthException.invoke()
     }
 
     this.user = await this.validate(credentials.name, credentials.pass, true)
@@ -75,6 +75,24 @@ class BasicAuthScheme extends BaseScheme {
   async getUser () {
     await this.check()
     return this.user
+  }
+
+  /**
+   * Login as a user by setting basic auth header
+   * before the request reaches the server.
+   *
+   * @param  {Function}    headerFn
+   * @param  {Function}    sessionFn
+   * @param  {String}      username
+   * @param  {String}      password
+   *
+   * @method clientLogin
+   * @async
+   *
+   * @return {void}
+   */
+  async clientLogin (headerFn, sessionFn, username, password) {
+    headerFn('authorization', `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`)
   }
 }
 

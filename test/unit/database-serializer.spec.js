@@ -288,4 +288,42 @@ test.group('Serializers - Lucid', (group) => {
     )
     assert.deepEqual(tokensQuery.bindings, [true, '20', '30', 1])
   })
+
+  test('query for user tokens', async (assert) => {
+    const config = {
+      uid: 'email',
+      password: 'password',
+      table: 'users',
+      primaryKey: 'id',
+      tokensTable: 'tokens',
+      foreignKey: 'user_id'
+    }
+
+    const db = new DatabaseSerializer()
+    db.setConfig(config)
+
+    let tokensQuery = null
+    db.query((builder) => {
+      builder.on('query', (query) => (tokensQuery = query))
+    })
+
+    await db.listTokens({ id: 1 }, 'api_tokens')
+    assert.equal(tokensQuery.sql, 'select * from "tokens" where "type" = ? and "is_revoked" = ? and "user_id" = ?')
+    assert.deepEqual(tokensQuery.bindings, ['api_tokens', false, 1])
+  })
+
+  test('make fake response', async (assert) => {
+    const config = {
+      uid: 'email',
+      password: 'password',
+      table: 'users',
+      primaryKey: 'id',
+      tokensTable: 'tokens',
+      foreignKey: 'user_id'
+    }
+
+    const db = new DatabaseSerializer()
+    db.setConfig(config)
+    assert.deepEqual(db.fakeResult(), [])
+  })
 })

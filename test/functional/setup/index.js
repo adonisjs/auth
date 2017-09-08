@@ -27,6 +27,18 @@ module.exports = async () => {
     return Context
   })
 
+  ioc.bind('Adonis/Src/Encryption', () => {
+    return {
+      encrypt (token) {
+        return `e${token}`
+      },
+
+      decrypt (token) {
+        return token.replace(/^e/, '')
+      }
+    }
+  })
+
   ioc.bind('Adonis/Src/Exception', () => {
     return {
       handle () {}
@@ -51,6 +63,16 @@ module.exports = async () => {
         model: 'App/Models/User',
         serializer: 'lucid',
         scheme: 'basic'
+      },
+      jwt: {
+        model: 'App/Models/User',
+        scheme: 'jwt',
+        serializer: 'lucid',
+        uid: 'email',
+        password: 'password',
+        options: {
+          secret: 'SECRET'
+        }
       }
     })
 

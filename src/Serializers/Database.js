@@ -263,6 +263,36 @@ class DatabaseSerializer {
     query.where(this.foreignKey, foreignKeyValue)
     return query.update({ is_revoked: true })
   }
+
+  /**
+   * Returns all non-revoked list of tokens for a given user.
+   *
+   * @method listTokens
+   * @async
+   *
+   * @param  {Object}   user
+   * @param  {String}   type
+   *
+   * @return {Object}
+   */
+  async listTokens (user, type) {
+    const foreignKeyValue = user[this.primaryKey]
+
+    const query = this._getQuery(this.tokensTable)
+    query.where({ type, is_revoked: false }).where(this.foreignKey, foreignKeyValue)
+    return query
+  }
+
+  /**
+   * Returns an empty array as the fake results
+   *
+   * @method fakeResult
+   *
+   * @return {Array}
+   */
+  fakeResult () {
+    return []
+  }
 }
 
 module.exports = DatabaseSerializer

@@ -208,6 +208,33 @@ class LucidSerializer {
     }
     return query.update({ is_revoked: true })
   }
+
+  /**
+   * Returns all non-revoked list of tokens for a given user.
+   *
+   * @method listTokens
+   * @async
+   *
+   * @param  {Object}   user
+   * @param  {String}   type
+   *
+   * @return {Object}
+   */
+  async listTokens (user, type) {
+    return user.tokens().where({ type, is_revoked: false }).fetch()
+  }
+
+  /**
+   * A fake instance of serializer with empty set
+   * of array
+   *
+   * @method fakeResult
+   *
+   * @return {Object}
+   */
+  fakeResult () {
+    return new this._Model.Serializer([])
+  }
 }
 
 module.exports = LucidSerializer

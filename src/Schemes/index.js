@@ -12,5 +12,6 @@
 module.exports = {
   session: require('./Session'),
   basic: require('./BasicAuth'),
-  jwt: require('./Jwt')
+  jwt: require('./Jwt'),
+  api: require('./Api')
 }

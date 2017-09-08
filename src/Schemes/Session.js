@@ -272,7 +272,7 @@ class SessionScheme extends BaseScheme {
       }
     }
 
-    throw CE.InvalidLoginException.invalidSession()
+    throw CE.InvalidSessionException.invoke()
   }
 
   /**
@@ -324,6 +324,30 @@ class SessionScheme extends BaseScheme {
   async getUser () {
     await this.check()
     return this.user
+  }
+
+  /**
+   * Login a user as a client. This is required when
+   * you want to set the session on a request that
+   * will reach the Adonis server.
+   *
+   * @method clientLogin
+   *
+   * @param  {Function}    headerFn
+   * @param  {Function}    sessionFn
+   * @param  {Object}    user
+   *
+   * @return {void}
+   */
+  clientLogin (headerFn, sessionFn, user) {
+    if (!user[this.primaryKey]) {
+      throw new Error(`Cannot login user, since value for ${this.primaryKey} is missing`)
+    }
+
+    /**
+     * Call the client method to set the session
+     */
+    sessionFn(this.sessionKey, user[this.primaryKey])
   }
 }
 

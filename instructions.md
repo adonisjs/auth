@@ -14,8 +14,11 @@ Next you need to do is register couple of middleware to ensure everything works 
 
 Middleware are defined inside `start/kernel.js` file. Make sure to define the middleware after `Adonis/Middleware/Session`, since authentication relies on sessions unless you are using JWT etc.
 
+Note: Make sure you have setup sessions middleware ( if using session scheme )
+
 ```js
 const globalMiddleware = [
+  'Adonis/Middleware/Session', // after this
   'Adonis/Middleware/AuthInit'
 ]
 ```
@@ -47,4 +50,13 @@ Route
 ```
 
 
+## Testing
+
+The testing client is used to login users when writing tests. Make sure to register the trait before using the `loginVia` method.
+
+```js
+trait('Auth/Client')
+```
+
+If using sessions, make sure the `Auth/Client` trait comes before the `Session/Client`.
 

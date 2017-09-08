@@ -21,8 +21,10 @@ Adonisjs auth is an authentication provider to add authentication layer to your 
 ## Installation
 You can install the package from npm.
 ```bash
-npm i --save @adonisjs/auth
+adonis install @adonisjs/auth
 ```
+
+Make sure to read [instructions.md](instructions.md) file.
 
 ## Node/OS Target
 

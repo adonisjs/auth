@@ -212,4 +212,34 @@ test.group('Schemes - BasicAuth', (group) => {
     const user = await basic.getUser()
     assert.instanceOf(user, User)
   })
+
+  test('login as client', async (assert) => {
+    assert.plan(2)
+
+    class User extends Model {
+      static get makePlain () {
+        return true
+      }
+    }
+    User._bootIfNotBooted()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const basic = new BasicAuth()
+    basic.setOptions(config, lucid)
+
+    const headerFn = function (key, value) {
+      assert.equal(key, 'authorization')
+      assert.equal(value, `Basic ${Buffer.from('foo:secret').toString('base64')}`)
+    }
+
+    await basic.clientLogin(headerFn, null, 'foo', 'secret')
+  })
 })

@@ -557,7 +557,7 @@ test.group('Schemes - Session', (group) => {
     try {
       await session.check()
     } catch ({ name, message }) {
-      assert.equal(name, 'InvalidLoginException')
+      assert.equal(name, 'InvalidSessionException')
       assert.equal(message, 'E_INVALID_SESSION: Invalid session')
     }
   })
@@ -593,7 +593,7 @@ test.group('Schemes - Session', (group) => {
     try {
       await session.check()
     } catch ({ name, message }) {
-      assert.equal(name, 'InvalidLoginException')
+      assert.equal(name, 'InvalidSessionException')
       assert.equal(message, 'E_INVALID_SESSION: Invalid session')
     }
   })
@@ -707,5 +707,52 @@ test.group('Schemes - Session', (group) => {
     await session.logout()
     assert.isNull(session.user)
     assert.deepEqual(httpSession, { key: 'adonis-auth', clearCookie: { key: 'adonis-remember-token' } })
+  })
+
+  test('set session as a client', async (assert) => {
+    assert.plan(2)
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const session = new Session()
+
+    session.setOptions(config, lucid)
+    session.setCtx({})
+
+    const sessionFn = function (key, value) {
+      assert.equal(key, 'adonis-auth')
+      assert.equal(value, 1)
+    }
+
+    session.clientLogin(null, sessionFn, { id: 1 })
+  })
+
+  test('throw exception when primary key value is missing', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const session = new Session()
+
+    session.setOptions(config, lucid)
+    session.setCtx({})
+
+    const fn = () => session.clientLogin(null, function () {}, {})
+    assert.throw(fn, 'Cannot login user, since value for id is missing')
   })
 })

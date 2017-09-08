@@ -53,6 +53,13 @@ module.exports = {
         }
         const parsedCookies = cookie.parse(this.request.headers.cookie)
         return parsedCookies[key]
+      },
+      header (key) {
+        key = key.toLowerCase()
+        return this.request.headers[key]
+      },
+      input (key) {
+        return ''
       }
     }
   },

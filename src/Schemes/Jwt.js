@@ -17,10 +17,29 @@ const BaseScheme = require('./Base')
 const GE = require('@adonisjs/generic-exceptions')
 const CE = require('../Exceptions')
 
+/**
+ * Jwt scheme for adonis auth provider
+ *
+ * @class JwtScheme
+ * @constructor
+ */
 class JwtScheme extends BaseScheme {
-  constructor () {
+  constructor (Encryption) {
     super()
+    this.Encryption = Encryption
     this._generateRefreshToken = new Resetable(false)
+  }
+
+  /* istanbul ignore next */
+  /**
+   * IoC container injections
+   *
+   * @method inject
+   *
+   * @return {Array}
+   */
+  static get inject () {
+    return ['Adonis/Src/Encryption']
   }
 
   /**
@@ -233,7 +252,12 @@ class JwtScheme extends BaseScheme {
      * Attach user as data object only when
      * jwtPayload is true
      */
-      payload.data = typeof (user.toJSON) === 'function' ? user.toJSON() : user
+      const data = typeof (user.toJSON) === 'function' ? user.toJSON() : user
+
+      /**
+       * Remove password from jwt data
+       */
+      payload.data = _.omit(data, 'password')
     } else if (_.isPlainObject(jwtPayload)) {
       /**
        * Attach payload as it is when it's an object
@@ -246,7 +270,14 @@ class JwtScheme extends BaseScheme {
      */
     const token = await this._signToken(payload, jwtOptions)
     const withRefresh = this._generateRefreshToken.pull()
-    const refreshToken = withRefresh ? await this._saveRefreshToken(user) : null
+    const plainRefreshToken = withRefresh ? await this._saveRefreshToken(user) : null
+
+    /**
+     * Encrypting the token before giving it to the
+     * user.
+     */
+    const refreshToken = plainRefreshToken ? this.Encryption.encrypt(plainRefreshToken) : null
+
     return { type: 'bearer', token, refreshToken }
   }
 
@@ -265,7 +296,12 @@ class JwtScheme extends BaseScheme {
    * @return {Object}
    */
   async generateForRefreshToken (refreshToken, jwtPayload, jwtOptions) {
-    const user = await this._serializerInstance.findByToken(refreshToken, 'jwt_refresh_token')
+    /**
+     * Decrypting the token before finding it in the db
+     */
+    const plainRefreshToken = refreshToken ? this.Encryption.decrypt(refreshToken) : refreshToken
+
+    const user = await this._serializerInstance.findByToken(plainRefreshToken, 'jwt_refresh_token')
     if (!user) {
       throw CE.InvalidRefreshToken.invoke(refreshToken)
     }
@@ -337,6 +373,68 @@ class JwtScheme extends BaseScheme {
   async getUser () {
     await this.check()
     return this.user
+  }
+
+  /**
+   * List tokens for a given user for the
+   * currently logged in user.
+   *
+   * @method listTokens
+   *
+   * @param  {Object} forUser
+   *
+   * @return {Object}
+   */
+  async listTokens (forUser) {
+    forUser = forUser || this.user
+    if (!forUser) {
+      return this._serializerInstance.fakeResult()
+    }
+
+    const tokens = await this._serializerInstance.listTokens(forUser, 'jwt_refresh_token')
+
+    /**
+     * We need to pull the `rows` when serializer is lucid, otherwise
+     * we use the array as it is.
+     *
+     * @type {Array}
+     */
+    const tokensArray = _.isArray(tokens) ? tokens : tokens.rows
+
+    /**
+     * If tokens array is empty then return the fake response
+     */
+    if (!_.isArray(tokensArray) || !_.size(tokensArray)) {
+      return this._serializerInstance.fakeResult()
+    }
+
+    /**
+     * Encrypt the tokens
+     */
+    tokensArray.forEach((token) => {
+      token.token = this.Encryption.encrypt(token.token)
+    })
+
+    return tokens
+  }
+
+  /**
+   * Login a user as a client. This method will set the
+   * JWT token as a header on the request.
+   *
+   * @param  {Function}    headerFn
+   * @param  {Function}    sessionFn
+   * @param  {Object}      user
+   * @param  {Object}      jwtOptions
+   *
+   * @method clientLogin
+   * @async
+   *
+   * @return {void}
+   */
+  async clientLogin (headerFn, sessionFn, user) {
+    const { token } = await this.generate(user)
+    headerFn('authorization', `Bearer ${token}`)
   }
 }
 

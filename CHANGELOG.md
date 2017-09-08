@@ -1,3 +1,51 @@
+<a name="2.0.6"></a>
+## [2.0.6](https://github.com/adonisjs/adonis-auth/compare/v2.0.5...v2.0.6) (2017-09-06)
+
+
+### Bug Fixes
+
+* **config:** add table column and api config ([d038205](https://github.com/adonisjs/adonis-auth/commit/d038205))
+
+
+### Features
+
+* **client:** add auth client for vow ([e18b02e](https://github.com/adonisjs/adonis-auth/commit/e18b02e))
+* **client:** add clientLogin method on api scheme ([b6e3767](https://github.com/adonisjs/adonis-auth/commit/b6e3767))
+
+
+
+<a name="2.0.5"></a>
+## [2.0.5](https://github.com/adonisjs/adonis-auth/compare/v2.0.4...v2.0.5) (2017-08-22)
+
+
+
+<a name="2.0.4"></a>
+## [2.0.4](https://github.com/adonisjs/adonis-auth/compare/v2.0.3...v2.0.4) (2017-08-22)
+
+
+### Bug Fixes
+
+* **jwt:** jwt remove password when attaching user ([542d331](https://github.com/adonisjs/adonis-auth/commit/542d331))
+
+
+### Features
+
+* **jwt,api:** add listTokens method ([1932449](https://github.com/adonisjs/adonis-auth/commit/1932449))
+* **tokens:** encrypt api and jwt refresh tokens ([57d5650](https://github.com/adonisjs/adonis-auth/commit/57d5650))
+
+
+
+<a name="2.0.3"></a>
+## [2.0.3](https://github.com/adonisjs/adonis-auth/compare/v2.0.2...v2.0.3) (2017-08-16)
+
+
+### Features
+
+* **middleware:** add auth middleware ([50e7346](https://github.com/adonisjs/adonis-auth/commit/50e7346))
+* **schemes:** add api tokens scheme ([b4c98d7](https://github.com/adonisjs/adonis-auth/commit/b4c98d7))
+
+
+
 <a name="2.0.2"></a>
 ## [2.0.2](https://github.com/adonisjs/adonis-auth/compare/v2.0.1...v2.0.2) (2017-08-08)
 

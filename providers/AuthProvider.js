@@ -54,6 +54,40 @@ class AuthProvider extends ServiceProvider {
   }
 
   /**
+   * Register auth middleware under `Adonis/Middleware/Auth` namespace.
+   *
+   * @method _registerAuthMiddleware
+   *
+   * @return {void}
+   *
+   * @private
+   */
+  _registerAuthMiddleware () {
+    this.app.bind('Adonis/Middleware/Auth', (app) => {
+      const Auth = require('../src/Middleware/Auth')
+      return new Auth(app.use('Adonis/Src/Config'))
+    })
+  }
+
+  /**
+   * Register the vow trait to bind session client
+   * under `Adonis/Traits/Session` namespace.
+   *
+   * @method _registerVowTrait
+   *
+   * @return {void}
+   */
+  _registerVowTrait () {
+    this.app.bind('Adonis/Traits/Auth', (app) => {
+      const Config = app.use('Adonis/Src/Config')
+      return ({ Request }) => {
+        require('../src/VowBindings/Request')(Request, Config)
+      }
+    })
+    this.app.alias('Adonis/Traits/Auth', 'Auth/Client')
+  }
+
+  /**
    * Register namespaces to the IoC container
    *
    * @method register
@@ -64,6 +98,8 @@ class AuthProvider extends ServiceProvider {
     this._registerAuth()
     this._registerAuthManager()
     this._registerAuthInitMiddleware()
+    this._registerAuthMiddleware()
+    this._registerVowTrait()
   }
 
   /**
@@ -78,9 +114,6 @@ class AuthProvider extends ServiceProvider {
     const Context = this.app.use('Adonis/Src/HttpContext')
     const Auth = this.app.use('Adonis/Src/Auth')
     const Config = this.app.use('Adonis/Src/Config')
-    const Exception = this.app.use('Adonis/Src/Exception')
-
-    require('../src/ExceptionHandler')(Exception)
 
     Context.getter('auth', function () {
       return new Auth({ request: this.request, response: this.response, session: this.session }, Config)
