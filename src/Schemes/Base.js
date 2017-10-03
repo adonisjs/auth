@@ -185,7 +185,7 @@ class BaseScheme {
     /**
      * Fallback to cookie
      */
-    return request.cookie('adonis-auth-jwt')
+    return request.cookie('adonis-auth-jwt', null)
   }
 }
 
