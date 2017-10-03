@@ -176,7 +176,15 @@ class BaseScheme {
     /**
      * Fallback to `input` field
      */
-    return request.input('token', null)
+    token = request.input('token', null)
+    if (token) {
+      return token
+    }
+
+    /**
+     * Fallback to cookie
+     */
+    return request.cookie('adonis-auth-jwt')
   }
 }
 
