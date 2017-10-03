@@ -274,6 +274,9 @@ test.group('Schemes - Api', (group) => {
         },
         input () {
           return null
+        },
+        cookie () {
+          return null
         }
       }
     })

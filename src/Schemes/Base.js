@@ -156,7 +156,7 @@ class BaseScheme {
   /**
    * Returns the value of authorization header
    * or request payload token key value
-   * or 'adonis-auth-jwt' cookie value
+   * or 'adonis-auth-token' cookie value
    *
    * @method getAuthHeader
    *
@@ -185,7 +185,7 @@ class BaseScheme {
     /**
      * Fallback to cookie
      */
-    return request.cookie('adonis-auth-jwt', null)
+    return request.cookie('adonis-auth-token', null)
   }
 }
 
