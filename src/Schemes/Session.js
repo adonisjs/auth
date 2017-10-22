@@ -220,7 +220,7 @@ class SessionScheme extends BaseScheme {
     if (this.user) {
       const rememberMeToken = this._ctx.request.cookie(this.remeberTokenKey)
       if (rememberMeToken) {
-        await this._serializerInstance.revokeTokens(this.user, [rememberMeToken])
+        await this._serializerInstance.deleteTokens(this.user, [rememberMeToken])
       }
       this.user = null
     }
