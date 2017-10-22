@@ -289,6 +289,102 @@ test.group('Serializers - Lucid', (group) => {
     assert.deepEqual(tokensQuery.bindings, [true, '20', '30', 1])
   })
 
+  test('delete single token for a given user', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+    let tokensQuery = null
+    user.tokens().RelatedModel.onQuery((query) => (tokensQuery = query))
+
+    await lucid.deleteTokens(user, '20')
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "token" in (?) and "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, ['20', 1])
+  })
+
+  test('delete all tokens for a given user', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+    let tokensQuery = null
+    user.tokens().RelatedModel.onQuery((query) => (tokensQuery = query))
+
+    await lucid.deleteTokens(user)
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, [1])
+  })
+
+  test('delete multiple tokens for a given user', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+    let tokensQuery = null
+    user.tokens().RelatedModel.onQuery((query) => (tokensQuery = query))
+
+    await lucid.deleteTokens(user, ['20', '30'])
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "token" in (?, ?) and "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, ['20', '30', 1])
+  })
+
+  test('delete all but not the metioned tokens for a given user', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+    let tokensQuery = null
+    user.tokens().RelatedModel.onQuery((query) => (tokensQuery = query))
+
+    await lucid.deleteTokens(user, ['20', '30'], true)
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "token" not in (?, ?) and "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, ['20', '30', 1])
+  })
+
   test('return false when there is no password is user payload', async (assert) => {
     const User = helpers.getUserModel()
 
