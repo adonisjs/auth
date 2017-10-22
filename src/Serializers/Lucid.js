@@ -225,9 +225,9 @@ class LucidSerializer {
     if (tokens) {
       tokens = tokens instanceof Array === true ? tokens : [tokens]
       inverse ? query.whereNotIn('token', tokens) : query.whereIn('token', tokens)
-      debug('revoking %j tokens for %s user', tokens, user.primaryKeyValue)
+      debug('deleting %j tokens for %s user', tokens, user.primaryKeyValue)
     } else {
-      debug('revoking all tokens for %s user', user.primaryKeyValue)
+      debug('deleting all tokens for %s user', user.primaryKeyValue)
     }
     return query.delete()
   }
