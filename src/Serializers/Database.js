@@ -265,6 +265,33 @@ class DatabaseSerializer {
   }
 
   /**
+   * Delete token(s) or all tokens for a given user
+   *
+   * @method deleteTokens
+   *
+   * @param  {Object}           user
+   * @param  {Array|String}     [tokens = null]
+   * @param  {Boolean}          [inverse = false]
+   *
+   * @return {Number}           Number of impacted rows
+   */
+  async deleteTokens (user, tokens = null, inverse = false) {
+    const foreignKeyValue = user[this.primaryKey]
+
+    const query = this._getQuery(this.tokensTable)
+    if (tokens) {
+      tokens = tokens instanceof Array === true ? tokens : [tokens]
+      inverse ? query.whereNotIn('token', tokens) : query.whereIn('token', tokens)
+      debug('revoking %j tokens for %s user', tokens, user.primaryKeyValue)
+    } else {
+      debug('revoking all tokens for %s user', user.primaryKeyValue)
+    }
+
+    query.where(this.foreignKey, foreignKeyValue)
+    return query.delete()
+  }
+
+  /**
    * Returns all non-revoked list of tokens for a given user.
    *
    * @method listTokens

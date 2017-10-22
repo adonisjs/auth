@@ -312,6 +312,110 @@ test.group('Serializers - Database', (group) => {
     assert.deepEqual(tokensQuery.bindings, ['api_tokens', false, 1])
   })
 
+  test('delete single token for a given user', async (assert) => {
+    const config = {
+      uid: 'email',
+      password: 'password',
+      table: 'users',
+      primaryKey: 'id',
+      tokensTable: 'tokens',
+      foreignKey: 'user_id'
+    }
+
+    const db = new DatabaseSerializer()
+    db.setConfig(config)
+
+    let tokensQuery = null
+    db.query((builder) => {
+      builder.on('query', (query) => (tokensQuery = query))
+    })
+
+    await db.deleteTokens({ id: 1 }, '20')
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "token" in (?) and "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, ['20', 1])
+  })
+
+  test('delete all tokens for a given user', async (assert) => {
+    const config = {
+      uid: 'email',
+      password: 'password',
+      table: 'users',
+      primaryKey: 'id',
+      tokensTable: 'tokens',
+      foreignKey: 'user_id'
+    }
+
+    const db = new DatabaseSerializer()
+    db.setConfig(config)
+
+    let tokensQuery = null
+    db.query((builder) => {
+      builder.on('query', (query) => (tokensQuery = query))
+    })
+
+    await db.deleteTokens({ id: 1 })
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, [1])
+  })
+
+  test('delete multiple tokens for a given user', async (assert) => {
+    const config = {
+      uid: 'email',
+      password: 'password',
+      table: 'users',
+      primaryKey: 'id',
+      tokensTable: 'tokens',
+      foreignKey: 'user_id'
+    }
+
+    const db = new DatabaseSerializer()
+    db.setConfig(config)
+
+    let tokensQuery = null
+    db.query((builder) => {
+      builder.on('query', (query) => (tokensQuery = query))
+    })
+
+    await db.deleteTokens({ id: 1 }, ['20', '30'])
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "token" in (?, ?) and "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, ['20', '30', 1])
+  })
+
+  test('delete all but not mentioned tokens', async (assert) => {
+    const config = {
+      uid: 'email',
+      password: 'password',
+      table: 'users',
+      primaryKey: 'id',
+      tokensTable: 'tokens',
+      foreignKey: 'user_id'
+    }
+
+    const db = new DatabaseSerializer()
+    db.setConfig(config)
+
+    let tokensQuery = null
+    db.query((builder) => {
+      builder.on('query', (query) => (tokensQuery = query))
+    })
+
+    await db.deleteTokens({ id: 1 }, ['20', '30'], true)
+    assert.equal(
+      tokensQuery.sql,
+      'delete from "tokens" where "token" not in (?, ?) and "user_id" = ?'
+    )
+    assert.deepEqual(tokensQuery.bindings, ['20', '30', 1])
+  })
+
   test('make fake response', async (assert) => {
     const config = {
       uid: 'email',
