@@ -17,7 +17,7 @@ const { ioc } = require('@adonisjs/fold')
 const { database: DatabaseSerializer } = require('../../src/Serializers')
 const setup = require('./setup')
 
-test.group('Serializers - Lucid', (group) => {
+test.group('Serializers - Database', (group) => {
   setup.databaseHook(group)
   setup.hashHook(group)
 
