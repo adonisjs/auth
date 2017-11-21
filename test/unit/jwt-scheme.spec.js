@@ -779,6 +779,32 @@ test.group('Schemes - Jwt', (group) => {
     assert.equal(iss, 'adonisjs')
   })
 
+  test('generate token via login() method', async (assert) => {
+    assert.plan(1)
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password',
+      options: {
+        secret: SECRET
+      }
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+
+    const jwt = new Jwt(Encryption)
+    jwt.setOptions(config, lucid)
+
+    const { token } = await jwt.login(user)
+    const { uid } = await verifyToken(token)
+    assert.equal(uid, 1)
+  })
+
   test('list refresh tokens', async (assert) => {
     const User = helpers.getUserModel()
 
