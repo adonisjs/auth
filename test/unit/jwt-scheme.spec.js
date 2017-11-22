@@ -779,7 +779,7 @@ test.group('Schemes - Jwt', (group) => {
     assert.equal(iss, 'adonisjs')
   })
 
-  test('generate token via login() method', async (assert) => {
+  test('throw exception when calling login()', async (assert) => {
     assert.plan(1)
     const User = helpers.getUserModel()
 
@@ -800,9 +800,11 @@ test.group('Schemes - Jwt', (group) => {
     const jwt = new Jwt(Encryption)
     jwt.setOptions(config, lucid)
 
-    const { token } = await jwt.login(user)
-    const { uid } = await verifyToken(token)
-    assert.equal(uid, 1)
+    try {
+      jwt.login(user)
+    } catch ({ message }) {
+      assert.equal(message, 'E_CANNOT_LOGIN: method not implemented, use generate() to retrieve jwt token')
+    }
   })
 
   test('list refresh tokens', async (assert) => {

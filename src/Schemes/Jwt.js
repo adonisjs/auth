@@ -208,21 +208,14 @@ class JwtScheme extends BaseScheme {
   }
 
   /**
-   * Generates a jwt token for a user
-   *
-   * This method acts as alias fot `generate()`,
-   * it's also a compatibility layer for `Auth.login()` method.
-   *
    * @method login
-   *
-   * @param {Object} user
-   *
-   * @return {Object}
    *
    * @throws {RuntimeException} If jwt secret is not defined or user doesn't have a primary key value
    */
-  login (user) {
-    return this.generate(user)
+  login () {
+    throw GE
+      .RuntimeException
+      .invoke('method not implemented, use generate() to retrieve jwt token', 500, 'E_CANNOT_LOGIN')
   }
 
   /**
