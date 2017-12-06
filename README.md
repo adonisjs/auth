@@ -13,7 +13,7 @@ Adonisjs auth is an authentication provider to add authentication layer to your 
 
 ## What's in the box?
 
-1. Support for multiple authentication schemes like **Jwt**, **Sessions**, **Basic auth** and **Personal API tokens**.
+1. Support for multiple authentication schemes like **Jwt**, **Sessions**, **Basic auth**, **Personal API tokens** and **Plain API tokens**.
 2. Support for Lucid and Database serializer.
 3. Easy to extend API to add your own serializers and schemes.
 4. Runtime middleware.
