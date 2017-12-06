@@ -28,6 +28,10 @@ async function makeConfigFile (cli) {
     {
       name: 'Api Tokens',
       value: 'api'
+    },
+    {
+      name: 'Plain Token',
+      value: 'token'
     }
   ])
 
