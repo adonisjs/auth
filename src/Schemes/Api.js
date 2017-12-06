@@ -41,7 +41,7 @@ class ApiScheme extends BaseScheme {
    * @return {Boolean}
    */
   get isPlainToken () {
-    return _.get(this._config, 'plain', false) === true
+    return this._config.plain === true
   }
 
   /**

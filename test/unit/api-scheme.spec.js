@@ -393,6 +393,25 @@ test.group('Schemes - Api', (group) => {
     assert.equal(tokenPayload.type, 'bearer')
   })
 
+  test('check config for plain attribute', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password',
+      plain: true
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const api = new Api(Encryption)
+    api.setOptions(config, lucid)
+
+    assert.equal(api.isPlainToken, true)
+  })
+
   test('generate plain token for user', async (assert) => {
     const User = helpers.getUserModel()
 
