@@ -200,4 +200,25 @@ test.group('Schemes - Token Api', (group) => {
     assert.isDefined(tokenPayload.token)
     assert.equal(tokenPayload.type, 'bearer')
   })
+
+  test('return a list of tokens for a given user', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password'
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+    const token = new Token(Encryption)
+    token.setOptions(config, lucid)
+    const payload = await token.generate(user)
+    const tokensList = await token.listTokens(user)
+    assert.equal(tokensList.size(), 1)
+    assert.equal(tokensList.first().token, payload.token)
+  })
 })
