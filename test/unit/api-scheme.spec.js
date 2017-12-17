@@ -395,4 +395,111 @@ test.group('Schemes - Api', (group) => {
     assert.isDefined(tokenPayload.token)
     assert.equal(tokenPayload.type, 'bearer')
   })
+
+  test('check config for plain attribute', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password',
+      plain: true
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const api = new Api(Encryption)
+    api.setOptions(config, lucid)
+
+    assert.equal(api.isPlainToken, true)
+  })
+
+  test('generate plain token for user', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password',
+      plain: true
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+
+    const api = new Api(Encryption)
+    api.setOptions(config, lucid)
+    const tokenPayload = await api.generate(user)
+
+    assert.isDefined(tokenPayload.token)
+    assert.equal(tokenPayload.type, 'bearer')
+  })
+
+  test('verify plain user token from header', async (assert) => {
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password',
+      plain: true
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    const user = await User.create({ email: 'foo@bar.com', password: 'secret' })
+    await user.tokens().create({ type: 'api_token', token: '22', is_revoked: false })
+
+    const api = new Api(Encryption)
+    api.setOptions(config, lucid)
+    api.setCtx({
+      request: {
+        header (key) {
+          return `Bearer 22`
+        }
+      }
+    })
+
+    const isLoggedIn = await api.check()
+    assert.isTrue(isLoggedIn)
+    assert.instanceOf(api.user, User)
+  })
+
+  test('throw exception when plain api token is invalid', async (assert) => {
+    assert.plan(2)
+    const User = helpers.getUserModel()
+
+    const config = {
+      model: User,
+      uid: 'email',
+      password: 'password',
+      plain: true
+    }
+
+    const lucid = new LucidSerializer(ioc.use('Hash'))
+    lucid.setConfig(config)
+
+    await User.create({ email: 'foo@bar.com', password: 'secret' })
+
+    const api = new Api(Encryption)
+    api.setOptions(config, lucid)
+    api.setCtx({
+      request: {
+        header (key) {
+          return `Bearer 22`
+        }
+      }
+    })
+
+    try {
+      await api.check()
+    } catch ({ name, message }) {
+      assert.equal(message, 'E_INVALID_API_TOKEN: The api token is missing or invalid')
+      assert.equal(name, 'InvalidApiToken')
+    }
+  })
 })

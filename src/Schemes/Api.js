@@ -34,6 +34,17 @@ class ApiScheme extends BaseScheme {
   }
 
   /**
+   * Checks for plain attribute
+   *
+   * @attribute isPlainToken
+   *
+   * @return {Boolean}
+   */
+  get isPlainToken () {
+    return this._config.plain === true
+  }
+
+  /**
    * Validate user credentials
    *
    * @method validate
@@ -102,9 +113,9 @@ class ApiScheme extends BaseScheme {
 
     /**
      * Encrypting the token before giving it to the
-     * user.
+     * user, unless it is configured with plain to true.
      */
-    const token = this.Encryption.encrypt(plainToken)
+    const token = this.isPlainToken ? plainToken : this.Encryption.encrypt(plainToken)
 
     return { type: 'bearer', token }
   }
@@ -130,9 +141,9 @@ class ApiScheme extends BaseScheme {
 
     /**
      * Decrypting the token before querying
-     * the db.
+     * the db, unless it is configured with plain to true.
      */
-    const plainToken = this.Encryption.decrypt(token)
+    const plainToken = this.isPlainToken ? token : this.Encryption.decrypt(token)
 
     this.user = await this._serializerInstance.findByToken(plainToken, 'api_token')
 
@@ -192,11 +203,13 @@ class ApiScheme extends BaseScheme {
     }
 
     /**
-     * Encrypt the tokens
+     * Encrypt the tokens, if not on plain mode
      */
-    tokensArray.forEach((token) => {
-      token.token = this.Encryption.encrypt(token.token)
-    })
+    if (!this.isPlainToken) {
+      tokensArray.forEach((token) => {
+        token.token = this.Encryption.encrypt(token.token)
+      })
+    }
 
     return tokens
   }
