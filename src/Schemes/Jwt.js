@@ -328,7 +328,7 @@ class JwtScheme extends BaseScheme {
     if (!token.refreshToken) {
       token.refreshToken = refreshToken
     } else {
-      await this._serializerInstance.revokeTokens(user, [refreshToken])
+      await this._serializerInstance.revokeTokens(user, [plainRefreshToken])
     }
 
     return token

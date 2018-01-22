@@ -530,7 +530,7 @@ test.group('Schemes - Jwt', (group) => {
     const jwt = new Jwt(Encryption)
     jwt.setOptions(config, lucid)
 
-    const { token, refreshToken } = await jwt.newRefreshToken().generateForRefreshToken('20')
+    const { token, refreshToken } = await jwt.newRefreshToken().generateForRefreshToken(Encryption.encrypt('20'))
     assert.isDefined(token)
 
     const payload = await verifyToken(token)
