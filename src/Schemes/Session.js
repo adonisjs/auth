@@ -49,11 +49,11 @@ class SessionScheme extends BaseScheme {
    * Reference to the value of `rememberMeToken` inside the config block.
    * Defaults to `adonis-remember-token`
    *
-   * @attribute remeberTokenKey
+   * @attribute rememberTokenKey
    * @readOnly
    * @return {String}
    */
-  get remeberTokenKey () {
+  get rememberTokenKey () {
     return this._config.rememberMeToken || 'adonis-remember-token'
   }
 
@@ -79,7 +79,7 @@ class SessionScheme extends BaseScheme {
      * defined
      */
     if (rememberToken && duration) {
-      this._ctx.response.cookie(this.remeberTokenKey, rememberToken, {
+      this._ctx.response.cookie(this.rememberTokenKey, rememberToken, {
         expires: new Date(Date.now() + duration)
       })
     }
@@ -96,7 +96,7 @@ class SessionScheme extends BaseScheme {
    */
   _removeSession () {
     this._ctx.session.forget(this.sessionKey)
-    this._ctx.response.clearCookie(this.remeberTokenKey)
+    this._ctx.response.clearCookie(this.rememberTokenKey)
   }
 
   /**
@@ -262,7 +262,7 @@ class SessionScheme extends BaseScheme {
    */
   async logout () {
     if (this.user) {
-      const rememberMeToken = this._ctx.request.cookie(this.remeberTokenKey)
+      const rememberMeToken = this._ctx.request.cookie(this.rememberTokenKey)
       if (rememberMeToken) {
         await this._serializerInstance.deleteTokens(this.user, [rememberMeToken])
       }
@@ -298,7 +298,7 @@ class SessionScheme extends BaseScheme {
     }
 
     const sessionValue = this._ctx.session.get(this.sessionKey)
-    const rememberMeToken = this._ctx.request.cookie(this.remeberTokenKey)
+    const rememberMeToken = this._ctx.request.cookie(this.rememberTokenKey)
 
     /**
      * Look for user only when there is a session
@@ -354,7 +354,7 @@ class SessionScheme extends BaseScheme {
      * Don't do anything when there is no session
      */
     const sessionValue = this._ctx.session.get(this.sessionKey)
-    const rememberMeToken = this._ctx.request.cookie(this.remeberTokenKey)
+    const rememberMeToken = this._ctx.request.cookie(this.rememberTokenKey)
 
     /**
      * Don't attempt for anything when there is no session
