@@ -1,4 +1,6 @@
 # AdonisJs Auth 🔒
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/adonisjs/adonis-auth.svg)](https://greenkeeper.io/)
 > Fully blown authentication provider for Adonis framework
 
 [![NPM Version][npm-image]][npm-url]
