@@ -500,11 +500,12 @@ test.group('Schemes - Jwt', (group) => {
     const jwt = new Jwt(Encryption)
     jwt.setOptions(config, lucid)
 
-    const { token } = await jwt.generateForRefreshToken('20')
+    const { token } = await jwt.generateForRefreshToken('20', false, { expiresIn: '1m' })
     assert.isDefined(token)
 
     const payload = await verifyToken(token)
     assert.equal(payload.uid, 1)
+    assert.isDefined(payload.exp)
     const firstToken = await user.tokens().where('token', '20').first()
     assert.equal(firstToken.is_revoked, 0)
   })

@@ -331,7 +331,7 @@ class JwtScheme extends BaseTokenScheme {
       throw CE.InvalidRefreshToken.invoke(refreshToken)
     }
 
-    const token = await this.generate(user, jwtPayload)
+    const token = await this.generate(user, jwtPayload, jwtOptions)
 
     /**
      * If user generated a new refresh token, in that case we
