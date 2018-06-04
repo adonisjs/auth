@@ -89,7 +89,9 @@ class Auth {
       return this._authenticatorsPool[name]
     }
 
-    const config = this.Config.get(`auth.${name}`)
+    const config = _.assign(this.Config.get(`auth.${name}`), {
+      cookie: this.Config.get(`session.cookie`)
+    })
 
     /**
      * Throws exception when config is defined or missing
