@@ -80,10 +80,12 @@ class SessionScheme extends BaseScheme {
      * defined
      */
     if (rememberToken && duration) {
-      const cookieOptions = _.assign(this._config.cookie, {
-        expires: new Date(Date.now() + duration)
+      this._ctx.response.cookie(this.rememberTokenKey, rememberToken, {
+        expires: new Date(Date.now() + duration),
+        httpOnly: true,
+        sameSite: true,
+        path: '/'
       })
-      this._ctx.response.cookie(this.rememberTokenKey, rememberToken, cookieOptions)
     }
   }
 
