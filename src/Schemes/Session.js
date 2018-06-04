@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
 */
 
-const _ = require('lodash')
 const Resetable = require('resetable')
 const ms = require('ms')
 const uuid = require('uuid')
