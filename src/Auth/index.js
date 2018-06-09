@@ -90,6 +90,7 @@ class Auth {
     }
 
     const config = this.Config.get(`auth.${name}`)
+    const cookieOptions = this.Config.get(`session.cookie`)
 
     /**
      * Throws exception when config is defined or missing
@@ -116,7 +117,7 @@ class Auth {
      * Configuring scheme
      */
     const schemeInstance = AuthManager.getScheme(config.scheme)
-    schemeInstance.setOptions(config, serializerInstance)
+    schemeInstance.setOptions(config, serializerInstance, cookieOptions)
     schemeInstance.setCtx(this._ctx)
 
     /**
