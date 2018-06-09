@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
 */
 
+const _ = require('lodash')
 const Resetable = require('resetable')
 const ms = require('ms')
 const uuid = require('uuid')
@@ -79,12 +80,10 @@ class SessionScheme extends BaseScheme {
      * defined
      */
     if (rememberToken && duration) {
-      this._ctx.response.cookie(this.rememberTokenKey, rememberToken, {
-        expires: new Date(Date.now() + duration),
-        httpOnly: this._config.httpOnly,
-        sameSite: this._config.sameSite,
-        path: this._config.path
+      const cookieOptions = _.assign(this._cookieOptions, {
+        expires: new Date(Date.now() + duration)
       })
+      this._ctx.response.cookie(this.rememberTokenKey, rememberToken, cookieOptions)
     }
   }
 

@@ -27,6 +27,7 @@ class BaseScheme {
     this._serializerInstance = null
     this._instanceUser = null
     this._ctx = null
+    this._cookieOptions = null
   }
 
   /**
@@ -113,9 +114,10 @@ class BaseScheme {
    *
    * @chainable
    */
-  setOptions (config, serializerInstance) {
+  setOptions (config, serializerInstance, cookieOptions) {
     this._config = config
     this._serializerInstance = serializerInstance
+    this._cookieOptions = cookieOptions
     return this
   }
 
