@@ -41,6 +41,17 @@ class BaseScheme {
   }
 
   /**
+   * The authenticator field. Get name of the current authenticator
+   *
+   * @attribute authenticator
+   * @readOnly
+   * @type {String}
+   */
+  get authenticator () {
+    return this._config.authenticator
+  }
+
+  /**
    * The password field name. Reads the `password` from the config object
    *
    * @attribute passwordField

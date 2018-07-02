@@ -90,7 +90,7 @@ class Auth {
     }
 
     const config = this.Config.get(`auth.${name}`)
-
+    config.authenticator = name
     /**
      * Throws exception when config is defined or missing
      */

@@ -72,14 +72,20 @@ class SessionScheme extends BaseScheme {
    * @private
    */
   _setSession (primaryKeyValue, rememberToken, duration) {
-    this._ctx.session.put(this.sessionKey, primaryKeyValue)
+    this._ctx.session.put(this.sessionKey, {
+      authenticator: this.authenticator,
+      primaryKeyValue
+    })
 
     /**
      * Set remember me cookie when token and duration is
      * defined
      */
     if (rememberToken && duration) {
-      this._ctx.response.cookie(this.rememberTokenKey, rememberToken, {
+      this._ctx.response.cookie(this.rememberTokenKey, {
+        authenticator: this.authenticator,
+        rememberToken
+      }, {
         expires: new Date(Date.now() + duration)
       })
     }
@@ -304,8 +310,8 @@ class SessionScheme extends BaseScheme {
      * Look for user only when there is a session
      * cookie
      */
-    if (sessionValue) {
-      this.user = await this._serializerInstance.findById(sessionValue)
+    if (sessionValue && sessionValue.authenticator === this.authenticator) {
+      this.user = await this._serializerInstance.findById(sessionValue.primaryKeyValue)
     }
 
     /**
@@ -319,8 +325,8 @@ class SessionScheme extends BaseScheme {
      * Attempt to login the user when remeber me
      * token exists
      */
-    if (rememberMeToken) {
-      const user = await this._serializerInstance.findByToken(rememberMeToken, 'remember_token')
+    if (rememberMeToken && rememberMeToken.authenticator === this.authenticator) {
+      const user = await this._serializerInstance.findByToken(rememberMeToken.rememberToken, 'remember_token')
       if (user) {
         await this.login(user)
         return true
