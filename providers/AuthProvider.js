@@ -75,6 +75,22 @@ class AuthProvider extends ServiceProvider {
   }
 
   /**
+   * Register AllowGuestOnly middleware under `Adonis/Middleware/AllowGuestOnly` namespace.
+   *
+   * @method _registerAllowGuestOnlyMiddleware
+   *
+   * @return {void}
+   *
+   * @private
+   */
+  _registerAllowGuestOnlyMiddleware () {
+    this.app.bind('Adonis/Middleware/AllowGuestOnly', (app) => {
+      const AllowGuestOnly = require('../src/Middleware/AllowGuestOnly')
+      return new AllowGuestOnly()
+    })
+  }
+
+  /**
    * Register the vow trait to bind session client
    * under `Adonis/Traits/Session` namespace.
    *
@@ -114,6 +130,7 @@ class AuthProvider extends ServiceProvider {
     this._registerAuthManager()
     this._registerAuthInitMiddleware()
     this._registerAuthMiddleware()
+    this._registerAllowGuestOnlyMiddleware()
     this._registerVowTrait()
   }
 

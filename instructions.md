@@ -31,7 +31,8 @@ The named middleware is used to authenticate selected routes by applying the mid
 
 ```js
 const namedMiddleware = {
-  auth: 'Adonis/Middleware/Auth'
+  auth: 'Adonis/Middleware/Auth',
+  guest: 'Adonis/Middleware/AllowGuestOnly'
 }
 ```
 
