@@ -60,6 +60,12 @@ module.exports = {
       },
       input (key) {
         return ''
+      },
+      method () {
+        return this.request.method
+      },
+      url () {
+        return this.request.url
       }
     }
   },
