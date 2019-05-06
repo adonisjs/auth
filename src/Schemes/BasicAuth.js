@@ -118,7 +118,7 @@ class BasicAuthScheme extends BaseScheme {
    * @return {void}
    */
   async clientLogin (headerFn, sessionFn, username, password) {
-    headerFn('authorization', `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`)
+    headerFn(this.headerKey, `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`)
   }
 }
 

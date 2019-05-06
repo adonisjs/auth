@@ -72,7 +72,8 @@ module.exports = async () => {
         password: 'password',
         model: 'App/Models/User',
         serializer: 'lucid',
-        scheme: 'basic'
+        scheme: 'basic',
+        headerKey: 'basic'
       },
       jwt: {
         model: 'App/Models/User',
@@ -82,14 +83,16 @@ module.exports = async () => {
         password: 'password',
         options: {
           secret: 'SECRET'
-        }
+        },
+        headerKey: 'jwt'
       },
       api: {
         model: 'App/Models/User',
         scheme: 'api',
         serializer: 'lucid',
         uid: 'email',
-        password: 'password'
+        password: 'password',
+        headerKey: 'api'
       }
     })
 

@@ -20,10 +20,16 @@ const CE = require('../Exceptions')
  * to authenticate a user.
  *
  * The tokens for a give user are stored inside the database and user sends
- * a token inside the `Authorization` header as following.
+ * a token inside the `Authorization` header or custom header if present from config as following.
  *
  * ```
  * Authorization=Bearer TOKEN
+ * ```
+ *
+ * With custom header config:
+ *
+ * ```
+ * CustomHeader=Bearer TOKEN
  * ```
  *
  * ### Note
@@ -238,7 +244,7 @@ class ApiScheme extends BaseTokenScheme {
       const { token } = await this.generate(tokenOrUser)
       tokenOrUser = token
     }
-    headerFn('authorization', `Bearer ${tokenOrUser}`)
+    headerFn(this.headerKey, `Bearer ${tokenOrUser}`)
   }
 }
 

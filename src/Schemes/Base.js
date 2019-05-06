@@ -63,6 +63,17 @@ class BaseScheme {
   }
 
   /**
+   * The headerKey used to get the token. Reads the `headerKey` from the config object
+   *
+   * @attribute headerKey
+   * @readonly
+   * @type {String}
+   */
+  get headerKey () {
+    return this._config.headerKey || 'authorization'
+  }
+
+  /**
    * The primary key to be used to fetch the unique identifier value
    * for the current user.
    *
@@ -237,7 +248,7 @@ class BaseScheme {
     /**
      * Parse the auth header and fetch token from it
      */
-    let token = request.header('authorization')
+    let token = request.header(this.headerKey)
     if (token) {
       token = token.split(' ')
       return (token.length === 2 && authTypes.indexOf(token[0].toLowerCase()) > -1) ? token[1] : null

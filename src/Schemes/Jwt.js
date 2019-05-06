@@ -477,7 +477,7 @@ class JwtScheme extends BaseTokenScheme {
    */
   async clientLogin (headerFn, sessionFn, user) {
     const { token } = await this.generate(user)
-    headerFn('authorization', `Bearer ${token}`)
+    headerFn(this.headerKey, `Bearer ${token}`)
   }
 }
 

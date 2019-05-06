@@ -275,6 +275,7 @@ test.group('Schemes - Jwt', (group) => {
       model: User,
       uid: 'email',
       password: 'password',
+      headerKey: 'jwt',
       options: {
         secret: SECRET
       }
@@ -291,7 +292,7 @@ test.group('Schemes - Jwt', (group) => {
     jwt.setCtx({
       request: {
         header (key) {
-          return `Bearer ${token}`
+          return (key === config.headerKey) ? `Bearer ${token}` : false
         }
       }
     })
@@ -924,6 +925,7 @@ test.group('Schemes - Jwt', (group) => {
       uid: 'email',
       foreignKey: 'user_id',
       password: 'password',
+      headerKey: 'jwt',
       options: {
         secret: SECRET
       }
@@ -936,7 +938,7 @@ test.group('Schemes - Jwt', (group) => {
     jwt.setOptions(config, database)
 
     const headerFn = function (key, value) {
-      assert.equal(key, 'authorization')
+      assert.equal(key, config.headerKey)
       assert.include(value, 'Bearer')
     }
 

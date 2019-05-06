@@ -257,7 +257,8 @@ test.group('Schemes - BasicAuth', (group) => {
     const config = {
       model: User,
       uid: 'email',
-      password: 'password'
+      password: 'password',
+      headerKey: 'basic'
     }
 
     const lucid = new LucidSerializer(ioc.use('Hash'))
@@ -267,7 +268,7 @@ test.group('Schemes - BasicAuth', (group) => {
     basic.setOptions(config, lucid)
 
     const headerFn = function (key, value) {
-      assert.equal(key, 'authorization')
+      assert.equal(key, config.headerKey)
       assert.equal(value, `Basic ${Buffer.from('foo:secret').toString('base64')}`)
     }
 

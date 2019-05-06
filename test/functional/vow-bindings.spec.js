@@ -67,8 +67,10 @@ test.group('Vow Request', (group) => {
     assert.plan(2)
 
     const request = new Request()
+    const Config = ioc.use('Adonis/Src/Config')
+
     request.header = function (key, value) {
-      assert.equal(key, 'authorization')
+      assert.equal(key, Config.get('auth.basic.headerKey'))
       assert.equal(value, `Basic ${Buffer.from('foo:bar').toString('base64')}`)
     }
     request.session = function () {}
@@ -81,8 +83,9 @@ test.group('Vow Request', (group) => {
     assert.plan(2)
 
     const request = new Request()
+    const Config = ioc.use('Adonis/Src/Config')
     request.header = function (key, value) {
-      assert.equal(key, 'authorization')
+      assert.equal(key, Config.get('auth.jwt.headerKey'))
       assert.include(value, 'Bearer')
     }
     request.session = function () {}

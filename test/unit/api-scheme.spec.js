@@ -466,7 +466,8 @@ test.group('Schemes - Api', (group) => {
     const config = {
       model: User,
       uid: 'email',
-      password: 'password'
+      password: 'password',
+      headerKey: 'api'
     }
 
     const database = new DatabaseSerializer(ioc.use('Hash'))
@@ -476,7 +477,7 @@ test.group('Schemes - Api', (group) => {
     api.setOptions(config, database)
 
     const headerFn = function (key, value) {
-      assert.equal(key, 'authorization')
+      assert.equal(key, config.headerKey)
       assert.include(value, 'Bearer')
     }
 
