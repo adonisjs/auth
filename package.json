@@ -21,7 +21,9 @@
     "test:win": "node ./node_modules/japa-cli/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "commit": "git-cz",
-    "lint": "standard"
+    "lint": "standard",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [
     "adonis",
@@ -84,6 +86,8 @@
     "lodash": "^4.17.11",
     "ms": "^2.1.1",
     "resetable": "^1.0.3",
-    "uuid": "^3.3.2"
-  }
+    "uuid": "^3.3.2",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }
