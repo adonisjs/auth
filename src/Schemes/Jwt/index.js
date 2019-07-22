@@ -145,9 +145,9 @@ class JwtScheme extends BaseScheme {
    *
    * @return {String}
    */
-  * attempt (uid, password) {
+  * attempt (uid, password, customPayload) {
     const user = yield this.validate(uid, password, true)
-    return yield this.generate(user)
+    return yield this.generate(user, customPayload)
   }
 
 }
