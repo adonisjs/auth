@@ -67,6 +67,17 @@ class JwtScheme extends BaseTokenScheme {
   }
 
   /**
+   * The jwt public
+   *
+   * @attribute jwtPublic
+   * @type {String|Null}
+   * @readOnly
+   */
+  get jwtPublic () {
+    return _.get(this.jwtOptions, 'public', null)
+  }
+
+  /**
    * Signs payload with jwtSecret using {{#crossLink "JwtScheme/jwtOptions:attribute"}}{{/crossLink}}
    *
    * @method _signToken
@@ -79,7 +90,7 @@ class JwtScheme extends BaseTokenScheme {
    * @private
    */
   _signToken (payload, options) {
-    options = _.size(options) && _.isPlainObject(options) ? options : _.omit(this.jwtOptions, 'secret')
+    options = _.size(options) && _.isPlainObject(options) ? options : _.omit(this.jwtOptions, ['secret', 'public'])
     return signToken(payload, this.jwtSecret, options)
   }
 
@@ -96,8 +107,22 @@ class JwtScheme extends BaseTokenScheme {
    * @private
    */
   _verifyToken (token) {
-    const options = _.omit(this.jwtOptions, 'secret')
-    return verifyToken(token, this.jwtSecret, options)
+    const options = _.omit(this.jwtOptions, ['secret', 'public'])
+    const secretOrPublicKey = this._isRSA() ? this.jwtPublic : this.jwtSecret
+    return verifyToken(token, secretOrPublicKey, options)
+  }
+
+  /**
+   * Verifies the jwt option algorithm is RSA
+   *
+   * @method _isRSA
+
+   * @return {Boolean}
+   *
+   * @private
+   */
+  _isRSA () {
+    return _.get(this.jwtOptions, 'algorithm') === 'RS256'
   }
 
   /**
