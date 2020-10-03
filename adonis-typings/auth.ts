@@ -161,6 +161,7 @@ declare module '@ioc:Adonis/Addons/Auth' {
 	export type DatabaseTokenProviderConfig = {
 		driver: 'database'
 		table: string
+		foreignKey?: string
 		connection?: string
 	}
 
