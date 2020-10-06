@@ -338,4 +338,77 @@ test.group('Auth', (group) => {
 		assert.instanceOf(auth.provider, LucidProvider)
 		assert.instanceOf(auth.tokenProvider, TokenDatabaseProvider)
 	})
+
+	test('return user_id when foreignKey is missing', (assert) => {
+		const User = getUserModel(BaseModel)
+
+		const manager = new AuthManager(container, {
+			guard: 'api',
+			list: {
+				api: {
+					driver: 'oat',
+					tokenProvider: {
+						driver: 'database',
+						table: 'api_tokens',
+					},
+					provider: getLucidProviderConfig({ model: User }),
+				},
+				basic: {
+					driver: 'basic',
+					provider: getLucidProviderConfig({ model: User }),
+				},
+				session: {
+					driver: 'session',
+					provider: getLucidProviderConfig({ model: User }),
+				},
+				sessionDb: {
+					driver: 'session',
+					provider: getDatabaseProviderConfig(),
+				},
+			},
+		})
+
+		const ctx = getCtx()
+		const auth = manager.getAuthForRequest(ctx).use('api')
+
+		assert.instanceOf(auth.tokenProvider, TokenDatabaseProvider)
+		assert.equal(auth.tokenProvider.foreignKey, 'user_id')
+	})
+
+	test('return the foreignKey when not missing', (assert) => {
+		const User = getUserModel(BaseModel)
+
+		const manager = new AuthManager(container, {
+			guard: 'api',
+			list: {
+				api: {
+					driver: 'oat',
+					tokenProvider: {
+						driver: 'database',
+						table: 'api_tokens',
+						foreignKey: 'account_id',
+					},
+					provider: getLucidProviderConfig({ model: User }),
+				},
+				basic: {
+					driver: 'basic',
+					provider: getLucidProviderConfig({ model: User }),
+				},
+				session: {
+					driver: 'session',
+					provider: getLucidProviderConfig({ model: User }),
+				},
+				sessionDb: {
+					driver: 'session',
+					provider: getDatabaseProviderConfig(),
+				},
+			},
+		})
+
+		const ctx = getCtx()
+		const auth = manager.getAuthForRequest(ctx).use('api')
+
+		assert.instanceOf(auth.tokenProvider, TokenDatabaseProvider)
+		assert.equal(auth.tokenProvider.foreignKey, 'account_id')
+	})
 })
