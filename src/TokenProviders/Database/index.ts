@@ -34,11 +34,9 @@ export class TokenDatabaseProvider implements TokenProviderContract {
 	}
 
 	/**
-	 * Returns the User's identifier column
+	 * The foreign key column
 	 */
-	private getForeignKey() {
-		return this.config.foreignKey ?? 'user_id'
-	}
+	private foreignKey = this.config.foreignKey || 'user_id'
 
 	/**
 	 * Returns the builder query for a given token + type
@@ -71,7 +69,7 @@ export class TokenDatabaseProvider implements TokenProviderContract {
 
 		const {
 			name,
-			[this.getForeignKey()]: userId,
+			[this.foreignKey]: userId,
 			token: value,
 			expires_at: expiresAt,
 			type,
@@ -116,7 +114,7 @@ export class TokenDatabaseProvider implements TokenProviderContract {
 		 * Payload to save to the database
 		 */
 		const payload = {
-			[this.getForeignKey()]: token.userId,
+			[this.foreignKey]: token.userId,
 			name: token.name,
 			token: token.tokenHash,
 			type: token.type,
