@@ -28,10 +28,15 @@ declare module '@ioc:Adonis/Addons/Auth' {
   type UnWrapProviderUser<T> = T extends ProviderUserContract<any> ? Exclude<T['user'], null> : T
 
   /**
+   * Unwraps awaited type from Promise
+   */
+  type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
+
+  /**
    * Returns the real user from the provider user
    */
   export type GetProviderRealUser<Provider extends keyof ProvidersList> = UnWrapProviderUser<
-    ReturnType<ProvidersList[Provider]['implementation']['getUserFor']>
+    Awaited<ReturnType<ProvidersList[Provider]['implementation']['getUserFor']>>
   >
 
   /*
