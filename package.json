@@ -61,11 +61,11 @@
     "cz-conventional-changelog": "^3.3.0",
     "del-cli": "^3.0.1",
     "eslint": "^7.20.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-adonis": "^1.2.1",
     "eslint-plugin-prettier": "^3.3.1",
     "github-label-sync": "^2.0.0",
-    "husky": "^5.0.9",
+    "husky": "^5.1.0",
     "japa": "^3.1.1",
     "mrm": "^2.5.19",
     "np": "^7.4.0",
@@ -102,7 +102,7 @@
     "anyBranch": false
   },
   "dependencies": {
-    "@poppinss/hooks": "^2.0.0",
+    "@poppinss/hooks": "^3.0.0",
     "@poppinss/utils": "^3.0.3",
     "luxon": "^1.26.0"
   },
