@@ -113,6 +113,9 @@
     "@adonisjs/session": "^6.0.0"
   },
   "peerDependenciesMeta": {
+    "@adonisjs/lucid": {
+      "optional": true
+    },
     "@adonisjs/session": {
       "optional": true
     },
