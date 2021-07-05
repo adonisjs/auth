@@ -40,4 +40,4 @@
       | field and `remember_me_token` column.
       |
       */
-      usersTable: {{ usersTableName }},
+      usersTable: '{{ usersTableName }}',
