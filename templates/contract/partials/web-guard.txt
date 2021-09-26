@@ -8,6 +8,6 @@
     |
     */
     web: {
-      implementation: SessionGuardContract<'user', 'web'>,
-      config: SessionGuardConfig<'user'>,
-    },
+      implementation: SessionGuardContract<'user', 'web'>
+      config: SessionGuardConfig<'user'>
+    }

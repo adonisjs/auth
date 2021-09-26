@@ -11,6 +11,6 @@
     |
     */
     user: {
-      implementation: LucidProviderContract<typeof {{ modelName }}>,
-      config: LucidProviderConfig<typeof {{ modelName }}>,
-    },
+      implementation: LucidProviderContract<typeof {{ modelName }}>
+      config: LucidProviderConfig<typeof {{ modelName }}>
+    }

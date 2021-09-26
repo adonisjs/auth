@@ -8,6 +8,6 @@
     |
     */
     api: {
-      implementation: OATGuardContract<'user', 'api'>,
-      config: OATGuardConfig<'user'>,
-    },
+      implementation: OATGuardContract<'user', 'api'>
+      config: OATGuardConfig<'user'>
+    }

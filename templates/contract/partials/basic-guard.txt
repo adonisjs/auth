@@ -8,6 +8,6 @@
     |
     */
     basic: {
-      implementation: BasicAuthGuardContract<'user', 'basic'>,
-      config: BasicAuthGuardConfig<'user'>,
-    },
+      implementation: BasicAuthGuardContract<'user', 'basic'>
+      config: BasicAuthGuardConfig<'user'>
+    }

@@ -11,6 +11,6 @@
     |
     */
     user: {
-      implementation: DatabaseProviderContract<DatabaseProviderRow>,
-      config: DatabaseProviderConfig,
-    },
+      implementation: DatabaseProviderContract<DatabaseProviderRow>
+      config: DatabaseProviderConfig
+    }
