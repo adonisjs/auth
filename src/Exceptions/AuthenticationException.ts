@@ -63,7 +63,7 @@ export class AuthenticationException extends Exception {
    */
   protected respondWithRedirect(ctx: HttpContextContract) {
     if (!ctx.session) {
-      return ctx.response.status(this.status).send(this.message)
+      return ctx.response.status(this.status).send(this.responseText)
     }
 
     ctx.session.flashExcept(['_csrf'])
