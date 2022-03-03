@@ -8,7 +8,7 @@
  */
 
 import 'reflect-metadata'
-import { join } from 'path'
+import { join, sep, posix } from 'path'
 import { MarkOptional } from 'ts-essentials'
 import { Filesystem } from '@poppinss/dev-utils'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
@@ -100,13 +100,13 @@ export async function setupApplication(
 				primary: {
 					client: 'sqlite3',
 					connection: {
-						filename: '${join(fs.basePath, 'primary.sqlite3')}',
+						filename: '${join(fs.basePath, 'primary.sqlite3').split(sep).join(posix.sep)}',
 					},
 				},
 				secondary: {
 					client: 'sqlite3',
 					connection: {
-						filename: '${join(fs.basePath, 'secondary.sqlite3')}',
+						filename: '${join(fs.basePath, 'secondary.sqlite3').split(sep).join(posix.sep)}',
 					},
 				},
 			}
