@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import 'reflect-metadata'
 import { DateTime } from 'luxon'
 import { string } from '@poppinss/utils/build/helpers'
@@ -19,20 +19,20 @@ let app: ApplicationContract
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
 test.group('Database Token Provider', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
   })
 
-  test('save token to the database', async (assert) => {
+  test('save token to the database', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -48,7 +48,7 @@ test.group('Database Token Provider', (group) => {
     assert.exists(tokenId)
   })
 
-  test('use custom connection for persistance', async (assert) => {
+  test('use custom connection for persistance', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -70,7 +70,7 @@ test.group('Database Token Provider', (group) => {
     assert.lengthOf(primaryConnectionTokens, 0)
   })
 
-  test('read token from the database', async (assert) => {
+  test('read token from the database', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -90,7 +90,7 @@ test.group('Database Token Provider', (group) => {
     assert.exists(tokenRow!.expiresAt)
   })
 
-  test('read token from a custom database connection', async (assert) => {
+  test('read token from a custom database connection', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -111,7 +111,7 @@ test.group('Database Token Provider', (group) => {
     assert.exists(tokenRow!.expiresAt)
   })
 
-  test('return null when there is a token hash mis-match', async (assert) => {
+  test('return null when there is a token hash mis-match', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -127,7 +127,7 @@ test.group('Database Token Provider', (group) => {
     assert.isNull(await provider.read(tokenId, 'foo', 'api_token'))
   })
 
-  test('return null when token has been expired', async (assert) => {
+  test('return null when token has been expired', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -144,7 +144,7 @@ test.group('Database Token Provider', (group) => {
     assert.isNull(await provider.read(tokenId, token, 'api_token'))
   })
 
-  test('work fine when token has no expiry', async (assert) => {
+  test('work fine when token has no expiry', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -160,7 +160,7 @@ test.group('Database Token Provider', (group) => {
     assert.isNotNull(await provider.read(tokenId, token, 'api_token'))
   })
 
-  test('return null when token is missing', async (assert) => {
+  test('return null when token is missing', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -176,7 +176,7 @@ test.group('Database Token Provider', (group) => {
     assert.isNull(await provider.read(tokenId + 1, token, 'api_token'))
   })
 
-  test('delete token from the database', async (assert) => {
+  test('delete token from the database', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)
@@ -194,7 +194,7 @@ test.group('Database Token Provider', (group) => {
     assert.lengthOf(tokens, 0)
   })
 
-  test('delete token from a custom database connection', async (assert) => {
+  test('delete token from a custom database connection', async ({ assert }) => {
     const token = string.generateRandom(40)
     const db = app.container.use('Adonis/Lucid/Database')
     const provider = getTokensDbProvider(db)

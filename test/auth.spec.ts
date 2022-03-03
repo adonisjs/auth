@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import 'reflect-metadata'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
@@ -33,20 +33,20 @@ import {
 let app: ApplicationContract
 
 test.group('Auth', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
   })
 
-  test('make and cache instance of the session guard', (assert) => {
+  test('make and cache instance of the session guard', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -85,7 +85,7 @@ test.group('Auth', (group) => {
     assert.instanceOf(mapping.provider, LucidProvider)
   })
 
-  test('proxy all methods to the default driver', async (assert) => {
+  test('proxy all methods to the default driver', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -212,7 +212,7 @@ test.group('Auth', (group) => {
     assert.isTrue(auth.authenticationAttempted)
   })
 
-  test('update default guard', (assert) => {
+  test('update default guard', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -249,7 +249,7 @@ test.group('Auth', (group) => {
     assert.instanceOf(auth.provider, DatabaseProvider)
   })
 
-  test('serialize toJSON', (assert) => {
+  test('serialize toJSON', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -298,7 +298,7 @@ test.group('Auth', (group) => {
     })
   })
 
-  test('make oat guard', (assert) => {
+  test('make oat guard', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -335,7 +335,7 @@ test.group('Auth', (group) => {
     assert.instanceOf(auth.tokenProvider, TokenDatabaseProvider)
   })
 
-  test('make oat guard with redis driver', (assert) => {
+  test('make oat guard with redis driver', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -372,7 +372,7 @@ test.group('Auth', (group) => {
     assert.instanceOf(auth.tokenProvider, TokenRedisProvider)
   })
 
-  test('return user_id when foreignKey is missing', (assert) => {
+  test('return user_id when foreignKey is missing', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -408,7 +408,7 @@ test.group('Auth', (group) => {
     assert.equal(auth.tokenProvider.foreignKey, 'user_id')
   })
 
-  test('return the foreignKey when not missing', (assert) => {
+  test('return the foreignKey when not missing', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {

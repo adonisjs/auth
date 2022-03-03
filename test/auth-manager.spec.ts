@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import 'reflect-metadata'
 import { UserProviderContract } from '@ioc:Adonis/Addons/Auth'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
@@ -33,20 +33,20 @@ import {
 let app: ApplicationContract
 
 test.group('Auth Manager', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
   })
 
-  test('make an instance of the session guard with lucid provider', (assert) => {
+  test('make an instance of the session guard with lucid provider', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -82,7 +82,7 @@ test.group('Auth Manager', (group) => {
     assert.instanceOf(mapping.provider, LucidProvider)
   })
 
-  test('make an instance of the session guard with database provider', (assert) => {
+  test('make an instance of the session guard with database provider', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -118,7 +118,7 @@ test.group('Auth Manager', (group) => {
     assert.instanceOf(mapping.provider, DatabaseProvider)
   })
 
-  test('make an instance of auth class for a given http request', (assert) => {
+  test('make an instance of auth class for a given http request', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -153,7 +153,7 @@ test.group('Auth Manager', (group) => {
     assert.instanceOf(auth, Auth)
   })
 
-  test('extend by adding custom provider', (assert) => {
+  test('extend by adding custom provider', ({ assert }) => {
     class MongoDBProvider implements UserProviderContract<any> {
       constructor(config: any) {
         assert.deepEqual(config, { driver: 'mongodb' })
@@ -189,7 +189,7 @@ test.group('Auth Manager', (group) => {
     assert.instanceOf(manager.makeMapping(ctx, 'admin' as any).provider, MongoDBProvider)
   })
 
-  test('extend by adding custom guard', (assert) => {
+  test('extend by adding custom guard', ({ assert }) => {
     class MongoDBProvider implements UserProviderContract<any> {
       constructor(config: any) {
         assert.deepEqual(config, { driver: 'mongodb' })
@@ -236,7 +236,7 @@ test.group('Auth Manager', (group) => {
     assert.instanceOf(manager.makeMapping(ctx, 'admin' as any).provider, MongoDBProvider)
   })
 
-  test('make an instance of the oat guard with lucid provider', (assert) => {
+  test('make an instance of the oat guard with lucid provider', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {
@@ -272,7 +272,7 @@ test.group('Auth Manager', (group) => {
     assert.instanceOf(mapping.provider, LucidProvider)
   })
 
-  test('make an instance of the basic auth guard with lucid provider', (assert) => {
+  test('make an instance of the basic auth guard with lucid provider', ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     const manager = new AuthManager(app, {

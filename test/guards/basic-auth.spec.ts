@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import supertest from 'supertest'
 import { createServer } from 'http'
 import { base64 } from '@poppinss/utils/build/helpers'
@@ -27,21 +27,21 @@ import {
 let app: ApplicationContract
 
 test.group('Basic Auth Guard | authenticate', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('authenticate request by reading the basic auth credentials', async (assert) => {
+  test('authenticate request by reading the basic auth credentials', async ({ assert }) => {
     assert.plan(7)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -94,7 +94,7 @@ test.group('Basic Auth Guard | authenticate', (group) => {
     assert.property(body, 'user')
   })
 
-  test('raise error when Authorization header is missing', async (assert) => {
+  test('raise error when Authorization header is missing', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     /**
@@ -127,7 +127,7 @@ test.group('Basic Auth Guard | authenticate', (group) => {
     assert.deepEqual(header['www-authenticate'], 'Basic realm="Login", charset="UTF-8"')
   })
 
-  test('raise error when type is not basic', async (assert) => {
+  test('raise error when type is not basic', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -170,7 +170,7 @@ test.group('Basic Auth Guard | authenticate', (group) => {
     assert.deepEqual(header['www-authenticate'], 'Basic realm="Login", charset="UTF-8"')
   })
 
-  test('raise error when credentials are not base64 encoded', async (assert) => {
+  test('raise error when credentials are not base64 encoded', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -213,7 +213,7 @@ test.group('Basic Auth Guard | authenticate', (group) => {
     assert.deepEqual(header['www-authenticate'], 'Basic realm="Login", charset="UTF-8"')
   })
 
-  test('raise error when credentials are not separated using colon', async (assert) => {
+  test('raise error when credentials are not separated using colon', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -256,7 +256,7 @@ test.group('Basic Auth Guard | authenticate', (group) => {
     assert.deepEqual(header['www-authenticate'], 'Basic realm="Login", charset="UTF-8"')
   })
 
-  test('raise error when uid is incorrect', async (assert) => {
+  test('raise error when uid is incorrect', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
 
     /**
@@ -294,7 +294,7 @@ test.group('Basic Auth Guard | authenticate', (group) => {
     assert.deepEqual(header['www-authenticate'], 'Basic realm="Login", charset="UTF-8"')
   })
 
-  test('raise error when password is incorrect', async (assert) => {
+  test('raise error when password is incorrect', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',

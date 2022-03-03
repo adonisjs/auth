@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import supertest from 'supertest'
 import { createServer } from 'http'
 import cookieParser from 'set-cookie-parser'
@@ -30,21 +30,21 @@ import {
 let app: ApplicationContract
 
 test.group('Session Driver | Verify Credentials', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('raise exception when unable to lookup user', async (assert) => {
+  test('raise exception when unable to lookup user', async ({ assert }) => {
     assert.plan(1)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -65,7 +65,7 @@ test.group('Session Driver | Verify Credentials', (group) => {
     }
   })
 
-  test('raise exception when password is incorrect', async (assert) => {
+  test('raise exception when password is incorrect', async ({ assert }) => {
     assert.plan(1)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -88,7 +88,7 @@ test.group('Session Driver | Verify Credentials', (group) => {
     }
   })
 
-  test('return user when able to verify credentials', async (assert) => {
+  test('return user when able to verify credentials', async ({ assert }) => {
     assert.plan(1)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -110,21 +110,21 @@ test.group('Session Driver | Verify Credentials', (group) => {
 })
 
 test.group('Session Driver | attempt', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('login user by setting the session', async (assert) => {
+  test('login user by setting the session', async ({ assert }) => {
     assert.plan(4)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -161,7 +161,7 @@ test.group('Session Driver | attempt', (group) => {
     assert.deepEqual(sessionValue, { auth_session: 1 })
   })
 
-  test('define remember me cookie when remember me is set to true', async (assert) => {
+  test('define remember me cookie when remember me is set to true', async ({ assert }) => {
     assert.plan(5)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -205,7 +205,9 @@ test.group('Session Driver | attempt', (group) => {
     assert.equal(user.rememberMeToken!, rememberMeCookie.token)
   })
 
-  test('delete remember_me cookie explicitly when login with remember me is false', async (assert) => {
+  test('delete remember_me cookie explicitly when login with remember me is false', async ({
+    assert,
+  }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const password = await app.container.use('Adonis/Core/Hash').make('secret')
     await User.create({ username: 'virk', email: 'virk@adonisjs.com', password })
@@ -242,21 +244,21 @@ test.group('Session Driver | attempt', (group) => {
 })
 
 test.group('Session Driver | authenticate', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('authenticate user session and load user from db', async (assert) => {
+  test('authenticate user session and load user from db', async ({ assert }) => {
     assert.plan(8)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -313,7 +315,7 @@ test.group('Session Driver | authenticate', (group) => {
     assert.isFalse(body.viaRemember)
   })
 
-  test('re-login user using remember me token', async (assert) => {
+  test('re-login user using remember me token', async ({ assert }) => {
     assert.plan(8)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -368,7 +370,7 @@ test.group('Session Driver | authenticate', (group) => {
     assert.isTrue(body.viaRemember)
   })
 
-  test('raise exception when unable to authenticate', async (assert) => {
+  test('raise exception when unable to authenticate', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const password = await app.container.use('Adonis/Core/Hash').make('secret')
     await User.create({ username: 'virk', email: 'virk@adonisjs.com', password })
@@ -403,7 +405,7 @@ test.group('Session Driver | authenticate', (group) => {
     await supertest(server).get('/')
   })
 
-  test('keep different guard session separate', async (assert) => {
+  test('keep different guard session separate', async ({ assert }) => {
     assert.plan(3)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -479,21 +481,23 @@ test.group('Session Driver | authenticate', (group) => {
 })
 
 test.group('Session Driver | logout', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('logout the user by clearing up the session and removing remember_me cookie', async (assert) => {
+  test('logout the user by clearing up the session and removing remember_me cookie', async ({
+    assert,
+  }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const password = await app.container.use('Adonis/Core/Hash').make('secret')
     const user = await User.create({ username: 'virk', email: 'virk@adonisjs.com', password })
@@ -550,7 +554,7 @@ test.group('Session Driver | logout', (group) => {
     assert.equal(user.rememberMeToken, initialToken)
   })
 
-  test('logout and recycle user remember me token', async (assert) => {
+  test('logout and recycle user remember me token', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const password = await app.container.use('Adonis/Core/Hash').make('secret')
     const user = await User.create({ username: 'virk', email: 'virk@adonisjs.com', password })

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { DateTime } from 'luxon'
 import supertest from 'supertest'
 import { createServer } from 'http'
@@ -31,21 +31,21 @@ import {
 let app: ApplicationContract
 
 test.group('OAT Guard | Verify Credentials', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('raise exception when unable to lookup user', async (assert) => {
+  test('raise exception when unable to lookup user', async ({ assert }) => {
     assert.plan(1)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -65,7 +65,7 @@ test.group('OAT Guard | Verify Credentials', (group) => {
     }
   })
 
-  test('raise exception when password is incorrect', async (assert) => {
+  test('raise exception when password is incorrect', async ({ assert }) => {
     assert.plan(1)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -90,7 +90,7 @@ test.group('OAT Guard | Verify Credentials', (group) => {
     }
   })
 
-  test('return user when able to verify credentials', async (assert) => {
+  test('return user when able to verify credentials', async ({ assert }) => {
     assert.plan(1)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -114,21 +114,21 @@ test.group('OAT Guard | Verify Credentials', (group) => {
 })
 
 test.group('OAT Guard | attempt', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('return token with user from the attempt call', async (assert) => {
+  test('return token with user from the attempt call', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     await User.create({
       username: 'virk',
@@ -166,7 +166,7 @@ test.group('OAT Guard | attempt', (group) => {
     assert.isNull(tokens[0].expires_at)
   })
 
-  test('define custom expiry', async (assert) => {
+  test('define custom expiry', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     await User.create({
       username: 'virk',
@@ -209,7 +209,7 @@ test.group('OAT Guard | attempt', (group) => {
     )
   })
 
-  test('define custom name for the token', async (assert) => {
+  test('define custom name for the token', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -253,7 +253,7 @@ test.group('OAT Guard | attempt', (group) => {
     assert.equal(tokens[0].name, 'Android token')
   })
 
-  test('define meta data to be persisted inside the database', async (assert) => {
+  test('define meta data to be persisted inside the database', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -301,21 +301,21 @@ test.group('OAT Guard | attempt', (group) => {
 })
 
 test.group('OAT Guard | login', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('login using user instance', async (assert) => {
+  test('login using user instance', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -361,7 +361,7 @@ test.group('OAT Guard | login', (group) => {
     assert.deepEqual(token.meta, { device_name: 'Android', ip_address: '192.168.1.1' })
   })
 
-  test('use custom token type', async (assert) => {
+  test('use custom token type', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -416,21 +416,21 @@ test.group('OAT Guard | login', (group) => {
 })
 
 test.group('OAT Guard | loginViaId', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('login using user id', async (assert) => {
+  test('login using user id', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -478,21 +478,21 @@ test.group('OAT Guard | loginViaId', (group) => {
 })
 
 test.group('OAT Guard | authenticate', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('authenticate request by reading the bearer token', async (assert) => {
+  test('authenticate request by reading the bearer token', async ({ assert }) => {
     assert.plan(6)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
@@ -556,7 +556,7 @@ test.group('OAT Guard | authenticate', (group) => {
     assert.exists(body.tokenHash)
   })
 
-  test('raise error when Authorization header is missing', async (assert) => {
+  test('raise error when Authorization header is missing', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -604,7 +604,7 @@ test.group('OAT Guard | authenticate', (group) => {
     })
   })
 
-  test('raise error when token is malformed', async (assert) => {
+  test('raise error when token is malformed', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -656,7 +656,7 @@ test.group('OAT Guard | authenticate', (group) => {
     })
   })
 
-  test('raise error when token is missing in the database', async (assert) => {
+  test('raise error when token is missing in the database', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -709,7 +709,7 @@ test.group('OAT Guard | authenticate', (group) => {
     })
   })
 
-  test('raise error when token is valid but user is missing', async (assert) => {
+  test('raise error when token is valid but user is missing', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -762,7 +762,7 @@ test.group('OAT Guard | authenticate', (group) => {
     })
   })
 
-  test('raise error when token is expired', async (assert) => {
+  test('raise error when token is expired', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -821,7 +821,7 @@ test.group('OAT Guard | authenticate', (group) => {
     })
   })
 
-  test('work fine when token is not expired', async (assert) => {
+  test('work fine when token is not expired', async ({ assert }) => {
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
     const user = await User.create({
       username: 'virk',
@@ -876,21 +876,21 @@ test.group('OAT Guard | authenticate', (group) => {
 })
 
 test.group('OAT Guard | logout', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     app = await setupApplication()
     await setup(app)
   })
 
-  group.after(async () => {
+  group.teardown(async () => {
     await cleanup(app)
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await reset(app)
     app.container.use('Adonis/Core/Event')['clearAllListeners']()
   })
 
-  test('delete user token during logout', async (assert) => {
+  test('delete user token during logout', async ({ assert }) => {
     assert.plan(6)
 
     const User = getUserModel(app.container.use('Adonis/Lucid/Orm').BaseModel)
