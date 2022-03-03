@@ -27,6 +27,7 @@ test.group('Redis Token Provider', (group) => {
   group.teardown(async () => {
     await cleanup(app)
     await app.container.use('Adonis/Addons/Redis').flushdb()
+    await app.container.use('Adonis/Addons/Redis').quit()
   })
 
   group.each.teardown(async () => {
@@ -82,6 +83,8 @@ test.group('Redis Token Provider', (group) => {
 
     let expiry = await redis.connection('localDb1').ttl(tokenId)
     assert.isBelow(expiry, 2 * 24 * 3600 + 1)
+
+    await redis.quitAll()
   })
 
   test('read token from the database', async ({ assert }) => {
@@ -123,6 +126,8 @@ test.group('Redis Token Provider', (group) => {
     assert.equal(tokenRow!.name, 'Auth token')
     assert.equal(tokenRow!.tokenHash, token)
     assert.equal(tokenRow!.type, 'api_token')
+
+    await redis.quitAll()
   })
 
   test('return null when there is a token hash mis-match', async ({ assert }) => {
@@ -228,5 +233,7 @@ test.group('Redis Token Provider', (group) => {
     await provider.destroy(tokenId, 'api_token')
     const tokenRow = await redis.connection('localDb1').get(tokenId)
     assert.isNull(tokenRow)
+
+    await redis.quitAll()
   })
 })
