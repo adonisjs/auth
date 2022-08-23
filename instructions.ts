@@ -396,9 +396,9 @@ export default async function instructions(
    */
   if (state.provider === 'lucid') {
     const modelName = await getModelName(sink)
-    state.modelName = modelName.replace(/(\.ts|\.js)$/, '')
+    state.modelName = string.pascalCase(string.singularize(modelName.replace(/(\.ts|\.js)$/, '')))
     state.usersTableName = string.pluralize(string.snakeCase(state.modelName))
-    state.modelReference = string.pascalCase(string.singularize(state.modelName))
+    state.modelReference = string.camelCase(string.singularize(state.modelName))
     state.modelNamespace = `${app.namespacesMap.get('models') || 'App/Models'}/${state.modelName}`
   } else {
     state.usersTableName = await getTableName(sink)
