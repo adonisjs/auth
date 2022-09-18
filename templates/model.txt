@@ -13,7 +13,7 @@ export default class {{ modelName }} extends BaseModel {
   public password: string
 
   @column()
-  public rememberMeToken?: string
+  public rememberMeToken: string | null
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

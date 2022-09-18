@@ -5,7 +5,7 @@
  * file.
  */
 
-import { AuthConfig } from '@ioc:Adonis/Addons/Auth'
+import type { AuthConfig } from '@ioc:Adonis/Addons/Auth'
 
 /*
 |--------------------------------------------------------------------------
