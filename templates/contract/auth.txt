@@ -6,7 +6,7 @@
  */
 {{#modelNamespace}}
 
-import {{ modelName }} from '{{{ modelNamespace }}}'
+import type {{ modelName }} from '{{{ modelNamespace }}}'
 {{/modelNamespace}}
 
 declare module '@ioc:Adonis/Addons/Auth' {
