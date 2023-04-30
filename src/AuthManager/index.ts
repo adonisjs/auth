@@ -22,6 +22,7 @@ import {
   DatabaseProviderConfig,
   ExtendProviderCallback,
   ExtendClientCallback,
+  ExtendTokenProviderCallback,
 } from '@ioc:Adonis/Addons/Auth'
 
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
@@ -43,6 +44,11 @@ export class AuthManager implements AuthManagerContract {
    * Extended set of providers
    */
   private extendedProviders: Map<string, ExtendProviderCallback> = new Map()
+
+  /**
+   * Extend set of token providers
+   */
+  private extendedTokenProviders: Map<string, ExtendTokenProviderCallback> = new Map()
 
   /**
    * Extend set of guards
@@ -121,6 +127,18 @@ export class AuthManager implements AuthManagerContract {
 
     const Redis = this.application.container.use('Adonis/Addons/Redis')
     return new (require('../TokenProviders/Redis').TokenRedisProvider)(config, Redis)
+  }
+
+  /**
+   * Returns an instance of the extended provider
+   */
+  private makeExtendedTokenProvider(config: any) {
+    const tokenProviderCallback = this.extendedTokenProviders.get(config.driver)
+    if (!tokenProviderCallback) {
+      throw new Exception(`Invalid token provider "${config.driver}"`)
+    }
+
+    return tokenProviderCallback(this, config)
   }
 
   /**
@@ -278,7 +296,7 @@ export class AuthManager implements AuthManagerContract {
       case 'redis':
         return this.makeTokenRedisProvider(providerConfig)
       default:
-        throw new Exception(`Invalid token provider "${providerConfig.driver}"`)
+        return this.makeExtendedTokenProvider(providerConfig)
     }
   }
 
@@ -351,15 +369,25 @@ export class AuthManager implements AuthManagerContract {
    * Extend auth by adding custom providers and guards
    */
   public extend(type: 'provider', name: string, callback: ExtendProviderCallback): void
+  public extend(type: 'token', name: string, callback: ExtendTokenProviderCallback): void
   public extend(type: 'guard', name: string, callback: ExtendGuardCallback): void
   public extend(type: 'client', name: string, callback: ExtendClientCallback): void
   public extend(
-    type: 'provider' | 'guard' | 'client',
+    type: 'provider' | 'token' | 'guard' | 'client',
     name: string,
-    callback: ExtendProviderCallback | ExtendGuardCallback | ExtendClientCallback
+    callback:
+      | ExtendProviderCallback
+      | ExtendTokenProviderCallback
+      | ExtendGuardCallback
+      | ExtendClientCallback
   ) {
     if (type === 'provider') {
       this.extendedProviders.set(name, callback as ExtendProviderCallback)
+      return
+    }
+
+    if (type === 'token') {
+      this.extendedTokenProviders.set(name, callback as ExtendTokenProviderCallback)
       return
     }
 

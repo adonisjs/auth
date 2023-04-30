@@ -8,3 +8,4 @@
  */
 
 export { AuthenticationException } from './src/Exceptions/AuthenticationException'
+export { ProviderToken } from './src/Tokens/ProviderToken'
