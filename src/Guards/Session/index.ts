@@ -95,7 +95,6 @@ export class SessionGuard extends BaseGuard<any> implements SessionGuardContract
 
     this.ctx.response.encryptedCookie(this.rememberMeKeyName, value, {
       maxAge: this.rememberMeTokenExpiry,
-      httpOnly: true,
     })
   }
 
