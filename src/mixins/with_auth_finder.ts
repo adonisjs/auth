@@ -25,7 +25,7 @@ import { E_INVALID_CREDENTIALS } from '../errors.js'
  *   timing attacks.
  */
 export function withAuthFinder(
-  hash: Hash,
+  hash: () => Hash,
   options: {
     uids: string[]
     passwordColumnName: string
@@ -43,7 +43,7 @@ export function withAuthFinder(
         user: InstanceType<T>
       ) {
         if (user.$dirty[options.passwordColumnName]) {
-          ;(user as any)[options.passwordColumnName] = await hash.make(
+          ;(user as any)[options.passwordColumnName] = await hash().make(
             (user as any)[options.passwordColumnName]
           )
         }
@@ -82,7 +82,7 @@ export function withAuthFinder(
 
         const user = await this.findForAuth(options.uids, uid)
         if (!user) {
-          await hash.make(password)
+          await hash().make(password)
           throw new E_INVALID_CREDENTIALS('Invalid user credentials')
         }
 
@@ -93,7 +93,7 @@ export function withAuthFinder(
           )
         }
 
-        if (await hash.verify(passwordHash, password)) {
+        if (await hash().verify(passwordHash, password)) {
           return user
         }
 

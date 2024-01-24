@@ -24,7 +24,7 @@ test.group('withAuthFinder | findForAuth', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
@@ -66,7 +66,7 @@ test.group('withAuthFinder | findForAuth', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
@@ -104,7 +104,7 @@ test.group('withAuthFinder | verify', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
@@ -141,7 +141,7 @@ test.group('withAuthFinder | verify', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
@@ -173,7 +173,7 @@ test.group('withAuthFinder | verify', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
@@ -211,7 +211,7 @@ test.group('withAuthFinder | verify', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
@@ -249,7 +249,7 @@ test.group('withAuthFinder | verify', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
@@ -300,7 +300,7 @@ test.group('withAuthFinder | verify', () => {
 
     class User extends compose(
       BaseModel,
-      withAuthFinder(hash, {
+      withAuthFinder(() => hash, {
         uids: ['email', 'username'],
         passwordColumnName: 'password',
       })
