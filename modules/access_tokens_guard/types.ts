@@ -111,7 +111,7 @@ export type AccessTokenDbColumns = {
   /**
    * An array of abilities stored as JSON.
    */
-  abilities: string
+  abilities: string[]
 
   /**
    * The date after which the token will be considered

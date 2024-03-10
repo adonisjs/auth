@@ -107,7 +107,7 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
       type: dbRow.type,
       name: dbRow.name,
       hash: dbRow.hash,
-      abilities: JSON.parse(dbRow.abilities),
+      abilities: dbRow.abilities,
       createdAt:
         typeof dbRow.created_at === 'number' ? new Date(dbRow.created_at) : dbRow.created_at,
       updatedAt:
@@ -162,7 +162,7 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
       type: this.type,
       name: options?.name || null,
       hash: transientToken.hash,
-      abilities: JSON.stringify(abilities),
+      abilities,
       created_at: new Date(),
       updated_at: new Date(),
       last_used_at: null,
@@ -196,7 +196,7 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
       secret: transientToken.secret,
       name: dbRow.name,
       hash: dbRow.hash,
-      abilities: JSON.parse(dbRow.abilities),
+      abilities: dbRow.abilities,
       createdAt: dbRow.created_at,
       updatedAt: dbRow.updated_at,
       lastUsedAt: dbRow.last_used_at,
