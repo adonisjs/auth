@@ -25,7 +25,9 @@ function isModuleInstalled(moduleName: string) {
   }
 }
 
-// @deprecate Import `withAuthFinder` from `@adonisjs/auth/mixins` instead
+/**
+ * @deprecated Import `withAuthFinder` from `@adonisjs/auth/mixins` instead
+ */
 let withAuthFinder: typeof withAuthFinderType
 
 if (isModuleInstalled('@adonisjs/lucid')) {
