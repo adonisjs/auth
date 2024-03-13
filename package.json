@@ -15,6 +15,7 @@
   },
   "exports": {
     ".": "./build/index.js",
+    "./mixins": "./build/mixins.js",
     "./types": "./build/src/types.js",
     "./auth_provider": "./build/providers/auth_provider.js",
     "./plugins/api_client": "./build/src/plugins/japa/api_client.js",
