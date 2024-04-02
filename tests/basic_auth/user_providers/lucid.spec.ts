@@ -11,7 +11,7 @@ import { test } from '@japa/runner'
 import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-import { withAuthFinder } from '../../../index.js'
+import { withAuthFinder } from '../../../src/mixins/with_auth_finder.js'
 import { createDatabase, createTables, getHasher } from '../../helpers.js'
 import { BasicAuthGuardUser } from '../../../modules/basic_auth_guard/types.js'
 import { BasicAuthLucidUserProvider } from '../../../modules/basic_auth_guard/user_providers/lucid.js'
