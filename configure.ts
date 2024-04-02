@@ -33,6 +33,10 @@ export async function configure(command: Configure) {
           name: 'access_tokens',
           message: 'Opaque access tokens',
         },
+        {
+          name: 'basic_auth',
+          message: 'Basic Auth',
+        },
       ],
       {
         validate(value) {
@@ -46,16 +50,16 @@ export async function configure(command: Configure) {
    * Ensure selected or guard defined via the CLI flag is
    * valid
    */
-  if (!['session', 'access_tokens'].includes(guard!)) {
+  if (!['session', 'access_tokens', 'basic_auth'].includes(guard!)) {
     command.logger.error(
-      `The selected guard "${guard}" is invalid. Select one from: session, access_tokens`
+      `The selected guard "${guard}" is invalid. Select one from: session, access_tokens, basic_auth`
     )
     command.exitCode = 1
     return
   }
 
   await presetAuth(codemods, command.app, {
-    guard: guard as 'session' | 'access_tokens',
+    guard: guard as 'session' | 'access_tokens' | 'basic_auth',
     userProvider: 'lucid',
   })
 }
