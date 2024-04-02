@@ -15,7 +15,7 @@ import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
-import { withAuthFinder } from '../../src/mixins/with_auth_finder.js'
+import { withAuthFinder } from '../../src/mixins/lucid.js'
 import { createEmitter, getHasher } from '../helpers.js'
 import {
   basicAuthGuard,
