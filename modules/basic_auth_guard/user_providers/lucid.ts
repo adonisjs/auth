@@ -42,7 +42,7 @@ export class BasicAuthLucidUserProvider<UserModel extends LucidAuthenticatable>
    * for further operations.
    */
   protected async getModel() {
-    if (this.model) {
+    if (this.model && !('hot' in import.meta)) {
       return this.model
     }
 
