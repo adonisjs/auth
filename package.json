@@ -1,18 +1,18 @@
 {
   "name": "@adonisjs/auth",
-  "version": "9.2.1",
   "description": "Official authentication provider for Adonis framework",
-  "type": "module",
+  "version": "9.2.1",
+  "engines": {
+    "node": ">=18.16.0"
+  },
   "main": "build/index.js",
+  "type": "module",
   "files": [
     "build",
     "!build/bin",
     "!build/tests",
     "!build/factories"
   ],
-  "engines": {
-    "node": ">=18.16.0"
-  },
   "exports": {
     ".": "./build/index.js",
     "./types": "./build/src/types.js",
@@ -51,29 +51,14 @@
     "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/auth",
     "quick:test": "cross-env NODE_DEBUG=\"adonisjs:auth:*\" node --enable-source-maps --loader=ts-node/esm ./bin/test.js"
   },
-  "keywords": [
-    "adonisjs",
-    "authentication",
-    "auth"
-  ],
-  "author": "adonisjs,virk",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/adonisjs/auth.git"
-  },
-  "homepage": "https://github.com/adonisjs/auth#readme",
-  "bugs": {
-    "url": "https://github.com/adonisjs/auth/issues"
-  },
   "devDependencies": {
-    "@adonisjs/assembler": "^7.5.1",
-    "@adonisjs/core": "^6.8.0",
+    "@adonisjs/assembler": "^7.7.0",
+    "@adonisjs/core": "^6.11.0",
     "@adonisjs/eslint-config": "^1.3.0",
     "@adonisjs/i18n": "^2.1.0",
-    "@adonisjs/lucid": "^20.5.1",
+    "@adonisjs/lucid": "^21.0.1",
     "@adonisjs/prettier-config": "^1.3.0",
-    "@adonisjs/session": "^7.4.0",
+    "@adonisjs/session": "^7.4.1",
     "@adonisjs/tsconfig": "^1.3.0",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
@@ -85,13 +70,13 @@
     "@japa/plugin-adonisjs": "^3.0.1",
     "@japa/runner": "^3.1.4",
     "@japa/snapshot": "^2.0.5",
-    "@swc/core": "^1.5.0",
+    "@swc/core": "^1.6.1",
     "@types/basic-auth": "^1.1.8",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^20.12.7",
-    "@types/set-cookie-parser": "^2.4.7",
+    "@types/node": "^20.14.5",
+    "@types/set-cookie-parser": "^2.4.9",
     "@types/sinon": "^17.0.3",
-    "c8": "^9.0.0",
+    "c8": "^10.1.2",
     "convert-hrtime": "^5.0.0",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
@@ -101,53 +86,23 @@
     "github-label-sync": "^2.3.1",
     "husky": "^9.0.11",
     "luxon": "^3.4.4",
-    "mysql2": "^3.9.7",
+    "mysql2": "^3.10.1",
     "nock": "^13.5.4",
-    "np": "^10.0.5",
-    "pg": "^8.11.5",
-    "playwright": "^1.43.1",
-    "prettier": "^3.2.5",
+    "np": "^10.0.6",
+    "pg": "^8.12.0",
+    "playwright": "^1.44.1",
+    "prettier": "^3.3.2",
     "set-cookie-parser": "^2.6.0",
-    "sinon": "^17.0.1",
+    "sinon": "^18.0.0",
     "sqlite3": "^5.1.7",
-    "tedious": "^18.1.0",
+    "tedious": "^18.2.0",
     "timekeeper": "^2.3.1",
     "ts-node": "^10.9.2",
-    "tsup": "^8.0.2",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   },
-  "prettier": "@adonisjs/prettier-config",
-  "eslintConfig": {
-    "extends": "@adonisjs/eslint-config/package"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "publishConfig": {
-    "access": "public",
-    "tag": "latest"
-  },
-  "np": {
-    "message": "chore(release): %s",
-    "tag": "latest",
-    "branch": "main",
-    "anyBranch": false
-  },
-  "c8": {
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "tests/**",
-      "backup/**",
-      "factories/**"
-    ]
-  },
   "dependencies": {
-    "@adonisjs/presets": "^2.4.0",
+    "@adonisjs/presets": "^2.5.1",
     "basic-auth": "^2.0.1"
   },
   "peerDependencies": {
@@ -174,6 +129,51 @@
     "@japa/plugin-adonisjs": {
       "optional": true
     }
+  },
+  "author": "adonisjs,virk",
+  "license": "MIT",
+  "homepage": "https://github.com/adonisjs/auth#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adonisjs/auth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adonisjs/auth/issues"
+  },
+  "keywords": [
+    "adonisjs",
+    "authentication",
+    "auth"
+  ],
+  "eslintConfig": {
+    "extends": "@adonisjs/eslint-config/package"
+  },
+  "prettier": "@adonisjs/prettier-config",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
+  "np": {
+    "message": "chore(release): %s",
+    "tag": "latest",
+    "branch": "main",
+    "anyBranch": false
+  },
+  "c8": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "tests/**",
+      "backup/**",
+      "factories/**"
+    ]
   },
   "tsup": {
     "entry": [

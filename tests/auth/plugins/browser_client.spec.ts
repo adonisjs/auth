@@ -23,7 +23,7 @@ import { authBrowserClient } from '../../../src/plugins/japa/browser_client.js'
 test.group('Browser client | loginAs', (group) => {
   group.each.timeout(0)
 
-  test('login user using the guard authenticate as client method', async ({
+  test('login user using the guard authenticateAsClient method', async ({
     assert,
     expectTypeOf,
   }) => {
