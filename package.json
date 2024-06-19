@@ -106,9 +106,9 @@
     "basic-auth": "^2.0.1"
   },
   "peerDependencies": {
-    "@adonisjs/core": "^6.5.0",
-    "@adonisjs/lucid": "^20.5.1",
-    "@adonisjs/session": "^7.3.0",
+    "@adonisjs/core": "^6.11.0",
+    "@adonisjs/lucid": "^21.0.1",
+    "@adonisjs/session": "^7.4.1",
     "@japa/api-client": "^2.0.3",
     "@japa/browser-client": "^2.0.3",
     "@japa/plugin-adonisjs": "^3.0.1"
