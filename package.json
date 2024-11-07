@@ -132,7 +132,10 @@
       "optional": true
     }
   },
-  "author": "adonisjs,virk",
+  "author": "Harminder Virk <virk@adonisjs.com>",
+  "contributors": [
+    "Romain Lanz <romain.lanz@pm.me>"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/adonisjs/auth#readme",
   "repository": {
