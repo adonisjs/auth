@@ -46,7 +46,7 @@
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "release": "np",
+    "release": "release-it",
     "version": "npm run build",
     "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/auth",
     "quick:test": "cross-env NODE_DEBUG=\"adonisjs:auth:*\" node --enable-source-maps --import=ts-node-maintained/register/esm ./bin/test.js"
@@ -89,10 +89,10 @@
     "luxon": "^3.4.4",
     "mysql2": "^3.10.1",
     "nock": "^13.5.4",
-    "np": "^10.0.6",
     "pg": "^8.12.0",
     "playwright": "^1.44.1",
     "prettier": "^3.3.2",
+    "release-it": "^17.10.0",
     "set-cookie-parser": "^2.6.0",
     "sinon": "^18.0.0",
     "sqlite3": "^5.1.7",
@@ -163,11 +163,17 @@
     "access": "public",
     "tag": "latest"
   },
-  "np": {
-    "message": "chore(release): %s",
-    "tag": "latest",
-    "branch": "main",
-    "anyBranch": false
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): ${version}",
+      "tagAnnotation": "v${version}",
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}",
+      "web": true
+    }
   },
   "c8": {
     "reporter": [
