@@ -165,14 +165,26 @@
   },
   "release-it": {
     "git": {
+      "requireCleanWorkingDir": true,
+      "requireUpstream": true,
       "commitMessage": "chore(release): ${version}",
       "tagAnnotation": "v${version}",
+      "push": true,
       "tagName": "v${version}"
     },
     "github": {
-      "release": true,
-      "releaseName": "v${version}",
-      "web": true
+      "release": true
+    },
+    "npm": {
+      "publish": true,
+      "skipChecks": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "angular"
+        }
+      }
     }
   },
   "c8": {
