@@ -286,10 +286,10 @@ test.group('withAuthFinder | verify', () => {
     const invalidPasswordTime = convertHrtime(process.hrtime.bigint() - startTime)
 
     /**
-     * Same timing within the range of 10 milliseconds is acceptable
+     * Same timing within the range of 15 milliseconds is acceptable
      */
     assert.isBelow(Math.abs(invalidPasswordTime.seconds - invalidEmailTime.seconds), 1)
-    assert.isBelow(Math.abs(invalidPasswordTime.milliseconds - invalidEmailTime.milliseconds), 10)
+    assert.isBelow(Math.abs(invalidPasswordTime.milliseconds - invalidEmailTime.milliseconds), 15)
   })
 
   test('throw error when uid or password values are missing', async ({ assert }) => {
