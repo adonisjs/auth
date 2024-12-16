@@ -260,9 +260,7 @@ test.group('Access tokens provider | DB | create', () => {
 
   test('throw error when user is not an instance of the associated model', async ({ assert }) => {
     const db = await createDatabase()
-    console.log('db created')
     await createTables(db)
-    console.log('tables created')
 
     class User extends BaseModel {
       @column({ isPrimary: true })

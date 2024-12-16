@@ -11,7 +11,7 @@ import { join } from 'node:path'
 import timekeeper from 'timekeeper'
 import { Hash } from '@adonisjs/hash'
 import { configDotenv } from 'dotenv'
-import { mkdir } from 'node:fs/promises'
+import { mkdir, rm } from 'node:fs/promises'
 import { getActiveTest } from '@japa/runner'
 import { Emitter } from '@adonisjs/core/events'
 import { BaseModel } from '@adonisjs/lucid/orm'
@@ -44,7 +44,8 @@ export async function createDatabase() {
     throw new Error('Cannot use "createDatabase" outside of a Japa test')
   }
 
-  await mkdir(test.context.fs.basePath)
+  const basePath = test.context.fs.basePath
+  await mkdir(basePath)
 
   const app = new AppFactory().create(test.context.fs.baseUrl, () => {})
   const logger = new LoggerFactory().create()
@@ -98,7 +99,10 @@ export async function createDatabase() {
     emitter
   )
 
-  test.cleanup(() => db.manager.closeAll())
+  test.cleanup(async () => {
+    db.manager.closeAll()
+    await rm(basePath, { force: true, recursive: true, maxRetries: 3 })
+  })
   BaseModel.useAdapter(db.modelAdapter())
   return db
 }
