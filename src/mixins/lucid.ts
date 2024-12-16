@@ -86,18 +86,25 @@ export function withAuthFinder(
           throw new E_INVALID_CREDENTIALS('Invalid user credentials')
         }
 
-        const passwordHash = (user as any)[options.passwordColumnName]
-        if (!passwordHash) {
-          throw new RuntimeException(
-            `Cannot verify password during login. The value of column "${options.passwordColumnName}" is undefined or null`
-          )
-        }
-
-        if (await hash().verify(passwordHash, password)) {
+        if (await user.verifyPassword(password)) {
           return user
         }
 
         throw new E_INVALID_CREDENTIALS('Invalid user credentials')
+      }
+
+      /**
+       * Verifies the plain password against the user's password
+       * hash
+       */
+      verifyPassword(plainPassword: string): Promise<boolean> {
+        const passwordHash = (this as any)[options.passwordColumnName]
+        if (!passwordHash) {
+          throw new RuntimeException(
+            `Cannot verify password. The value for "${options.passwordColumnName}" column is undefined or null`
+          )
+        }
+        return hash().verify(passwordHash, plainPassword)
       }
     }
 

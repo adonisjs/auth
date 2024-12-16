@@ -237,7 +237,7 @@ test.group('withAuthFinder | verify', () => {
 
     await assert.rejects(
       () => User.verifyCredentials('virk@adonisjs.com', 'supersecret'),
-      'Cannot verify password during login. The value of column "password" is undefined or null'
+      'Cannot verify password. The value for "password" column is undefined or null'
     )
   })
 
