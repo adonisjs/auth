@@ -36,16 +36,16 @@
     "test:mysql": "cross-env DB=mysql npm run quick:test",
     "test:mssql": "cross-env DB=mssql npm run quick:test",
     "test:pg": "cross-env DB=pg npm run quick:test",
-    "clean": "del-cli build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
+    "clean": "del-cli build",
     "copy:templates": "copyfiles \"stubs/**/*.stub\" --up=\"1\" build",
     "precompile": "npm run lint && npm run clean",
     "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
     "postcompile": "npm run copy:templates",
     "build": "npm run compile",
     "prepublishOnly": "npm run build",
-    "lint": "eslint .",
-    "format": "prettier --write .",
     "release": "release-it",
     "version": "npm run build",
     "quick:test": "cross-env NODE_DEBUG=\"adonisjs:auth:*\" node --enable-source-maps --import=ts-node-maintained/register/esm ./bin/test.js"
@@ -128,11 +128,6 @@
       "optional": true
     }
   },
-  "author": "Harminder Virk <virk@adonisjs.com>",
-  "contributors": [
-    "Romain Lanz <romain.lanz@pm.me>"
-  ],
-  "license": "MIT",
   "homepage": "https://github.com/adonisjs/auth#readme",
   "repository": {
     "type": "git",
@@ -146,18 +141,14 @@
     "authentication",
     "auth"
   ],
-  "eslintConfig": {
-    "extends": "@adonisjs/eslint-config/package"
-  },
-  "prettier": "@adonisjs/prettier-config",
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
+  "author": "Harminder Virk <virk@adonisjs.com>",
+  "contributors": [
+    "Romain Lanz <romain.lanz@pm.me>"
+  ],
+  "license": "MIT",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "provenance": true
   },
   "release-it": {
     "git": {
@@ -183,17 +174,6 @@
       }
     }
   },
-  "c8": {
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "tests/**",
-      "backup/**",
-      "factories/**"
-    ]
-  },
   "tsup": {
     "entry": [
       "./index.ts",
@@ -215,7 +195,19 @@
     "clean": true,
     "format": "esm",
     "dts": false,
-    "sourcemap": true,
+    "sourcemap": false,
     "target": "esnext"
-  }
+  },
+  "c8": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "tests/**",
+      "backup/**",
+      "factories/**"
+    ]
+  },
+  "prettier": "@adonisjs/prettier-config"
 }
