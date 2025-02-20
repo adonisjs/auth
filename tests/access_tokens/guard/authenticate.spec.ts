@@ -366,3 +366,24 @@ test.group('Access tokens guard | authenticateAsClient', () => {
     assert.match(response.headers!.authorization, /Bearer oat_[a-zA-Z0-9]+\.[a-zA-Z0-9]+/)
   })
 })
+
+test.group('Access tokens guard | createToken', () => {
+  test('create bearer token for the given user', async ({ assert }) => {
+    const ctx = new HttpContextFactory().create()
+    const emitter = createEmitter<AccessTokensGuardEvents<AccessTokensFakeUser>>()
+    const userProvider = new AccessTokensFakeUserProvider()
+
+    const guard = new AccessTokensGuard('api', ctx, emitter, userProvider)
+    const user = await userProvider.findById(1)
+    const token = await guard.createToken(user!.getOriginal(), ['list.users'], {
+      expiresIn: 3600,
+      name: 'sign_in',
+    })
+    assert.instanceOf(token, AccessToken)
+    assert.equal(token.tokenableId, user?.getId())
+    assert.deepEqual(token.abilities, ['list.users'])
+    assert.equal(token.name, 'sign_in')
+    assert.closeTo(token.expiresAt!.getTime(), new Date().getTime() + 3600 * 1000, 100)
+    assert.match(token.value!.release(), /oat_[a-zA-Z0-9]+\.[a-zA-Z0-9]+/)
+  })
+})

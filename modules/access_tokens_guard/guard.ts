@@ -217,6 +217,20 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
   }
 
   /**
+   * Create a token for a user (sign in)
+   */
+  async createToken(
+    user: UserProvider[typeof PROVIDER_REAL_USER],
+    abilities?: string[],
+    options?: {
+      expiresIn?: string | number
+      name?: string
+    }
+  ) {
+    return await this.#userProvider.createToken(user, abilities, options)
+  }
+
+  /**
    * Returns the Authorization header clients can use to authenticate
    * the request.
    */
