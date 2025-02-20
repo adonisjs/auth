@@ -13,6 +13,27 @@ import { beforeSave, type BaseModel } from '@adonisjs/lucid/orm'
 import type { NormalizeConstructor } from '@adonisjs/core/types/helpers'
 import { E_INVALID_CREDENTIALS } from '../errors.js'
 
+type UserWithUserFinderRow = {
+  verifyPassword(plainPassword: string): Promise<boolean>
+}
+
+type UserWithUserFinderClass<
+  Model extends NormalizeConstructor<typeof BaseModel> = NormalizeConstructor<typeof BaseModel>,
+> = Model & {
+  hashPassword<T extends UserWithUserFinderClass>(this: T, user: InstanceType<T>): Promise<void>
+  findForAuth<T extends UserWithUserFinderClass>(
+    this: T,
+    uids: string[],
+    value: string
+  ): Promise<InstanceType<T> | null>
+  verifyCredentials<T extends UserWithUserFinderClass>(
+    this: T,
+    uid: string,
+    password: string
+  ): Promise<InstanceType<T>>
+  new (...args: any[]): UserWithUserFinderRow
+}
+
 /**
  * Mixing to add user lookup and password verification methods
  * on a model.
@@ -31,17 +52,16 @@ export function withAuthFinder(
     passwordColumnName: string
   }
 ) {
-  return <Model extends NormalizeConstructor<typeof BaseModel>>(superclass: Model) => {
+  return function <Model extends NormalizeConstructor<typeof BaseModel>>(
+    superclass: Model
+  ): UserWithUserFinderClass<Model> {
     class UserWithUserFinder extends superclass {
       /**
        * Hook to verify user password when creating or updating
        * the user model.
        */
       @beforeSave()
-      static async hashPassword<T extends typeof UserWithUserFinder>(
-        this: T,
-        user: InstanceType<T>
-      ) {
+      static async hashPassword<T extends UserWithUserFinderClass>(this: T, user: InstanceType<T>) {
         if (user.$dirty[options.passwordColumnName]) {
           ;(user as any)[options.passwordColumnName] = await hash().make(
             (user as any)[options.passwordColumnName]
@@ -54,7 +74,7 @@ export function withAuthFinder(
        * Feel free to override this method customize the user
        * lookup behavior.
        */
-      static findForAuth<T extends typeof UserWithUserFinder>(
+      static findForAuth<T extends UserWithUserFinderClass>(
         this: T,
         uids: string[],
         value: string
@@ -68,7 +88,7 @@ export function withAuthFinder(
        * Find a user by uid and verify their password. This method is
        * safe from timing attacks.
        */
-      static async verifyCredentials<T extends typeof UserWithUserFinder>(
+      static async verifyCredentials<T extends UserWithUserFinderClass>(
         this: T,
         uid: string,
         password: string
