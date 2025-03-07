@@ -120,6 +120,14 @@ export class AccessTokensLucidUserProvider<
   }
 
   /**
+   * Invalidates a token identified by its publicly shared token
+   */
+  async invalidateToken(tokenValue: Secret<string>) {
+    const tokensProvider = await this.getTokensProvider()
+    return tokensProvider.invalidate(tokenValue)
+  }
+
+  /**
    * Finds a user by the user id
    */
   async findById(

@@ -231,6 +231,14 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
   }
 
   /**
+   * Invalidates the currently authenticated token (sign out)
+   */
+  async invalidateToken() {
+    const bearerToken = new Secret(this.#getBearerToken())
+    return await this.#userProvider.invalidateToken(bearerToken)
+  }
+
+  /**
    * Returns the Authorization header clients can use to authenticate
    * the request.
    */
