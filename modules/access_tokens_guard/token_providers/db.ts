@@ -330,4 +330,24 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
 
     return accessToken
   }
+
+  /**
+   * Invalidates a token identified by its publicly shared token
+   */
+  async invalidate(tokenValue: Secret<string>) {
+    const decodedToken = AccessToken.decode(this.prefix, tokenValue.release())
+    if (!decodedToken) {
+      return false
+    }
+
+    const db = await this.getDb()
+    const deleteCount = await db
+      .query<AccessTokenDbColumns>()
+      .from(this.table)
+      .where({ id: decodedToken.identifier, type: this.type })
+      .del()
+      .exec()
+
+    return Boolean(deleteCount)
+  }
 }

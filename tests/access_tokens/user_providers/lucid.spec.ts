@@ -149,6 +149,123 @@ test.group('Access tokens user provider | Lucid | createToken', () => {
   })
 })
 
+test.group('Access tokens user provider | Lucid | invalidateToken', () => {
+  test('return true if token was invalidated', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    class User extends BaseModel {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+
+      static authTokens = DbAccessTokensProvider.forModel(User)
+    }
+
+    const userProvider = new AccessTokensLucidUserProvider({
+      tokens: 'authTokens',
+      async model() {
+        return {
+          default: User,
+        }
+      },
+    })
+
+    const user = await User.create({
+      email: 'virk@adonisjs.com',
+      username: 'virk',
+      password: 'secret',
+    })
+
+    const token = await User.authTokens.create(user)
+    const result = await userProvider.invalidateToken(token.value!)
+    assert.isTrue(result)
+  })
+
+  test('return false if not a real token', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    class User extends BaseModel {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+
+      static authTokens = DbAccessTokensProvider.forModel(User)
+    }
+
+    const userProvider = new AccessTokensLucidUserProvider({
+      tokens: 'authTokens',
+      async model() {
+        return {
+          default: User,
+        }
+      },
+    })
+
+    const result = await userProvider.invalidateToken(new Secret('not-a-real-token'))
+    assert.isFalse(result)
+  })
+
+  test('return false if token is not longer valid', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    class User extends BaseModel {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+
+      static authTokens = DbAccessTokensProvider.forModel(User)
+    }
+
+    const userProvider = new AccessTokensLucidUserProvider({
+      tokens: 'authTokens',
+      async model() {
+        return {
+          default: User,
+        }
+      },
+    })
+
+    const user = await User.create({
+      email: 'virk@adonisjs.com',
+      username: 'virk',
+      password: 'secret',
+    })
+
+    const token = await User.authTokens.create(user)
+    await userProvider.invalidateToken(token.value!)
+
+    const result = await userProvider.invalidateToken(token.value!)
+    assert.isFalse(result)
+  })
+})
+
 test.group('Access tokens user provider | Lucid | findById', () => {
   test('find user by id', async ({ assert }) => {
     const db = await createDatabase()

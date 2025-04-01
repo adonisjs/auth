@@ -132,6 +132,21 @@ export class AccessTokensFakeUserProvider
     return this.createUserForGuard(user)
   }
 
+  async invalidateToken(tokenValue: Secret<string>) {
+    const decodedToken = AccessToken.decode('oat_', tokenValue.release())
+    if (!decodedToken) {
+      return false
+    }
+
+    const index = this.#tokens.findIndex(({ id }) => id === decodedToken.identifier)
+
+    if (index === -1) {
+      return false
+    }
+    this.#tokens.splice(index, 1)
+    return true
+  }
+
   async verifyToken(tokenValue: Secret<string>): Promise<AccessToken | null> {
     const decodedToken = AccessToken.decode('oat_', tokenValue.release())
     if (!decodedToken) {

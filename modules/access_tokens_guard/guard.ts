@@ -217,6 +217,28 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
   }
 
   /**
+   * Create a token for a user (sign in)
+   */
+  async createToken(
+    user: UserProvider[typeof PROVIDER_REAL_USER],
+    abilities?: string[],
+    options?: {
+      expiresIn?: string | number
+      name?: string
+    }
+  ) {
+    return await this.#userProvider.createToken(user, abilities, options)
+  }
+
+  /**
+   * Invalidates the currently authenticated token (sign out)
+   */
+  async invalidateToken() {
+    const bearerToken = new Secret(this.#getBearerToken())
+    return await this.#userProvider.invalidateToken(bearerToken)
+  }
+
+  /**
    * Returns the Authorization header clients can use to authenticate
    * the request.
    */

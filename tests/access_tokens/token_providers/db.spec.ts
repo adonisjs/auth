@@ -721,3 +721,100 @@ test.group('Access tokens provider | DB | all', () => {
     assert.isFalse(tokens[0].isExpired())
   })
 })
+
+test.group('Access tokens provider | DB | invalidate', () => {
+  test('delete token identified by publicly shared token', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    class User extends BaseModel {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+
+      static authTokens = DbAccessTokensProvider.forModel(User)
+    }
+
+    const user = await User.create({
+      email: 'virk@adonisjs.com',
+      username: 'virk',
+      password: 'secret',
+    })
+
+    const token = await User.authTokens.create(user, ['*'], { name: 'List projects' })
+
+    assert.isNotEmpty(await User.authTokens.all(user))
+
+    const invalidateResult = await User.authTokens.invalidate(token.value!)
+
+    assert.isTrue(invalidateResult)
+    assert.isEmpty(await User.authTokens.all(user))
+  })
+
+  test('return false if invalid token', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    class User extends BaseModel {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+
+      static authTokens = DbAccessTokensProvider.forModel(User)
+    }
+
+    const invalidateResult = await User.authTokens.invalidate(new Secret('invalid-token'))
+
+    assert.isFalse(invalidateResult)
+  })
+
+  test('return false if token was already invalidated', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    class User extends BaseModel {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+
+      static authTokens = DbAccessTokensProvider.forModel(User)
+    }
+
+    const user = await User.create({
+      email: 'virk@adonisjs.com',
+      username: 'virk',
+      password: 'secret',
+    })
+
+    const token = await User.authTokens.create(user, ['*'], { name: 'List projects' })
+    await User.authTokens.invalidate(token.value!)
+
+    const invalidateResult = await User.authTokens.invalidate(token.value!)
+
+    assert.isFalse(invalidateResult)
+  })
+})

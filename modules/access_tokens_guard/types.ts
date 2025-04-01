@@ -149,6 +149,11 @@ export interface AccessTokensProviderContract<Tokenable extends LucidModel> {
    * access token for it.
    */
   verify(tokenValue: Secret<string>): Promise<AccessToken | null>
+
+  /**
+   * Invalidates a token identified by its publicly shared token
+   */
+  invalidate(tokenValue: Secret<string>): Promise<boolean>
 }
 
 /**
@@ -209,6 +214,11 @@ export interface AccessTokensUserProviderContract<RealUser> {
       expiresIn?: string | number
     }
   ): Promise<AccessToken>
+
+  /**
+   * Invalidates a token identified by its publicly shared token.
+   */
+  invalidateToken(tokenValue: Secret<string>): Promise<boolean>
 
   /**
    * Find a user by the user id.
