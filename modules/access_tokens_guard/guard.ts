@@ -126,8 +126,8 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
    */
   #getBearerToken(): string {
     const bearerToken = this.#ctx.request.header('authorization', '')!
-    const [, token] = bearerToken.split('Bearer ')
-    if (!token) {
+    const [type, token] = bearerToken.split(' ')
+    if (!type || type.toLowerCase() !== 'bearer' || !token) {
       throw this.#authenticationFailed()
     }
 
