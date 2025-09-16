@@ -229,4 +229,24 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
       redirectTo: options?.loginRoute,
     })
   }
+
+  /**
+   * Silently attempt to authenticate the request using all of the mentioned guards
+   * or the default guard. Calling this method multiple times triggers multiple
+   * authentication with the guard.
+   */
+  async checkUsing(guards: (keyof KnownGuards)[] = [this.defaultGuard]) {
+    for (const name of guards) {
+      this.#authenticationAttemptedViaGuard = name
+      const isAuthenticated = await this.use(name).check()
+
+      if (isAuthenticated) {
+        this.#authenticatedViaGuard = name
+
+        return true
+      }
+    }
+
+    return false
+  }
 }
