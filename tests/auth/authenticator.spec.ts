@@ -171,4 +171,27 @@ test.group('Authenticator', () => {
     assert.isFalse(authenticator.isAuthenticated)
     assert.isTrue(authenticator.authenticationAttempted)
   })
+
+  test('check authentication using multiple guards', async ({ assert }) => {
+    const ctx = new HttpContextFactory().create()
+    const authenticator = new Authenticator(ctx, {
+      default: 'web1',
+      guards: {
+        web1: () => new FakeGuard(),
+        web2: () => new FakeGuard(),
+      },
+    })
+
+    authenticator.use('web1').authenticate = async function () {
+      this.authenticationAttempted = true
+      return this.getUserOrFail()
+    }
+
+    const isAuthenticated = await authenticator.checkUsing(['web1', 'web2'])
+
+    assert.isTrue(isAuthenticated)
+    assert.isTrue(authenticator.isAuthenticated)
+    assert.isTrue(authenticator.authenticationAttempted)
+    assert.equal(authenticator.authenticatedViaGuard, 'web2')
+  })
 })
