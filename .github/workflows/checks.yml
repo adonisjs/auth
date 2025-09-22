@@ -5,17 +5,17 @@ on:
   - workflow_call
 jobs:
   lint:
-    uses: adonisjs/.github/.github/workflows/lint.yml@main
+    uses: adonisjs/.github/.github/workflows/lint.yml@next
 
   typecheck:
-    uses: adonisjs/.github/.github/workflows/typecheck.yml@main
+    uses: adonisjs/.github/.github/workflows/typecheck.yml@next
 
   test-postgres:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        node-version: [21]
+        node-version: [24]
         postgres-version: [11]
     services:
       postgres:
@@ -27,8 +27,8 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install Playwright Browsers
@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         mysql: [{ version: '8.0', command: 'mysql' }]
-        node-version: [21]
+        node-version: [24]
     services:
       mysql:
         image: mysql:${{ matrix.mysql.version }}
@@ -57,8 +57,8 @@ jobs:
         ports:
           - '3306:3306'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [21]
+        node-version: [24]
     services:
       mssql:
         image: mcr.microsoft.com/mssql/server:2019-latest
@@ -83,8 +83,8 @@ jobs:
         ports:
           - '1433:1433'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
@@ -100,10 +100,10 @@ jobs:
       fail-fast: false
       matrix:
         lib: ['sqlite']
-        node-version: [20, 21]
+        node-version: [24]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
