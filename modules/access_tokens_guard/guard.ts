@@ -21,6 +21,19 @@ import type { AccessTokensGuardEvents, AccessTokensUserProviderContract } from '
  * Implementation of access tokens guard for the Auth layer. The heavy lifting
  * of verifying tokens is done by the user provider. However, the guard is
  * used to seamlessly integrate with the auth layer of the package.
+ *
+ * @template UserProvider - The user provider contract
+ *
+ * @example
+ * const guard = new AccessTokensGuard(
+ *   'api',
+ *   ctx,
+ *   emitter,
+ *   userProvider
+ * )
+ *
+ * const user = await guard.authenticate()
+ * console.log('Authenticated user:', user.email)
  */
 export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderContract<unknown>>
   implements
@@ -87,6 +100,22 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
    */
   user?: UserProvider[typeof PROVIDER_REAL_USER] & { currentAccessToken: AccessToken }
 
+  /**
+   * Creates a new AccessTokensGuard instance
+   *
+   * @param name - Unique name for the guard instance
+   * @param ctx - HTTP context for the current request
+   * @param emitter - Event emitter for guard events
+   * @param userProvider - User provider for token verification
+   *
+   * @example
+   * const guard = new AccessTokensGuard(
+   *   'api',
+   *   ctx,
+   *   emitter,
+   *   new TokenUserProvider()
+   * )
+   */
   constructor(
     name: string,
     ctx: HttpContext,
@@ -137,6 +166,13 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
   /**
    * Returns an instance of the authenticated user. Or throws
    * an exception if the request is not authenticated.
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When user is not authenticated
+   *
+   * @example
+   * const user = guard.getUserOrFail()
+   * console.log('User ID:', user.id)
+   * console.log('Current token:', user.currentAccessToken.name)
    */
   getUserOrFail(): UserProvider[typeof PROVIDER_REAL_USER] & { currentAccessToken: AccessToken } {
     if (!this.user) {
@@ -151,6 +187,17 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
   /**
    * Authenticate the current HTTP request by verifying the bearer
    * token or fails with an exception
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When authentication fails
+   *
+   * @example
+   * try {
+   *   const user = await guard.authenticate()
+   *   console.log('Authenticated as:', user.email)
+   *   console.log('Token abilities:', user.currentAccessToken.abilities)
+   * } catch (error) {
+   *   console.log('Authentication failed')
+   * }
    */
   async authenticate(): Promise<
     UserProvider[typeof PROVIDER_REAL_USER] & { currentAccessToken: AccessToken }
@@ -218,6 +265,17 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
 
   /**
    * Create a token for a user (sign in)
+   *
+   * @param user - The user to create a token for
+   * @param abilities - Optional array of abilities the token should have
+   * @param options - Optional token configuration
+   *
+   * @example
+   * const token = await guard.createToken(user, ['read', 'write'], {
+   *   name: 'Mobile App',
+   *   expiresIn: '7d'
+   * })
+   * console.log('Token:', token.value.release())
    */
   async createToken(
     user: UserProvider[typeof PROVIDER_REAL_USER],
@@ -232,6 +290,10 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
 
   /**
    * Invalidates the currently authenticated token (sign out)
+   *
+   * @example
+   * await guard.invalidateToken()
+   * console.log('Token invalidated successfully')
    */
   async invalidateToken() {
     const bearerToken = new Secret(this.#getBearerToken())
@@ -241,6 +303,14 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
   /**
    * Returns the Authorization header clients can use to authenticate
    * the request.
+   *
+   * @param user - The user to authenticate as
+   * @param abilities - Optional array of abilities
+   * @param options - Optional token configuration
+   *
+   * @example
+   * const clientAuth = await guard.authenticateAsClient(user, ['read'])
+   * // Use clientAuth.headers.authorization in API tests
    */
   async authenticateAsClient(
     user: UserProvider[typeof PROVIDER_REAL_USER],
@@ -260,8 +330,15 @@ export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderCont
 
   /**
    * Silently check if the user is authenticated or not. The
-   * method is same the "authenticate" method but does not
+   * method is same as the "authenticate" method but does not
    * throw any exceptions.
+   *
+   * @example
+   * const isAuthenticated = await guard.check()
+   * if (isAuthenticated) {
+   *   const user = guard.user
+   *   console.log('User is authenticated:', user.email)
+   * }
    */
   async check(): Promise<boolean> {
     try {

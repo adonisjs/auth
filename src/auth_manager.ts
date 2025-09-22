@@ -25,13 +25,30 @@ export class AuthManager<KnownGuards extends Record<string, GuardFactory>> {
     return this.config.default
   }
 
+  /**
+   * Creates a new AuthManager instance
+   *
+   * @param config - Configuration object containing default guard and available guards
+   *
+   * @example
+   * const manager = new AuthManager({
+   *   default: 'web',
+   *   guards: { web: sessionGuard, api: tokenGuard }
+   * })
+   */
   constructor(public config: { default: keyof KnownGuards; guards: KnownGuards }) {
     this.config = config
   }
 
   /**
    * Create an authenticator for a given HTTP request. The authenticator
-   * is used to authenticated in incoming HTTP request
+   * is used to authenticate incoming HTTP requests
+   *
+   * @param ctx - The HTTP context for the current request
+   *
+   * @example
+   * const authenticator = manager.createAuthenticator(ctx)
+   * const user = await authenticator.authenticate()
    */
   createAuthenticator(ctx: HttpContext) {
     return new Authenticator<KnownGuards>(ctx, this.config)
@@ -40,6 +57,10 @@ export class AuthManager<KnownGuards extends Record<string, GuardFactory>> {
   /**
    * Creates an instance of the authenticator client. The client is
    * used to setup authentication state during testing.
+   *
+   * @example
+   * const client = manager.createAuthenticatorClient()
+   * const guard = client.use('session')
    */
   createAuthenticatorClient() {
     return new AuthenticatorClient<KnownGuards>(this.config)

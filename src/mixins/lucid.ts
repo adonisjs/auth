@@ -44,6 +44,19 @@ type UserWithUserFinderClass<
  * - findForAuth method to find a user during authentication
  * - verifyCredentials method to verify user credentials and prevent
  *   timing attacks.
+ *
+ * @param hash - Function that returns a Hash instance for password hashing
+ * @param options - Configuration options with uids and password column name
+ *
+ * @example
+ * import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+ *
+ * class User extends withAuthFinder(hash, {
+ *   uids: ['email', 'username'],
+ *   passwordColumnName: 'password'
+ * })(BaseModel) {
+ *   // User model implementation
+ * }
  */
 export function withAuthFinder(
   hash: () => Hash,
@@ -57,8 +70,16 @@ export function withAuthFinder(
   ): UserWithUserFinderClass<Model> {
     class UserWithUserFinder extends superclass {
       /**
-       * Hook to verify user password when creating or updating
+       * Hook to hash user password when creating or updating
        * the user model.
+       *
+       * @param user - The user instance being saved
+       *
+       * @example
+       * // This hook runs automatically before saving
+       * const user = new User()
+       * user.password = 'plaintext'
+       * await user.save() // password will be hashed automatically
        */
       @beforeSave()
       static async hashPassword<T extends UserWithUserFinderClass>(this: T, user: InstanceType<T>) {
@@ -71,8 +92,14 @@ export function withAuthFinder(
 
       /**
        * Finds the user for authentication via "verifyCredentials".
-       * Feel free to override this method customize the user
+       * Feel free to override this method to customize the user
        * lookup behavior.
+       *
+       * @param uids - Array of column names to search in
+       * @param value - The value to search for
+       *
+       * @example
+       * const user = await User.findForAuth(['email', 'username'], 'john@example.com')
        */
       static findForAuth<T extends UserWithUserFinderClass>(
         this: T,
@@ -87,6 +114,15 @@ export function withAuthFinder(
       /**
        * Find a user by uid and verify their password. This method is
        * safe from timing attacks.
+       *
+       * @param uid - The user identifier (email, username, etc.)
+       * @param password - The plain text password to verify
+       *
+       * @throws {E_INVALID_CREDENTIALS} When credentials are invalid
+       *
+       * @example
+       * const user = await User.verifyCredentials('john@example.com', 'password123')
+       * console.log('Authenticated user:', user.email)
        */
       static async verifyCredentials<T extends UserWithUserFinderClass>(
         this: T,
@@ -116,6 +152,16 @@ export function withAuthFinder(
       /**
        * Verifies the plain password against the user's password
        * hash
+       *
+       * @param plainPassword - The plain text password to verify
+       *
+       * @throws {RuntimeException} When password column value is undefined or null
+       *
+       * @example
+       * const isValid = await user.verifyPassword('password123')
+       * if (isValid) {
+       *   console.log('Password is correct')
+       * }
        */
       verifyPassword(plainPassword: string): Promise<boolean> {
         const passwordHash = (this as any)[options.passwordColumnName]

@@ -38,6 +38,17 @@ export class AuthenticatorClient<KnownGuards extends Record<string, GuardFactory
     return this.#config.default
   }
 
+  /**
+   * Creates a new AuthenticatorClient instance for testing
+   *
+   * @param config - Configuration object containing default guard and available guards
+   *
+   * @example
+   * const client = new AuthenticatorClient({
+   *   default: 'web',
+   *   guards: { web: sessionGuard }
+   * })
+   */
   constructor(config: { default: keyof KnownGuards; guards: KnownGuards }) {
     this.#config = config
     debug('creating authenticator client. config %O', this.#config)
@@ -46,6 +57,12 @@ export class AuthenticatorClient<KnownGuards extends Record<string, GuardFactory
   /**
    * Returns an instance of a known guard. Guards instances are
    * cached during the lifecycle of an HTTP request.
+   *
+   * @param guard - Optional guard name. Uses default guard if not provided
+   *
+   * @example
+   * const sessionGuard = client.use('session')
+   * const defaultGuard = client.use()
    */
   use<Guard extends keyof KnownGuards>(guard?: Guard): ReturnType<KnownGuards[Guard]> {
     const guardToUse = guard || this.#config.default

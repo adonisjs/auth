@@ -24,12 +24,31 @@ import type {
  * persist tokens for a given user.
  *
  * The user must be an instance of the associated user model.
+ *
+ * @template TokenableModel - The Lucid model that can have tokens
+ *
+ * @example
+ * const provider = new DbAccessTokensProvider({
+ *   tokenableModel: () => import('#models/user'),
+ *   table: 'api_tokens',
+ *   type: 'api_token',
+ *   prefix: 'api_'
+ * })
  */
 export class DbAccessTokensProvider<TokenableModel extends LucidModel>
   implements AccessTokensProviderContract<TokenableModel>
 {
   /**
    * Create tokens provider instance for a given Lucid model
+   *
+   * @param model - The tokenable model factory function
+   * @param options - Optional configuration options
+   *
+   * @example
+   * const provider = DbAccessTokensProvider.forModel(
+   *   () => import('#models/user'),
+   *   { prefix: 'api_', type: 'api_token' }
+   * )
    */
   static forModel<TokenableModel extends LucidModel>(
     model: DbAccessTokensProviderOptions<TokenableModel>['tokenableModel'],
@@ -64,6 +83,20 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
    */
   protected tokenSecretLength: number
 
+  /**
+   * Creates a new DbAccessTokensProvider instance
+   *
+   * @param options - Configuration options for the provider
+   *
+   * @example
+   * const provider = new DbAccessTokensProvider({
+   *   tokenableModel: () => import('#models/user'),
+   *   table: 'auth_access_tokens',
+   *   tokenSecretLength: 40,
+   *   type: 'auth_token',
+   *   prefix: 'oat_'
+   * })
+   */
   constructor(protected options: DbAccessTokensProviderOptions<TokenableModel>) {
     this.table = options.table || 'auth_access_tokens'
     this.tokenSecretLength = options.tokenSecretLength || 40
@@ -98,7 +131,18 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
   }
 
   /**
-   * Maps a database row to an instance token instance
+   * Maps a database row to an AccessToken instance
+   *
+   * @param dbRow - The database row containing token data
+   *
+   * @example
+   * const token = provider.dbRowToAccessToken({
+   *   id: 1,
+   *   tokenable_id: 123,
+   *   type: 'auth_token',
+   *   hash: 'sha256hash',
+   *   // ... other columns
+   * })
    */
   protected dbRowToAccessToken(dbRow: AccessTokenDbColumns): AccessToken {
     return new AccessToken({
@@ -121,6 +165,10 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Returns a query client instance from the parent model
+   *
+   * @example
+   * const db = await provider.getDb()
+   * const tokens = await db.from('auth_access_tokens').select('*')
    */
   protected async getDb() {
     const model = this.options.tokenableModel
@@ -129,6 +177,17 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Create a token for a user
+   *
+   * @param user - The user instance to create a token for
+   * @param abilities - Array of abilities the token should have
+   * @param options - Optional token configuration
+   *
+   * @example
+   * const token = await provider.create(user, ['read', 'write'], {
+   *   name: 'Mobile App Token',
+   *   expiresIn: '7d'
+   * })
+   * console.log('Token:', token.value.release())
    */
   async create(
     user: InstanceType<TokenableModel>,
@@ -206,6 +265,15 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Find a token for a user by the token id
+   *
+   * @param user - The user instance that owns the token
+   * @param identifier - The token identifier to search for
+   *
+   * @example
+   * const token = await provider.find(user, 123)
+   * if (token) {
+   *   console.log('Found token:', token.name)
+   * }
    */
   async find(user: InstanceType<TokenableModel>, identifier: string | number | BigInt) {
     this.#ensureIsPersisted(user)
@@ -227,6 +295,13 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Delete a token by its id
+   *
+   * @param user - The user instance that owns the token
+   * @param identifier - The token identifier to delete
+   *
+   * @example
+   * const deletedCount = await provider.delete(user, 123)
+   * console.log('Deleted tokens:', deletedCount)
    */
   async delete(
     user: InstanceType<TokenableModel>,
@@ -246,7 +321,14 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
   }
 
   /**
-   * Returns all the tokens a given user
+   * Returns all the tokens for a given user
+   *
+   * @param user - The user instance to get tokens for
+   *
+   * @example
+   * const tokens = await provider.all(user)
+   * console.log('User has', tokens.length, 'tokens')
+   * tokens.forEach(token => console.log(token.name))
    */
   async all(user: InstanceType<TokenableModel>) {
     this.#ensureIsPersisted(user)
@@ -288,6 +370,14 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
    *
    * Returns null when unable to verify the token or find it
    * inside the storage
+   *
+   * @param tokenValue - The token value to verify
+   *
+   * @example
+   * const token = await provider.verify(new Secret('oat_abc123.def456'))
+   * if (token && !token.isExpired()) {
+   *   console.log('Valid token for user:', token.tokenableId)
+   * }
    */
   async verify(tokenValue: Secret<string>) {
     const decodedToken = AccessToken.decode(this.prefix, tokenValue.release())
@@ -333,6 +423,14 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Invalidates a token identified by its publicly shared token
+   *
+   * @param tokenValue - The token value to invalidate
+   *
+   * @example
+   * const wasInvalidated = await provider.invalidate(new Secret('oat_abc123.def456'))
+   * if (wasInvalidated) {
+   *   console.log('Token successfully invalidated')
+   * }
    */
   async invalidate(tokenValue: Secret<string>) {
     const decodedToken = AccessToken.decode(this.prefix, tokenValue.release())

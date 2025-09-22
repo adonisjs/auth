@@ -19,6 +19,19 @@ import type { BasicAuthGuardEvents, BasicAuthUserProviderContract } from './type
 
 /**
  * BasicAuth guard implements the HTTP Authentication protocol
+ *
+ * @template UserProvider - The user provider contract
+ *
+ * @example
+ * const guard = new BasicAuthGuard(
+ *   'basic',
+ *   ctx,
+ *   emitter,
+ *   userProvider
+ * )
+ *
+ * const user = await guard.authenticate()
+ * console.log('Authenticated user:', user.email)
  */
 export class BasicAuthGuard<UserProvider extends BasicAuthUserProviderContract<unknown>>
   implements GuardContract<UserProvider[typeof PROVIDER_REAL_USER]>

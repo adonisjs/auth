@@ -15,6 +15,16 @@ import { Secret, base64, safeEqual } from '@adonisjs/core/helpers'
  * Remember me token represents an opaque token that can be
  * used to automatically login a user without asking them
  * to re-login
+ *
+ * @example
+ * const token = new RememberMeToken({
+ *   identifier: 1,
+ *   tokenableId: 123,
+ *   hash: 'sha256hash',
+ *   createdAt: new Date(),
+ *   updatedAt: new Date(),
+ *   expiresAt: new Date(Date.now() + 86400000)
+ * })
  */
 export class RememberMeToken {
   /**
@@ -23,6 +33,15 @@ export class RememberMeToken {
    *
    * Returns null when unable to decode the token because of
    * invalid format or encoding.
+   *
+   * @param value - The token value to decode
+   *
+   * @example
+   * const decoded = RememberMeToken.decode('abc123.def456')
+   * if (decoded) {
+   *   console.log('Token ID:', decoded.identifier)
+   *   console.log('Secret:', decoded.secret.release())
+   * }
    */
   static decode(value: string): null | { identifier: string; secret: Secret<string> } {
     /**
@@ -59,6 +78,14 @@ export class RememberMeToken {
   /**
    * Creates a transient token that can be shared with the persistence
    * layer.
+   *
+   * @param userId - The ID of the user for whom the token is created
+   * @param size - The size of the random secret to generate
+   * @param expiresIn - Expiration time (seconds or duration string)
+   *
+   * @example
+   * const transientToken = RememberMeToken.createTransientToken(123, 32, '30d')
+   * // Store transientToken in database
    */
   static createTransientToken(
     userId: string | number | BigInt,
@@ -77,6 +104,13 @@ export class RememberMeToken {
 
   /**
    * Creates a secret opaque token and its hash.
+   *
+   * @param size - The size of the random string to generate
+   *
+   * @example
+   * const { secret, hash } = RememberMeToken.seed(32)
+   * console.log('Secret:', secret.release())
+   * console.log('Hash:', hash)
    */
   static seed(size: number) {
     const seed = string.random(size)
@@ -125,6 +159,21 @@ export class RememberMeToken {
    */
   expiresAt: Date
 
+  /**
+   * Creates a new RememberMeToken instance
+   *
+   * @param attributes - Token attributes including identifier, user ID, hash, etc.
+   *
+   * @example
+   * const token = new RememberMeToken({
+   *   identifier: 1,
+   *   tokenableId: 123,
+   *   hash: 'sha256hash',
+   *   createdAt: new Date(),
+   *   updatedAt: new Date(),
+   *   expiresAt: new Date(Date.now() + 86400000)
+   * })
+   */
   constructor(attributes: {
     identifier: string | number | BigInt
     tokenableId: string | number | BigInt
@@ -157,6 +206,13 @@ export class RememberMeToken {
    * Check if the token has been expired. Verifies
    * the "expiresAt" timestamp with the current
    * date.
+   *
+   * @example
+   * if (token.isExpired()) {
+   *   console.log('Remember me token has expired')
+   * } else {
+   *   console.log('Token is still valid')
+   * }
    */
   isExpired() {
     return this.expiresAt < new Date()
@@ -164,6 +220,14 @@ export class RememberMeToken {
 
   /**
    * Verifies the value of a token against the pre-defined hash
+   *
+   * @param secret - The secret to verify against the stored hash
+   *
+   * @example
+   * const isValid = token.verify(new Secret('user-provided-secret'))
+   * if (isValid) {
+   *   console.log('Remember me token is valid')
+   * }
    */
   verify(secret: Secret<string>): boolean {
     const newHash = createHash('sha256').update(secret.release()).digest('hex')

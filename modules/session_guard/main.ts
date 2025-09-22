@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-export { RememberMeToken } from './remember_me_token.ts'
 export { SessionGuard } from './guard.ts'
+export { RememberMeToken } from './remember_me_token.ts'
 export { DbRememberMeTokensProvider } from './token_providers/db.ts'
-export { sessionGuard, sessionUserProvider } from './define_config.ts'
 export { SessionLucidUserProvider } from './user_providers/lucid.ts'
+export { sessionGuard, sessionUserProvider } from './define_config.ts'

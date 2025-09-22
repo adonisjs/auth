@@ -22,6 +22,13 @@ import type {
 /**
  * Uses a lucid model to verify access tokens and find a user during
  * authentication
+ *
+ * @template UserModel - The Lucid model representing the user
+ *
+ * @example
+ * const userProvider = new SessionLucidUserProvider({
+ *   model: () => import('#models/user')
+ * })
  */
 export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
   implements SessionUserProviderContract<InstanceType<UserModel>>
@@ -33,6 +40,16 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
    */
   protected model?: UserModel
 
+  /**
+   * Creates a new SessionLucidUserProvider instance
+   *
+   * @param options - Configuration options for the user provider
+   *
+   * @example
+   * const provider = new SessionLucidUserProvider({
+   *   model: () => import('#models/user')
+   * })
+   */
   constructor(
     /**
      * Lucid provider options
@@ -43,6 +60,10 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
   /**
    * Imports the model from the provider, returns and caches it
    * for further operations.
+   *
+   * @example
+   * const UserModel = await provider.getModel()
+   * const user = await UserModel.find(1)
    */
   protected async getModel() {
     if (this.model && !('hot' in import.meta)) {
@@ -56,6 +77,10 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
 
   /**
    * Returns the tokens provider associated with the user model
+   *
+   * @example
+   * const tokensProvider = await provider.getTokensProvider()
+   * const token = await tokensProvider.create(user, '7d')
    */
   protected async getTokensProvider() {
     const model = await this.getModel()
@@ -71,6 +96,13 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
 
   /**
    * Creates an adapter user for the guard
+   *
+   * @param user - The user model instance
+   *
+   * @example
+   * const guardUser = await provider.createUserForGuard(user)
+   * console.log('User ID:', guardUser.getId())
+   * console.log('Original user:', guardUser.getOriginal())
    */
   async createUserForGuard(
     user: InstanceType<UserModel>
@@ -103,6 +135,15 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
 
   /**
    * Finds a user by their primary key value
+   *
+   * @param identifier - The user identifier to search for
+   *
+   * @example
+   * const guardUser = await provider.findById(123)
+   * if (guardUser) {
+   *   const originalUser = guardUser.getOriginal()
+   *   console.log('Found user:', originalUser.email)
+   * }
    */
   async findById(
     identifier: string | number | BigInt
@@ -119,6 +160,13 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
 
   /**
    * Creates a remember token for a given user
+   *
+   * @param user - The user to create a token for
+   * @param expiresIn - Token expiration time
+   *
+   * @example
+   * const token = await provider.createRememberToken(user, '30d')
+   * console.log('Remember token:', token.value.release())
    */
   async createRememberToken(
     user: InstanceType<UserModel>,
@@ -130,6 +178,16 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
 
   /**
    * Verify a token by its publicly shared value
+   *
+   * @param tokenValue - The token value to verify
+   *
+   * @example
+   * const token = await provider.verifyRememberToken(
+   *   new Secret('rmt_abc123.def456')
+   * )
+   * if (token && !token.isExpired()) {
+   *   console.log('Valid remember token for user:', token.tokenableId)
+   * }
    */
   async verifyRememberToken(tokenValue: Secret<string>): Promise<RememberMeToken | null> {
     const tokensProvider = await this.getTokensProvider()
@@ -138,6 +196,13 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
 
   /**
    * Delete a token for a user by the token identifier
+   *
+   * @param user - The user that owns the token
+   * @param identifier - The token identifier to delete
+   *
+   * @example
+   * const deletedCount = await provider.deleteRemeberToken(user, 123)
+   * console.log('Deleted tokens:', deletedCount)
    */
   async deleteRemeberToken(
     user: InstanceType<UserModel>,
@@ -149,6 +214,14 @@ export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
 
   /**
    * Recycle a token for a user by the token identifier
+   *
+   * @param user - The user that owns the token
+   * @param identifier - The token identifier to recycle
+   * @param expiresIn - New expiration time
+   *
+   * @example
+   * const newToken = await provider.recycleRememberToken(user, 123, '30d')
+   * console.log('Recycled token:', newToken.value.release())
    */
   async recycleRememberToken(
     user: InstanceType<UserModel>,

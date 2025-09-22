@@ -8,5 +8,5 @@
  */
 
 export { BasicAuthGuard } from './guard.ts'
-export { basicAuthGuard, basicAuthUserProvider } from './define_config.ts'
 export { BasicAuthLucidUserProvider } from './user_providers/lucid.ts'
+export { basicAuthGuard, basicAuthUserProvider } from './define_config.ts'

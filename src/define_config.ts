@@ -29,6 +29,24 @@ export type ResolvedAuthConfig<
  * Define configuration for the auth package. The function returns
  * a config provider that is invoked inside the auth service
  * provider
+ *
+ * @param config - Configuration object with default guard and available guards
+ *
+ * @example
+ * import { defineConfig } from '@adonisjs/auth'
+ * import { sessionGuard, sessionUserProvider } from '@adonisjs/auth/session'
+ *
+ * const authConfig = defineConfig({
+ *   default: 'web',
+ *   guards: {
+ *     web: sessionGuard({
+ *       useRememberMeTokens: false,
+ *       provider: sessionUserProvider({
+ *         model: () => import('#models/user')
+ *       })
+ *     })
+ *   }
+ * })
  */
 export function defineConfig<
   KnownGuards extends Record<string, GuardFactory | GuardConfigProvider<GuardFactory>>,

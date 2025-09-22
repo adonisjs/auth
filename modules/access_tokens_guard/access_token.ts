@@ -21,6 +21,20 @@ import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
  *
  * It encapsulates the logic of creating an opaque token, generating
  * its hash and verifying its hash.
+ *
+ * @example
+ * const token = new AccessToken({
+ *   identifier: 1,
+ *   tokenableId: 123,
+ *   type: 'api',
+ *   hash: 'sha256hash',
+ *   createdAt: new Date(),
+ *   updatedAt: new Date(),
+ *   lastUsedAt: null,
+ *   expiresAt: null,
+ *   name: 'API Token',
+ *   abilities: ['read', 'write']
+ * })
  */
 export class AccessToken {
   /**
@@ -29,6 +43,16 @@ export class AccessToken {
    *
    * Returns null when unable to decode the token because of
    * invalid format or encoding.
+   *
+   * @param prefix - The token prefix to validate against
+   * @param value - The token value to decode
+   *
+   * @example
+   * const decoded = AccessToken.decode('oat_', 'oat_abc123.def456')
+   * if (decoded) {
+   *   console.log('Token ID:', decoded.identifier)
+   *   console.log('Secret:', decoded.secret.release())
+   * }
    */
   static decode(
     prefix: string,
@@ -69,6 +93,14 @@ export class AccessToken {
   /**
    * Creates a transient token that can be shared with the persistence
    * layer.
+   *
+   * @param userId - The ID of the user for whom the token is created
+   * @param size - The size of the random secret to generate
+   * @param expiresIn - Optional expiration time (seconds or duration string)
+   *
+   * @example
+   * const transientToken = AccessToken.createTransientToken(123, 32, '7d')
+   * // Store transientToken in database
    */
   static createTransientToken(
     userId: string | number | BigInt,
@@ -92,6 +124,13 @@ export class AccessToken {
    * Creates a secret opaque token and its hash. The secret is
    * suffixed with a crc32 checksum for secret scanning tools
    * to easily identify the token.
+   *
+   * @param size - The size of the random string to generate
+   *
+   * @example
+   * const { secret, hash } = AccessToken.seed(32)
+   * console.log('Secret:', secret.release())
+   * console.log('Hash:', hash)
    */
   static seed(size: number) {
     const seed = string.random(size)
@@ -162,6 +201,25 @@ export class AccessToken {
    */
   abilities: string[]
 
+  /**
+   * Creates a new AccessToken instance
+   *
+   * @param attributes - Token attributes including identifier, user ID, type, hash, etc.
+   *
+   * @example
+   * const token = new AccessToken({
+   *   identifier: 1,
+   *   tokenableId: 123,
+   *   type: 'api',
+   *   hash: 'sha256hash',
+   *   createdAt: new Date(),
+   *   updatedAt: new Date(),
+   *   lastUsedAt: null,
+   *   expiresAt: new Date(Date.now() + 86400000),
+   *   name: 'Mobile App Token',
+   *   abilities: ['read:posts', 'write:posts']
+   * })
+   */
   constructor(attributes: {
     identifier: string | number | BigInt
     tokenableId: string | number | BigInt
@@ -204,6 +262,13 @@ export class AccessToken {
 
   /**
    * Check if the token allows the given ability.
+   *
+   * @param ability - The ability to check
+   *
+   * @example
+   * if (token.allows('read:posts')) {
+   *   console.log('User can read posts')
+   * }
    */
   allows(ability: string) {
     return this.abilities.includes(ability) || this.abilities.includes('*')
@@ -211,6 +276,13 @@ export class AccessToken {
 
   /**
    * Check if the token denies the ability.
+   *
+   * @param ability - The ability to check
+   *
+   * @example
+   * if (token.denies('delete:posts')) {
+   *   console.log('User cannot delete posts')
+   * }
    */
   denies(ability: string) {
     return !this.abilities.includes(ability) && !this.abilities.includes('*')
@@ -218,6 +290,14 @@ export class AccessToken {
 
   /**
    * Authorize ability access using the current access token
+   *
+   * @param ability - The ability to authorize
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When the token denies the ability
+   *
+   * @example
+   * token.authorize('write:posts') // Throws if not allowed
+   * console.log('Authorization successful')
    */
   authorize(ability: string) {
     if (this.denies(ability)) {
@@ -231,6 +311,13 @@ export class AccessToken {
    * date.
    *
    * Tokens with no expiry never expire
+   *
+   * @example
+   * if (token.isExpired()) {
+   *   console.log('Token has expired')
+   * } else {
+   *   console.log('Token is still valid')
+   * }
    */
   isExpired() {
     if (!this.expiresAt) {
@@ -242,12 +329,28 @@ export class AccessToken {
 
   /**
    * Verifies the value of a token against the pre-defined hash
+   *
+   * @param secret - The secret to verify against the stored hash
+   *
+   * @example
+   * const isValid = token.verify(new Secret('user-provided-secret'))
+   * if (isValid) {
+   *   console.log('Token is valid')
+   * }
    */
   verify(secret: Secret<string>): boolean {
     const newHash = createHash('sha256').update(secret.release()).digest('hex')
     return safeEqual(this.hash, newHash)
   }
 
+  /**
+   * Converts the token to a JSON representation suitable for API responses
+   *
+   * @example
+   * const tokenData = token.toJSON()
+   * console.log(tokenData.type) // 'bearer'
+   * console.log(tokenData.token) // 'oat_abc123.def456'
+   */
   toJSON() {
     return {
       type: 'bearer',

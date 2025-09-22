@@ -23,6 +23,15 @@ import type {
 /**
  * Uses a lucid model to verify access tokens and find a user during
  * authentication
+ *
+ * @template TokenableProperty - The property name that holds the tokens provider
+ * @template UserModel - The Lucid model representing the user
+ *
+ * @example
+ * const userProvider = new AccessTokensLucidUserProvider({
+ *   model: () => import('#models/user'),
+ *   tokens: 'accessTokens'
+ * })
  */
 export class AccessTokensLucidUserProvider<
   TokenableProperty extends string,
@@ -36,6 +45,17 @@ export class AccessTokensLucidUserProvider<
    */
   protected model?: UserModel
 
+  /**
+   * Creates a new AccessTokensLucidUserProvider instance
+   *
+   * @param options - Configuration options for the user provider
+   *
+   * @example
+   * const provider = new AccessTokensLucidUserProvider({
+   *   model: () => import('#models/user'),
+   *   tokens: 'accessTokens'
+   * })
+   */
   constructor(
     /**
      * Lucid provider options
@@ -46,6 +66,10 @@ export class AccessTokensLucidUserProvider<
   /**
    * Imports the model from the provider, returns and caches it
    * for further operations.
+   *
+   * @example
+   * const UserModel = await provider.getModel()
+   * const user = await UserModel.find(1)
    */
   protected async getModel() {
     if (this.model && !('hot' in import.meta)) {
@@ -59,6 +83,10 @@ export class AccessTokensLucidUserProvider<
 
   /**
    * Returns the tokens provider associated with the user model
+   *
+   * @example
+   * const tokensProvider = await provider.getTokensProvider()
+   * const token = await tokensProvider.create(user, ['read'])
    */
   protected async getTokensProvider() {
     const model = await this.getModel()
@@ -74,6 +102,13 @@ export class AccessTokensLucidUserProvider<
 
   /**
    * Creates an adapter user for the guard
+   *
+   * @param user - The user model instance
+   *
+   * @example
+   * const guardUser = await provider.createUserForGuard(user)
+   * console.log('User ID:', guardUser.getId())
+   * console.log('Original user:', guardUser.getOriginal())
    */
   async createUserForGuard(
     user: InstanceType<UserModel>
@@ -106,6 +141,17 @@ export class AccessTokensLucidUserProvider<
 
   /**
    * Create a token for a given user
+   *
+   * @param user - The user to create a token for
+   * @param abilities - Optional array of abilities the token should have
+   * @param options - Optional token configuration
+   *
+   * @example
+   * const token = await provider.createToken(user, ['read', 'write'], {
+   *   name: 'API Token',
+   *   expiresIn: '30d'
+   * })
+   * console.log('Created token:', token.value.release())
    */
   async createToken(
     user: InstanceType<UserModel>,
@@ -121,6 +167,14 @@ export class AccessTokensLucidUserProvider<
 
   /**
    * Invalidates a token identified by its publicly shared token
+   *
+   * @param tokenValue - The token value to invalidate
+   *
+   * @example
+   * const wasInvalidated = await provider.invalidateToken(
+   *   new Secret('oat_abc123.def456')
+   * )
+   * console.log('Token invalidated:', wasInvalidated)
    */
   async invalidateToken(tokenValue: Secret<string>) {
     const tokensProvider = await this.getTokensProvider()
@@ -129,6 +183,15 @@ export class AccessTokensLucidUserProvider<
 
   /**
    * Finds a user by the user id
+   *
+   * @param identifier - The user identifier to search for
+   *
+   * @example
+   * const guardUser = await provider.findById(123)
+   * if (guardUser) {
+   *   const originalUser = guardUser.getOriginal()
+   *   console.log('Found user:', originalUser.email)
+   * }
    */
   async findById(
     identifier: string | number | BigInt
@@ -146,6 +209,16 @@ export class AccessTokensLucidUserProvider<
   /**
    * Verifies a publicly shared access token and returns an
    * access token for it.
+   *
+   * @param tokenValue - The token value to verify
+   *
+   * @example
+   * const token = await provider.verifyToken(
+   *   new Secret('oat_abc123.def456')
+   * )
+   * if (token && !token.isExpired()) {
+   *   console.log('Valid token with abilities:', token.abilities)
+   * }
    */
   async verifyToken(tokenValue: Secret<string>): Promise<AccessToken | null> {
     const tokensProvider = await this.getTokensProvider()

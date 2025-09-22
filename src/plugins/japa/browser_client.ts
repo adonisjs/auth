@@ -55,6 +55,15 @@ declare module 'playwright' {
 /**
  * Browser API client to authenticate users when making
  * HTTP requests using the Japa Browser client.
+ *
+ * @param app - The AdonisJS application service instance
+ *
+ * @example
+ * import { authBrowserClient } from '@adonisjs/auth/plugins/japa/browser_client'
+ *
+ * export const plugins: PluginFn[] = [
+ *   authBrowserClient(app)
+ * ]
  */
 export const authBrowserClient = (app: ApplicationService) => {
   const pluginFn: PluginFn = async function () {

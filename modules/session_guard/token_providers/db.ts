@@ -24,12 +24,30 @@ import type {
  * persist tokens for a given user.
  *
  * The user must be an instance of the associated user model.
+ *
+ * @template TokenableModel - The Lucid model that can have remember me tokens
+ *
+ * @example
+ * const provider = new DbRememberMeTokensProvider({
+ *   tokenableModel: () => import('#models/user'),
+ *   table: 'remember_me_tokens',
+ *   tokenSecretLength: 32
+ * })
  */
 export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
   implements RememberMeTokensProviderContract<TokenableModel>
 {
   /**
    * Create tokens provider instance for a given Lucid model
+   *
+   * @param model - The tokenable model factory function
+   * @param options - Optional configuration options
+   *
+   * @example
+   * const provider = DbRememberMeTokensProvider.forModel(
+   *   () => import('#models/user'),
+   *   { table: 'user_remember_tokens' }
+   * )
    */
   static forModel<TokenableModel extends LucidModel>(
     model: DbRememberMeTokensProviderOptions<TokenableModel>['tokenableModel'],
@@ -52,6 +70,18 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
    */
   protected tokenSecretLength: number
 
+  /**
+   * Creates a new DbRememberMeTokensProvider instance
+   *
+   * @param options - Configuration options for the provider
+   *
+   * @example
+   * const provider = new DbRememberMeTokensProvider({
+   *   tokenableModel: () => import('#models/user'),
+   *   table: 'remember_me_tokens',
+   *   tokenSecretLength: 40
+   * })
+   */
   constructor(protected options: DbRememberMeTokensProviderOptions<TokenableModel>) {
     this.table = options.table || 'remember_me_tokens'
     this.tokenSecretLength = options.tokenSecretLength || 40
@@ -85,6 +115,16 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Maps a database row to an instance token instance
+   *
+   * @param dbRow - The database row containing token data
+   *
+   * @example
+   * const token = provider.dbRowToRememberMeToken({
+   *   id: 1,
+   *   tokenable_id: 123,
+   *   hash: 'sha256hash',
+   *   // ... other columns
+   * })
    */
   protected dbRowToRememberMeToken(dbRow: RememberMeTokenDbColumns): RememberMeToken {
     return new RememberMeToken({
@@ -102,6 +142,10 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Returns a query client instance from the parent model
+   *
+   * @example
+   * const db = await provider.getDb()
+   * const tokens = await db.from('remember_me_tokens').select('*')
    */
   protected async getDb() {
     const model = this.options.tokenableModel
@@ -110,6 +154,13 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Create a token for a user
+   *
+   * @param user - The user instance to create a token for
+   * @param expiresIn - Token expiration time
+   *
+   * @example
+   * const token = await provider.create(user, '30d')
+   * console.log('Remember token:', token.value.release())
    */
   async create(user: InstanceType<TokenableModel>, expiresIn: string | number) {
     this.#ensureIsPersisted(user)
@@ -171,6 +222,15 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Find a token for a user by the token id
+   *
+   * @param user - The user instance that owns the token
+   * @param identifier - The token identifier to search for
+   *
+   * @example
+   * const token = await provider.find(user, 123)
+   * if (token) {
+   *   console.log('Found token with id:', token.identifier)
+   * }
    */
   async find(user: InstanceType<TokenableModel>, identifier: string | number | BigInt) {
     this.#ensureIsPersisted(user)
@@ -192,6 +252,13 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Delete a token by its id
+   *
+   * @param user - The user instance that owns the token
+   * @param identifier - The token identifier to delete
+   *
+   * @example
+   * const deletedCount = await provider.delete(user, 123)
+   * console.log('Deleted tokens:', deletedCount)
    */
   async delete(
     user: InstanceType<TokenableModel>,
@@ -212,6 +279,13 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
 
   /**
    * Returns all the tokens a given user
+   *
+   * @param user - The user instance to get tokens for
+   *
+   * @example
+   * const tokens = await provider.all(user)
+   * console.log('User has', tokens.length, 'remember tokens')
+   * tokens.forEach(token => console.log(token.identifier))
    */
   async all(user: InstanceType<TokenableModel>) {
     this.#ensureIsPersisted(user)
@@ -235,6 +309,14 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
    *
    * Returns null when unable to verify the token or find it
    * inside the storage
+   *
+   * @param tokenValue - The token value to verify
+   *
+   * @example
+   * const token = await provider.verify(new Secret('rmt_abc123.def456'))
+   * if (token && !token.isExpired()) {
+   *   console.log('Valid remember token for user:', token.tokenableId)
+   * }
    */
   async verify(tokenValue: Secret<string>) {
     const decodedToken = RememberMeToken.decode(tokenValue.release())
@@ -276,6 +358,14 @@ export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
    * Ideally, the recycle should update the existing token, but we
    * skip that for now and come back to it later and handle race
    * conditions as well.
+   *
+   * @param user - The user that owns the token
+   * @param identifier - The token identifier to recycle
+   * @param expiresIn - New expiration time
+   *
+   * @example
+   * const newToken = await provider.recycle(user, 123, '30d')
+   * console.log('Recycled token:', newToken.value.release())
    */
   async recycle(
     user: InstanceType<TokenableModel>,

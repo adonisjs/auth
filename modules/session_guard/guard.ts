@@ -12,8 +12,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import type { EmitterLike } from '@adonisjs/core/types/events'
 
-import { type RememberMeToken } from './remember_me_token.ts'
 import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
+import { type RememberMeToken } from './remember_me_token.ts'
 import type { AuthClientResponse, GuardContract } from '../../src/types.ts'
 import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.ts'
 import type {
@@ -26,6 +26,21 @@ import type {
 /**
  * Session guard uses AdonisJS session store to track logged-in
  * user information.
+ *
+ * @template UseRememberTokens - Whether the guard supports remember me tokens
+ * @template UserProvider - The user provider contract
+ *
+ * @example
+ * const guard = new SessionGuard(
+ *   'web',
+ *   ctx,
+ *   { useRememberMeTokens: true },
+ *   emitter,
+ *   userProvider
+ * )
+ *
+ * const user = await guard.authenticate()
+ * console.log('Authenticated user:', user.email)
  */
 export class SessionGuard<
   UseRememberTokens extends boolean,
@@ -115,6 +130,9 @@ export class SessionGuard<
   /**
    * The key used to store the logged-in user id inside
    * session
+   *
+   * @example
+   * console.log('Session key:', guard.sessionKeyName) // 'auth_web'
    */
   get sessionKeyName() {
     return `auth_${this.#name}`
@@ -122,11 +140,32 @@ export class SessionGuard<
 
   /**
    * The key used to store the remember me token cookie
+   *
+   * @example
+   * console.log('Remember me key:', guard.rememberMeKeyName) // 'remember_web'
    */
   get rememberMeKeyName() {
     return `remember_${this.#name}`
   }
 
+  /**
+   * Creates a new SessionGuard instance
+   *
+   * @param name - Unique name for the guard instance
+   * @param ctx - HTTP context for the current request
+   * @param options - Configuration options for the session guard
+   * @param emitter - Event emitter for guard events
+   * @param userProvider - User provider for authentication
+   *
+   * @example
+   * const guard = new SessionGuard(
+   *   'web',
+   *   ctx,
+   *   { useRememberMeTokens: true, rememberMeTokensAge: '30d' },
+   *   emitter,
+   *   userProvider
+   * )
+   */
   constructor(
     name: string,
     ctx: HttpContext,

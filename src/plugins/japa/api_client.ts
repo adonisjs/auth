@@ -59,6 +59,15 @@ declare module '@japa/api-client' {
 /**
  * Auth API client to authenticate users when making
  * HTTP requests using the Japa API client
+ *
+ * @param app - The AdonisJS application service instance
+ *
+ * @example
+ * import { authApiClient } from '@adonisjs/auth/plugins/japa/api_client'
+ *
+ * export const plugins: PluginFn[] = [
+ *   authApiClient(app)
+ * ]
  */
 export const authApiClient = (app: ApplicationService) => {
   const pluginFn: PluginFn = function () {

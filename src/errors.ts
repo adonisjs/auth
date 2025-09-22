@@ -130,6 +130,13 @@ export const E_UNAUTHORIZED_ACCESS = class extends Exception {
    * Returns the message to be sent in the HTTP response.
    * Feel free to override this method and return a custom
    * response.
+   *
+   * @param error - The error instance
+   * @param ctx - The HTTP context
+   *
+   * @example
+   * const message = error.getResponseMessage(error, ctx)
+   * console.log('Error message:', message)
    */
   getResponseMessage(error: this, ctx: HttpContext) {
     if ('i18n' in ctx) {
@@ -138,6 +145,18 @@ export const E_UNAUTHORIZED_ACCESS = class extends Exception {
     return error.message
   }
 
+  /**
+   * Creates a new E_UNAUTHORIZED_ACCESS exception
+   *
+   * @param message - The error message
+   * @param options - Options including redirectTo and guardDriverName
+   *
+   * @example
+   * throw new E_UNAUTHORIZED_ACCESS('Access denied', {
+   *   guardDriverName: 'session',
+   *   redirectTo: '/login'
+   * })
+   */
   constructor(
     message: string,
     options: {
@@ -152,6 +171,13 @@ export const E_UNAUTHORIZED_ACCESS = class extends Exception {
 
   /**
    * Converts exception to an HTTP response
+   *
+   * @param error - The error instance
+   * @param ctx - The HTTP context
+   *
+   * @example
+   * // This method is called automatically by AdonisJS
+   * await error.handle(error, ctx)
    */
   async handle(error: this, ctx: HttpContext) {
     const renderer = this.renderers[this.guardDriverName]
@@ -167,6 +193,9 @@ export const E_UNAUTHORIZED_ACCESS = class extends Exception {
 
 /**
  * Exception is raised when user credentials are invalid
+ *
+ * @example
+ * throw new E_INVALID_CREDENTIALS('Invalid email or password')
  */
 export const E_INVALID_CREDENTIALS = class extends Exception {
   static status: number = 400
@@ -181,6 +210,13 @@ export const E_INVALID_CREDENTIALS = class extends Exception {
    * Returns the message to be sent in the HTTP response.
    * Feel free to override this method and return a custom
    * response.
+   *
+   * @param error - The error instance
+   * @param ctx - The HTTP context
+   *
+   * @example
+   * const message = error.getResponseMessage(error, ctx)
+   * console.log('Error message:', message)
    */
   getResponseMessage(error: this, ctx: HttpContext) {
     if ('i18n' in ctx) {
@@ -191,6 +227,13 @@ export const E_INVALID_CREDENTIALS = class extends Exception {
 
   /**
    * Converts exception to an HTTP response
+   *
+   * @param error - The error instance
+   * @param ctx - The HTTP context
+   *
+   * @example
+   * // This method is called automatically by AdonisJS
+   * await error.handle(error, ctx)
    */
   async handle(error: this, ctx: HttpContext) {
     const message = this.getResponseMessage(error, ctx)

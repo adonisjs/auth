@@ -20,9 +20,30 @@ declare module '@adonisjs/core/types' {
   }
 }
 
+/**
+ * The AuthProvider service provider registers the auth manager
+ * with the IoC container as a singleton
+ *
+ * @example
+ * // The auth manager is automatically registered and can be injected
+ * container.use('auth.manager')
+ */
 export default class AuthProvider {
+  /**
+   * Creates a new AuthProvider instance
+   *
+   * @param app - The application service instance
+   */
   constructor(protected app: ApplicationService) {}
 
+  /**
+   * Registers the auth manager as a singleton service
+   * in the IoC container
+   *
+   * @example
+   * // This method is called automatically by AdonisJS
+   * // The auth manager becomes available as 'auth.manager'
+   */
   register() {
     this.app.container.singleton('auth.manager', async () => {
       const authConfigProvider = this.app.config.get('auth')

@@ -19,6 +19,13 @@ import type {
 /**
  * Uses a Lucid model to verify access tokens and find a user during
  * authentication
+ *
+ * @template UserModel - The Lucid model representing the user
+ *
+ * @example
+ * const userProvider = new BasicAuthLucidUserProvider({
+ *   model: () => import('#models/user')
+ * })
  */
 export class BasicAuthLucidUserProvider<UserModel extends LucidAuthenticatable>
   implements BasicAuthUserProviderContract<InstanceType<UserModel>>
@@ -30,6 +37,16 @@ export class BasicAuthLucidUserProvider<UserModel extends LucidAuthenticatable>
    */
   protected model?: UserModel
 
+  /**
+   * Creates a new BasicAuthLucidUserProvider instance
+   *
+   * @param options - Configuration options for the user provider
+   *
+   * @example
+   * const provider = new BasicAuthLucidUserProvider({
+   *   model: () => import('#models/user')
+   * })
+   */
   constructor(
     /**
      * Lucid provider options

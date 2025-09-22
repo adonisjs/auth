@@ -114,6 +114,18 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
     return this.use(this.#authenticationAttemptedViaGuard).authenticationAttempted
   }
 
+  /**
+   * Creates a new Authenticator instance
+   *
+   * @param ctx - The HTTP context for the current request
+   * @param config - Configuration object containing default guard and available guards
+   *
+   * @example
+   * const authenticator = new Authenticator(ctx, {
+   *   default: 'web',
+   *   guards: { web: sessionGuard }
+   * })
+   */
   constructor(ctx: HttpContext, config: { default: keyof KnownGuards; guards: KnownGuards }) {
     this.#ctx = ctx
     this.#config = config
@@ -121,8 +133,13 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
   }
 
   /**
-   * Returns an instance of the logged-in user or throws an
-   * exception
+   * Returns an instance of the logged-in user or throws an exception
+   *
+   * @throws {RuntimeException} When authentication has not been attempted
+   *
+   * @example
+   * const user = auth.getUserOrFail()
+   * console.log(user.id)
    */
   getUserOrFail(): {
     [K in keyof KnownGuards]: ReturnType<ReturnType<KnownGuards[K]>['getUserOrFail']>
@@ -141,6 +158,12 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
   /**
    * Returns an instance of a known guard. Guards instances are
    * cached during the lifecycle of an HTTP request.
+   *
+   * @param guard - Optional guard name. Uses default guard if not provided
+   *
+   * @example
+   * const sessionGuard = auth.use('session')
+   * const defaultGuard = auth.use()
    */
   use<Guard extends keyof KnownGuards>(guard?: Guard): ReturnType<KnownGuards[Guard]> {
     const guardToUse = guard || this.#config.default
@@ -170,6 +193,12 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
    * Authenticate current request using the default guard. Calling this
    * method multiple times triggers multiple authentication with the
    * guard.
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When authentication fails
+   *
+   * @example
+   * const user = await auth.authenticate()
+   * console.log('Authenticated user:', user.email)
    */
   async authenticate() {
     await this.authenticateUsing()
@@ -180,6 +209,12 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
    * Silently attempt to authenticate the request using the default
    * guard. Calling this method multiple times triggers multiple
    * authentication with the guard.
+   *
+   * @example
+   * const isAuthenticated = await auth.check()
+   * if (isAuthenticated) {
+   *   console.log('User is authenticated')
+   * }
    */
   async check() {
     this.#authenticationAttemptedViaGuard = this.defaultGuard
@@ -199,6 +234,15 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
    * guards is able to authenticate the request successfully.
    *
    * Otherwise, "E_UNAUTHORIZED_ACCESS" will be raised.
+   *
+   * @param guards - Array of guard names to try for authentication
+   * @param options - Options object with optional loginRoute for redirects
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When none of the guards can authenticate
+   *
+   * @example
+   * const user = await auth.authenticateUsing(['session', 'api'])
+   * const userWithRedirect = await auth.authenticateUsing(['web'], { loginRoute: '/login' })
    */
   async authenticateUsing(
     guards?: (keyof KnownGuards)[],
@@ -234,6 +278,14 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
    * Silently attempt to authenticate the request using all of the mentioned guards
    * or the default guard. Calling this method multiple times triggers multiple
    * authentication with the guard.
+   *
+   * @param guards - Array of guard names to check. Defaults to default guard
+   *
+   * @example
+   * const isAuthenticated = await auth.checkUsing(['session', 'api'])
+   * if (isAuthenticated) {
+   *   const user = auth.user
+   * }
    */
   async checkUsing(guards: (keyof KnownGuards)[] = [this.defaultGuard]) {
     for (const name of guards) {
