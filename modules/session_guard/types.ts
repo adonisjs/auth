@@ -12,7 +12,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { Exception } from '@adonisjs/core/exceptions'
 import type { LucidModel } from '@adonisjs/lucid/types/model'
 
-import { PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { type PROVIDER_REAL_USER } from '../../src/symbols.js'
 import type { RememberMeToken } from './remember_me_token.js'
 
 /**

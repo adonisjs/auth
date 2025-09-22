@@ -3,7 +3,7 @@
   "description": "Official authentication provider for Adonis framework",
   "version": "9.4.2",
   "engines": {
-    "node": ">=18.16.0"
+    "node": ">=24.0.0"
   },
   "main": "build/index.js",
   "type": "module",
@@ -48,28 +48,27 @@
     "prepublishOnly": "npm run build",
     "release": "release-it",
     "version": "npm run build",
-    "quick:test": "cross-env NODE_DEBUG=\"adonisjs:auth:*\" node --enable-source-maps --import=ts-node-maintained/register/esm ./bin/test.js"
+    "quick:test": "cross-env NODE_DEBUG=\"adonisjs:auth:*\" node --enable-source-maps --import=@poppinss/ts-exec ./bin/test.js"
   },
   "devDependencies": {
-    "@adonisjs/assembler": "^7.8.2",
-    "@adonisjs/core": "^6.19.0",
-    "@adonisjs/eslint-config": "^2.1.2",
-    "@adonisjs/hash": "^9.1.1",
-    "@adonisjs/i18n": "^2.2.2",
-    "@adonisjs/lucid": "^21.8.0",
+    "@adonisjs/assembler": "^8.0.0-next.9",
+    "@adonisjs/core": "^7.0.0-next.1",
+    "@adonisjs/eslint-config": "^3.0.0-next.1",
+    "@adonisjs/i18n": "^3.0.0-next.0",
+    "@adonisjs/lucid": "^22.0.0-next.0",
     "@adonisjs/prettier-config": "^1.4.5",
-    "@adonisjs/session": "^7.5.1",
-    "@adonisjs/tsconfig": "^1.4.1",
+    "@adonisjs/session": "^8.0.0-next.0",
+    "@adonisjs/tsconfig": "^2.0.0-next.0",
     "@japa/api-client": "^3.1.0",
     "@japa/assert": "^4.1.1",
     "@japa/browser-client": "^2.1.1",
     "@japa/expect-type": "^2.0.3",
     "@japa/file-system": "^2.3.2",
-    "@japa/plugin-adonisjs": "^4.0.0",
+    "@japa/plugin-adonisjs": "^5.0.0-next.0",
     "@japa/runner": "^4.4.0",
     "@japa/snapshot": "^2.0.9",
+    "@poppinss/ts-exec": "^1.4.1",
     "@release-it/conventional-changelog": "^10.0.1",
-    "@swc/core": "1.13.5",
     "@types/basic-auth": "^1.1.8",
     "@types/luxon": "^3.7.1",
     "@types/node": "^24.5.2",
@@ -94,24 +93,26 @@
     "sqlite3": "^5.1.7",
     "tedious": "^18.6.1",
     "timekeeper": "^2.3.1",
-    "ts-node-maintained": "^10.9.6",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@adonisjs/presets": "^2.6.4",
-    "@poppinss/utils": "^6.10.1",
+    "@adonisjs/presets": "^3.0.0-next.0",
     "basic-auth": "^2.0.1"
   },
   "peerDependencies": {
-    "@adonisjs/core": "^6.11.0",
-    "@adonisjs/lucid": "^20.0.0 || ^21.0.1",
-    "@adonisjs/session": "^7.4.1",
-    "@japa/api-client": "^2.0.3 || ^3.0.0",
-    "@japa/browser-client": "^2.0.3",
-    "@japa/plugin-adonisjs": "^3.0.1 || ^4.0.0"
+    "@adonisjs/assembler": "^8.0.0-next.9",
+    "@adonisjs/core": "^7.0.0-next.1",
+    "@adonisjs/lucid": "^22.0.0-next.0",
+    "@adonisjs/session": "^8.0.0-next.0",
+    "@japa/api-client": "^3.1.0",
+    "@japa/browser-client": "^2.1.1",
+    "@japa/plugin-adonisjs": "^5.0.0-next.0"
   },
   "peerDependenciesMeta": {
+    "@adonisjs/assembler": {
+      "optional": true
+    },
     "@adonisjs/lucid": {
       "optional": true
     },

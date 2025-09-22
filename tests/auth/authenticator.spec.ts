@@ -12,7 +12,7 @@ import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
 import { Authenticator } from '../../src/authenticator.js'
 import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
-import { FakeGuard, FakeUser } from '../../factories/auth/main.js'
+import { FakeGuard, type FakeUser } from '../../factories/auth/main.js'
 
 test.group('Authenticator', () => {
   test('create authenticator with guards', async ({ assert, expectTypeOf }) => {

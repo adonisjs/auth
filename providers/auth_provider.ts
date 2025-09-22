@@ -8,7 +8,7 @@
  */
 
 import { configProvider } from '@adonisjs/core'
-import { RuntimeException } from '@poppinss/utils'
+import { RuntimeException } from '@adonisjs/core/exceptions'
 import type { ApplicationService } from '@adonisjs/core/types'
 
 import type { AuthService } from '../src/types.js'

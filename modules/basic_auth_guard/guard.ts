@@ -14,7 +14,7 @@ import type { EmitterLike } from '@adonisjs/core/types/events'
 
 import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
 import type { AuthClientResponse, GuardContract } from '../../src/types.js'
-import { GUARD_KNOWN_EVENTS, PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.js'
 import type { BasicAuthGuardEvents, BasicAuthUserProviderContract } from './types.js'
 
 /**

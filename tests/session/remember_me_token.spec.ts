@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { Secret, base64 } from '@poppinss/utils'
+import { Secret, base64 } from '@adonisjs/core/helpers'
 
 import { freezeTime } from '../helpers.js'
 import { RememberMeToken } from '../../modules/session_guard/remember_me_token.js'

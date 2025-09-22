@@ -13,7 +13,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 import { withAuthFinder } from '../../../src/mixins/lucid.js'
 import { createDatabase, createTables, getHasher } from '../../helpers.js'
-import { BasicAuthGuardUser } from '../../../modules/basic_auth_guard/types.js'
+import { type BasicAuthGuardUser } from '../../../modules/basic_auth_guard/types.js'
 import { BasicAuthLucidUserProvider } from '../../../modules/basic_auth_guard/user_providers/lucid.js'
 
 test.group('Basic auth user provider | Lucid | verifyCredentials', () => {

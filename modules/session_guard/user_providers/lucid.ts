@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Secret } from '@adonisjs/core/helpers'
+import { type Secret } from '@adonisjs/core/helpers'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 
-import { RememberMeToken } from '../remember_me_token.js'
+import { type RememberMeToken } from '../remember_me_token.js'
 import { PROVIDER_REAL_USER } from '../../../src/symbols.js'
 import type {
   SessionGuardUser,

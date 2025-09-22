@@ -16,7 +16,7 @@ import { SessionGuard } from '../../../modules/session_guard/guard.js'
 import type { SessionGuardEvents } from '../../../modules/session_guard/types.js'
 import { RememberMeToken } from '../../../modules/session_guard/remember_me_token.js'
 import {
-  SessionFakeUser,
+  type SessionFakeUser,
   SessionFakeUserProvider,
   SessionFakeUserWithTokensProvider,
 } from '../../../factories/session/main.js'

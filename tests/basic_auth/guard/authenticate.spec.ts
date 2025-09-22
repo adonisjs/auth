@@ -14,8 +14,11 @@ import { HttpContextFactory } from '@adonisjs/core/factories/http'
 import { createEmitter, pEvent } from '../../helpers.js'
 import { E_UNAUTHORIZED_ACCESS } from '../../../src/errors.js'
 import { BasicAuthGuard } from '../../../modules/basic_auth_guard/guard.js'
-import { BasicAuthGuardEvents } from '../../../modules/basic_auth_guard/types.js'
-import { BasicAuthFakeUser, BasicAuthFakeUserProvider } from '../../../factories/basic_auth/main.js'
+import { type BasicAuthGuardEvents } from '../../../modules/basic_auth_guard/types.js'
+import {
+  type BasicAuthFakeUser,
+  BasicAuthFakeUserProvider,
+} from '../../../factories/basic_auth/main.js'
 
 test.group('Basic auth guard | authenticate', () => {
   test('return user when credentials are valid', async ({ assert, expectTypeOf }) => {

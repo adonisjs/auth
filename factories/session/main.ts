@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import { Secret } from '@adonisjs/core/helpers'
+import { type Secret } from '@adonisjs/core/helpers'
 import { setTimeout } from 'node:timers/promises'
 import stringHelpers from '@adonisjs/core/helpers/string'
 
 import { PROVIDER_REAL_USER } from '../../src/symbols.js'
 import {
-  RememberMeTokenDbColumns,
-  SessionUserProviderContract,
-  SessionWithTokensUserProviderContract,
+  type RememberMeTokenDbColumns,
+  type SessionUserProviderContract,
+  type SessionWithTokensUserProviderContract,
 } from '../../modules/session_guard/types.js'
 import { RememberMeToken } from '../../modules/session_guard/remember_me_token.js'
 

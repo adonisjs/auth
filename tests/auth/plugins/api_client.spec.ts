@@ -15,9 +15,9 @@ import { runner } from '@japa/runner/factories'
 import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 
-import { Guards } from './global_types.js'
+import { type Guards } from './global_types.js'
 import { AuthManager } from '../../../src/auth_manager.js'
-import { FakeGuard, FakeUser } from '../../../factories/auth/main.js'
+import { FakeGuard, type FakeUser } from '../../../factories/auth/main.js'
 import { authApiClient } from '../../../src/plugins/japa/api_client.js'
 
 test.group('Api client | loginAs', () => {

@@ -12,10 +12,10 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import type { EmitterLike } from '@adonisjs/core/types/events'
 
-import { RememberMeToken } from './remember_me_token.js'
+import { type RememberMeToken } from './remember_me_token.js'
 import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
 import type { AuthClientResponse, GuardContract } from '../../src/types.js'
-import { GUARD_KNOWN_EVENTS, PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.js'
 import type {
   SessionGuardEvents,
   SessionGuardOptions,
