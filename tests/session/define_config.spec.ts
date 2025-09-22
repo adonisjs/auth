@@ -14,9 +14,9 @@ import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
-import { createEmitter } from '../helpers.js'
-import { SessionGuard, SessionLucidUserProvider } from '../../modules/session_guard/main.js'
-import { sessionGuard, sessionUserProvider } from '../../modules/session_guard/define_config.js'
+import { createEmitter } from '../helpers.ts'
+import { SessionGuard, SessionLucidUserProvider } from '../../modules/session_guard/main.ts'
+import { sessionGuard, sessionUserProvider } from '../../modules/session_guard/define_config.ts'
 
 test.group('defineConfig', () => {
   test('configure lucid user provider', ({ assert, expectTypeOf }) => {

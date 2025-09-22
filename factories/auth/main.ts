@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { GUARD_KNOWN_EVENTS } from '../../src/symbols.js'
-import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
-import { type AuthClientResponse, type GuardContract } from '../../src/types.js'
+import { GUARD_KNOWN_EVENTS } from '../../src/symbols.ts'
+import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
+import { type AuthClientResponse, type GuardContract } from '../../src/types.ts'
 
 /**
  * @note

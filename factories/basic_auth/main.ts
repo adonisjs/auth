@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { PROVIDER_REAL_USER } from '../../src/symbols.ts'
 import {
   type BasicAuthGuardUser,
   type BasicAuthUserProviderContract,
-} from '../../modules/basic_auth_guard/types.js'
+} from '../../modules/basic_auth_guard/types.ts'
 
 /**
  * Representation of a fake user used to test

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import debug from './debug.js'
-import type { GuardFactory } from './types.js'
+import debug from './debug.ts'
+import type { GuardFactory } from './types.ts'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
 /**

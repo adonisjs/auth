@@ -11,11 +11,11 @@ import { Secret } from '@adonisjs/core/helpers'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { EmitterLike } from '@adonisjs/core/types/events'
 
-import type { AccessToken } from './access_token.js'
-import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
-import type { AuthClientResponse, GuardContract } from '../../src/types.js'
-import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.js'
-import type { AccessTokensGuardEvents, AccessTokensUserProviderContract } from './types.js'
+import type { AccessToken } from './access_token.ts'
+import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
+import type { AuthClientResponse, GuardContract } from '../../src/types.ts'
+import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.ts'
+import type { AccessTokensGuardEvents, AccessTokensUserProviderContract } from './types.ts'
 
 /**
  * Implementation of access tokens guard for the Auth layer. The heavy lifting

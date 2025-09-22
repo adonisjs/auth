@@ -10,8 +10,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { ApplicationService, ConfigProvider } from '@adonisjs/core/types'
 
-import type { AuthManager } from './auth_manager.js'
-import type { GUARD_KNOWN_EVENTS } from './symbols.js'
+import type { AuthManager } from './auth_manager.ts'
+import type { GUARD_KNOWN_EVENTS } from './symbols.ts'
 
 /**
  * Authentication response to login a user as a client.

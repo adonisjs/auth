@@ -12,7 +12,7 @@ import { I18nManagerFactory } from '@adonisjs/i18n/factories'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 import { SessionMiddlewareFactory } from '@adonisjs/session/factories'
 
-import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
+import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
 
 test.group('Errors | E_UNAUTHORIZED_ACCESS | session', () => {
   test('report error via flash messages and redirect', async ({ assert }) => {

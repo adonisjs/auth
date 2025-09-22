@@ -11,10 +11,10 @@ import { test } from '@japa/runner'
 import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-import { withAuthFinder } from '../../../src/mixins/lucid.js'
-import { createDatabase, createTables, getHasher } from '../../helpers.js'
-import { type BasicAuthGuardUser } from '../../../modules/basic_auth_guard/types.js'
-import { BasicAuthLucidUserProvider } from '../../../modules/basic_auth_guard/user_providers/lucid.js'
+import { withAuthFinder } from '../../../src/mixins/lucid.ts'
+import { createDatabase, createTables, getHasher } from '../../helpers.ts'
+import { type BasicAuthGuardUser } from '../../../modules/basic_auth_guard/types.ts'
+import { BasicAuthLucidUserProvider } from '../../../modules/basic_auth_guard/user_providers/lucid.ts'
 
 test.group('Basic auth user provider | Lucid | verifyCredentials', () => {
   test('return user when credentials are valid', async ({ assert, expectTypeOf }) => {

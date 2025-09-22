@@ -15,10 +15,10 @@ import { runner } from '@japa/runner/factories'
 import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 
-import { type Guards } from './global_types.js'
-import { AuthManager } from '../../../src/auth_manager.js'
-import { FakeGuard, type FakeUser } from '../../../factories/auth/main.js'
-import { authApiClient } from '../../../src/plugins/japa/api_client.js'
+import { type Guards } from './global_types.ts'
+import { AuthManager } from '../../../src/auth_manager.ts'
+import { FakeGuard, type FakeUser } from '../../../factories/auth/main.ts'
+import { authApiClient } from '../../../src/plugins/japa/api_client.ts'
 
 test.group('Api client | loginAs', () => {
   test('login user using the guard authenticate as client method', async ({

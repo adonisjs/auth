@@ -8,13 +8,13 @@
  */
 
 import { RuntimeException } from '@adonisjs/core/exceptions'
-import { PROVIDER_REAL_USER } from '../../../src/symbols.js'
+import { PROVIDER_REAL_USER } from '../../../src/symbols.ts'
 import type {
   BasicAuthGuardUser,
   LucidAuthenticatable,
   BasicAuthUserProviderContract,
   BasicAuthLucidUserProviderOptions,
-} from '../types.js'
+} from '../types.ts'
 
 /**
  * Uses a Lucid model to verify access tokens and find a user during

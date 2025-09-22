@@ -11,14 +11,14 @@ import { type Secret } from '@adonisjs/core/helpers'
 import type { LucidRow } from '@adonisjs/lucid/types/model'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 
-import { type AccessToken } from '../access_token.js'
-import { PROVIDER_REAL_USER } from '../../../src/symbols.js'
+import { type AccessToken } from '../access_token.ts'
+import { PROVIDER_REAL_USER } from '../../../src/symbols.ts'
 import type {
   LucidTokenable,
   AccessTokensGuardUser,
   AccessTokensUserProviderContract,
   AccessTokensLucidUserProviderOptions,
-} from '../types.js'
+} from '../types.ts'
 
 /**
  * Uses a lucid model to verify access tokens and find a user during

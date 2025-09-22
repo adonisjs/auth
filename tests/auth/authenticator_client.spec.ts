@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { FakeGuard, type FakeUser } from '../../factories/auth/main.js'
-import { AuthenticatorClient } from '../../src/authenticator_client.js'
+import { FakeGuard, type FakeUser } from '../../factories/auth/main.ts'
+import { AuthenticatorClient } from '../../src/authenticator_client.ts'
 
 test.group('Authenticator client', () => {
   test('create authenticator client with guards', async ({ assert, expectTypeOf }) => {

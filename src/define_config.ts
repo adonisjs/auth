@@ -9,7 +9,7 @@
 
 import { configProvider } from '@adonisjs/core'
 import type { ConfigProvider } from '@adonisjs/core/types'
-import type { GuardConfigProvider, GuardFactory } from './types.js'
+import type { GuardConfigProvider, GuardFactory } from './types.ts'
 
 /**
  * Config resolved by the "defineConfig" method

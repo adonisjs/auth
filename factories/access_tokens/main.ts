@@ -9,9 +9,9 @@
 
 import { type Secret } from '@adonisjs/core/helpers'
 import stringHelpers from '@adonisjs/core/helpers/string'
-import { PROVIDER_REAL_USER } from '../../src/symbols.js'
-import { AccessToken } from '../../modules/access_tokens_guard/access_token.js'
-import { type AccessTokensUserProviderContract } from '../../modules/access_tokens_guard/types.js'
+import { PROVIDER_REAL_USER } from '../../src/symbols.ts'
+import { AccessToken } from '../../modules/access_tokens_guard/access_token.ts'
+import { type AccessTokensUserProviderContract } from '../../modules/access_tokens_guard/types.ts'
 
 /**
  * Representation of a fake user used to test

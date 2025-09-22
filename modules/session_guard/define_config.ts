@@ -10,16 +10,16 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { ConfigProvider } from '@adonisjs/core/types'
 
-import { SessionGuard } from './guard.js'
-import type { GuardConfigProvider } from '../../src/types.js'
-import { SessionLucidUserProvider } from './user_providers/lucid.js'
+import { SessionGuard } from './guard.ts'
+import type { GuardConfigProvider } from '../../src/types.ts'
+import { SessionLucidUserProvider } from './user_providers/lucid.ts'
 import type {
   SessionGuardOptions,
   LucidAuthenticatable,
   SessionUserProviderContract,
   SessionLucidUserProviderOptions,
   SessionWithTokensUserProviderContract,
-} from './types.js'
+} from './types.ts'
 
 /**
  * Configures session tokens guard for authentication

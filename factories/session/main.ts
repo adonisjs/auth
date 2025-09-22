@@ -11,13 +11,13 @@ import { type Secret } from '@adonisjs/core/helpers'
 import { setTimeout } from 'node:timers/promises'
 import stringHelpers from '@adonisjs/core/helpers/string'
 
-import { PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { PROVIDER_REAL_USER } from '../../src/symbols.ts'
 import {
   type RememberMeTokenDbColumns,
   type SessionUserProviderContract,
   type SessionWithTokensUserProviderContract,
-} from '../../modules/session_guard/types.js'
-import { RememberMeToken } from '../../modules/session_guard/remember_me_token.js'
+} from '../../modules/session_guard/types.ts'
+import { RememberMeToken } from '../../modules/session_guard/remember_me_token.ts'
 
 /**
  * Representation of a fake user used to test

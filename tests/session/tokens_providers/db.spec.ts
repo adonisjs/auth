@@ -11,9 +11,9 @@ import { test } from '@japa/runner'
 import { Secret } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-import { createDatabase, createTables, timeTravel } from '../../helpers.js'
-import { RememberMeToken } from '../../../modules/session_guard/remember_me_token.js'
-import { DbRememberMeTokensProvider } from '../../../modules/session_guard/token_providers/db.js'
+import { createDatabase, createTables, timeTravel } from '../../helpers.ts'
+import { RememberMeToken } from '../../../modules/session_guard/remember_me_token.ts'
+import { DbRememberMeTokensProvider } from '../../../modules/session_guard/token_providers/db.ts'
 
 test.group('RememberMe tokens provider | DB | create', () => {
   test('create token for a user', async ({ assert }) => {

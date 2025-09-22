@@ -14,14 +14,14 @@ import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
-import { createEmitter } from '../helpers.js'
+import { createEmitter } from '../helpers.ts'
 import {
   tokensGuard,
   AccessTokensGuard,
   tokensUserProvider,
   DbAccessTokensProvider,
   AccessTokensLucidUserProvider,
-} from '../../modules/access_tokens_guard/main.js'
+} from '../../modules/access_tokens_guard/main.ts'
 
 test.group('defineConfig', () => {
   test('configure lucid user provider', ({ assert, expectTypeOf }) => {

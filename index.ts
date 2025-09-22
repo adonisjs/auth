@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-export * as errors from './src/errors.js'
-export { configure } from './configure.js'
-export * as symbols from './src/symbols.js'
-export { AuthManager } from './src/auth_manager.js'
-export { defineConfig } from './src/define_config.js'
-export { Authenticator } from './src/authenticator.js'
-export { AuthenticatorClient } from './src/authenticator_client.js'
-import type { withAuthFinder as withAuthFinderType } from './src/mixins/lucid.js'
+export * as errors from './src/errors.ts'
+export { configure } from './configure.ts'
+export * as symbols from './src/symbols.ts'
+export { AuthManager } from './src/auth_manager.ts'
+export { defineConfig } from './src/define_config.ts'
+export { Authenticator } from './src/authenticator.ts'
+export { AuthenticatorClient } from './src/authenticator_client.ts'
+import type { withAuthFinder as withAuthFinderType } from './src/mixins/lucid.ts'
 
 function isModuleInstalled(moduleName: string) {
   try {

@@ -10,14 +10,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { ConfigProvider } from '@adonisjs/core/types'
 
-import { AccessTokensGuard } from './guard.js'
-import type { GuardConfigProvider } from '../../src/types.js'
-import { AccessTokensLucidUserProvider } from './user_providers/lucid.js'
+import { AccessTokensGuard } from './guard.ts'
+import type { GuardConfigProvider } from '../../src/types.ts'
+import { AccessTokensLucidUserProvider } from './user_providers/lucid.ts'
 import type {
   LucidTokenable,
   AccessTokensUserProviderContract,
   AccessTokensLucidUserProviderOptions,
-} from './types.js'
+} from './types.ts'
 
 /**
  * Configures access tokens guard for authentication

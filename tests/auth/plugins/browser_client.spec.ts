@@ -15,10 +15,10 @@ import { browserClient } from '@japa/browser-client'
 import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 
-import { type Guards } from './global_types.js'
-import { AuthManager } from '../../../src/auth_manager.js'
-import { FakeGuard, type FakeUser } from '../../../factories/auth/main.js'
-import { authBrowserClient } from '../../../src/plugins/japa/browser_client.js'
+import { type Guards } from './global_types.ts'
+import { AuthManager } from '../../../src/auth_manager.ts'
+import { FakeGuard, type FakeUser } from '../../../factories/auth/main.ts'
+import { authBrowserClient } from '../../../src/plugins/japa/browser_client.ts'
 
 test.group('Browser client | loginAs', (group) => {
   group.each.timeout(0)

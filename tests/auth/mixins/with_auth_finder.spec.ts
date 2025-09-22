@@ -12,8 +12,8 @@ import convertHrtime from 'convert-hrtime'
 import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-import { createDatabase, createTables, getHasher } from '../../helpers.js'
-import { withAuthFinder } from '../../../src/mixins/lucid.js'
+import { createDatabase, createTables, getHasher } from '../../helpers.ts'
+import { withAuthFinder } from '../../../src/mixins/lucid.ts'
 
 test.group('withAuthFinder | findForAuth', () => {
   test('find user for authentication using the mixin', async ({ assert, expectTypeOf }) => {

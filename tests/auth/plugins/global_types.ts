@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { type FakeGuard } from '../../../factories/auth/main.js'
+import { type FakeGuard } from '../../../factories/auth/main.ts'
 
 /**
  * Guard to use for testing

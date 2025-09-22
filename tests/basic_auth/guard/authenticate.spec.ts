@@ -11,14 +11,14 @@ import { test } from '@japa/runner'
 import { base64 } from '@adonisjs/core/helpers'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
-import { createEmitter, pEvent } from '../../helpers.js'
-import { E_UNAUTHORIZED_ACCESS } from '../../../src/errors.js'
-import { BasicAuthGuard } from '../../../modules/basic_auth_guard/guard.js'
-import { type BasicAuthGuardEvents } from '../../../modules/basic_auth_guard/types.js'
+import { createEmitter, pEvent } from '../../helpers.ts'
+import { E_UNAUTHORIZED_ACCESS } from '../../../src/errors.ts'
+import { BasicAuthGuard } from '../../../modules/basic_auth_guard/guard.ts'
+import { type BasicAuthGuardEvents } from '../../../modules/basic_auth_guard/types.ts'
 import {
   type BasicAuthFakeUser,
   BasicAuthFakeUserProvider,
-} from '../../../factories/basic_auth/main.js'
+} from '../../../factories/basic_auth/main.ts'
 
 test.group('Basic auth guard | authenticate', () => {
   test('return user when credentials are valid', async ({ assert, expectTypeOf }) => {

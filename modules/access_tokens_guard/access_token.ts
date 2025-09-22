@@ -12,8 +12,8 @@ import string from '@adonisjs/core/helpers/string'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import { Secret, base64, safeEqual } from '@adonisjs/core/helpers'
 
-import { CRC32 } from './crc32.js'
-import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
+import { CRC32 } from './crc32.ts'
+import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
 
 /**
  * Access token represents a token created for a user to authenticate

@@ -10,15 +10,15 @@
 import { test } from '@japa/runner'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
-import { E_UNAUTHORIZED_ACCESS } from '../../../src/errors.js'
-import { createEmitter, pEvent, timeTravel } from '../../helpers.js'
-import { AccessTokensGuard } from '../../../modules/access_tokens_guard/guard.js'
-import type { AccessTokensGuardEvents } from '../../../modules/access_tokens_guard/types.js'
+import { E_UNAUTHORIZED_ACCESS } from '../../../src/errors.ts'
+import { createEmitter, pEvent, timeTravel } from '../../helpers.ts'
+import { AccessTokensGuard } from '../../../modules/access_tokens_guard/guard.ts'
+import type { AccessTokensGuardEvents } from '../../../modules/access_tokens_guard/types.ts'
 import {
   type AccessTokensFakeUser,
   AccessTokensFakeUserProvider,
-} from '../../../factories/access_tokens/main.js'
-import { AccessToken } from '../../../modules/access_tokens_guard/access_token.js'
+} from '../../../factories/access_tokens/main.ts'
+import { AccessToken } from '../../../modules/access_tokens_guard/access_token.ts'
 
 test.group('Access tokens guard | authenticate', () => {
   test('return user when access token is valid', async ({ assert, expectTypeOf }) => {

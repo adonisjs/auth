@@ -11,15 +11,15 @@ import { test } from '@japa/runner'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 import { SessionMiddlewareFactory } from '@adonisjs/session/factories'
 
-import { createEmitter, pEvent, parseCookies } from '../../helpers.js'
-import { SessionGuard } from '../../../modules/session_guard/guard.js'
-import type { SessionGuardEvents } from '../../../modules/session_guard/types.js'
-import { RememberMeToken } from '../../../modules/session_guard/remember_me_token.js'
+import { createEmitter, pEvent, parseCookies } from '../../helpers.ts'
+import { SessionGuard } from '../../../modules/session_guard/guard.ts'
+import type { SessionGuardEvents } from '../../../modules/session_guard/types.ts'
+import { RememberMeToken } from '../../../modules/session_guard/remember_me_token.ts'
 import {
   type SessionFakeUser,
   SessionFakeUserProvider,
   SessionFakeUserWithTokensProvider,
-} from '../../../factories/session/main.js'
+} from '../../../factories/session/main.ts'
 
 test.group('Session guard | login', () => {
   test('create session for the user', async ({ assert, expectTypeOf }) => {

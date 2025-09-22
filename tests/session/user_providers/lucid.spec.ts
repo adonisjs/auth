@@ -11,10 +11,10 @@ import { test } from '@japa/runner'
 import { Secret } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-import { createDatabase, createTables } from '../../helpers.js'
-import { RememberMeToken } from '../../../modules/session_guard/remember_me_token.js'
-import { SessionLucidUserProvider } from '../../../modules/session_guard/user_providers/lucid.js'
-import { DbRememberMeTokensProvider } from '../../../modules/session_guard/token_providers/db.js'
+import { createDatabase, createTables } from '../../helpers.ts'
+import { RememberMeToken } from '../../../modules/session_guard/remember_me_token.ts'
+import { SessionLucidUserProvider } from '../../../modules/session_guard/user_providers/lucid.ts'
+import { DbRememberMeTokensProvider } from '../../../modules/session_guard/token_providers/db.ts'
 
 test.group('Session user provider | Lucid', () => {
   test('throw error when user model is not using tokens provider', async () => {

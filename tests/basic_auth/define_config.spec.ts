@@ -15,13 +15,13 @@ import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
-import { withAuthFinder } from '../../src/mixins/lucid.js'
-import { createEmitter, getHasher } from '../helpers.js'
+import { withAuthFinder } from '../../src/mixins/lucid.ts'
+import { createEmitter, getHasher } from '../helpers.ts'
 import {
   basicAuthGuard,
   basicAuthUserProvider,
-} from '../../modules/basic_auth_guard/define_config.js'
-import { BasicAuthGuard, BasicAuthLucidUserProvider } from '../../modules/basic_auth_guard/main.js'
+} from '../../modules/basic_auth_guard/define_config.ts'
+import { BasicAuthGuard, BasicAuthLucidUserProvider } from '../../modules/basic_auth_guard/main.ts'
 
 test.group('defineConfig', () => {
   test('configure lucid user provider', ({ assert, expectTypeOf }) => {

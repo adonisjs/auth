@@ -11,10 +11,10 @@ import { test } from '@japa/runner'
 import { Secret } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-import { createDatabase, createTables } from '../../helpers.js'
-import { AccessToken } from '../../../modules/access_tokens_guard/access_token.js'
-import { DbAccessTokensProvider } from '../../../modules/access_tokens_guard/token_providers/db.js'
-import { AccessTokensLucidUserProvider } from '../../../modules/access_tokens_guard/user_providers/lucid.js'
+import { createDatabase, createTables } from '../../helpers.ts'
+import { AccessToken } from '../../../modules/access_tokens_guard/access_token.ts'
+import { DbAccessTokensProvider } from '../../../modules/access_tokens_guard/token_providers/db.ts'
+import { AccessTokensLucidUserProvider } from '../../../modules/access_tokens_guard/user_providers/lucid.ts'
 
 test.group('Access tokens user provider | Lucid', () => {
   test('throw error when user does not implement a token provider', async ({ assert }) => {

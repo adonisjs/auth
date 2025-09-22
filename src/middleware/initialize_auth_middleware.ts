@@ -3,8 +3,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 
-import type { Authenticator } from '../authenticator.js'
-import type { Authenticators, GuardFactory } from '../types.js'
+import type { Authenticator } from '../authenticator.ts'
+import type { Authenticators, GuardFactory } from '../types.ts'
 
 /**
  * The "InitializeAuthMiddleware" is used to create a request

@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-export { BasicAuthGuard } from './guard.js'
-export { basicAuthGuard, basicAuthUserProvider } from './define_config.js'
-export { BasicAuthLucidUserProvider } from './user_providers/lucid.js'
+export { BasicAuthGuard } from './guard.ts'
+export { basicAuthGuard, basicAuthUserProvider } from './define_config.ts'
+export { BasicAuthLucidUserProvider } from './user_providers/lucid.ts'

@@ -11,9 +11,9 @@ import { test } from '@japa/runner'
 import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 
-import { AuthManager } from '../../src/auth_manager.js'
-import { FakeGuard } from '../../factories/auth/main.js'
-import { defineConfig } from '../../src/define_config.js'
+import { AuthManager } from '../../src/auth_manager.ts'
+import { FakeGuard } from '../../factories/auth/main.ts'
+import { defineConfig } from '../../src/define_config.ts'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
 const BASE_URL = new URL('./', import.meta.url)

@@ -12,16 +12,16 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import type { EmitterLike } from '@adonisjs/core/types/events'
 
-import { type RememberMeToken } from './remember_me_token.js'
-import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
-import type { AuthClientResponse, GuardContract } from '../../src/types.js'
-import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { type RememberMeToken } from './remember_me_token.ts'
+import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
+import type { AuthClientResponse, GuardContract } from '../../src/types.ts'
+import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.ts'
 import type {
   SessionGuardEvents,
   SessionGuardOptions,
   SessionUserProviderContract,
   SessionWithTokensUserProviderContract,
-} from './types.js'
+} from './types.ts'
 
 /**
  * Session guard uses AdonisJS session store to track logged-in

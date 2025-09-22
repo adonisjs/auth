@@ -12,12 +12,12 @@ import type { Secret } from '@adonisjs/core/helpers'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import type { LucidModel } from '@adonisjs/lucid/types/model'
 
-import { RememberMeToken } from '../remember_me_token.js'
+import { RememberMeToken } from '../remember_me_token.ts'
 import type {
   RememberMeTokenDbColumns,
   RememberMeTokensProviderContract,
   DbRememberMeTokensProviderOptions,
-} from '../types.js'
+} from '../types.ts'
 
 /**
  * DbRememberMeTokensProvider uses lucid database service to fetch and

@@ -11,7 +11,7 @@ import type { Hash } from '@adonisjs/core/hash'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import { beforeSave, type BaseModel } from '@adonisjs/lucid/orm'
 import type { NormalizeConstructor } from '@adonisjs/core/types/helpers'
-import { E_INVALID_CREDENTIALS } from '../errors.js'
+import { E_INVALID_CREDENTIALS } from '../errors.ts'
 
 type UserWithUserFinderRow = {
   verifyPassword(plainPassword: string): Promise<boolean>

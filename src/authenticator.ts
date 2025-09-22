@@ -10,9 +10,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 
-import debug from './debug.js'
-import type { GuardFactory } from './types.js'
-import { E_UNAUTHORIZED_ACCESS } from './errors.js'
+import debug from './debug.ts'
+import type { GuardFactory } from './types.ts'
+import { E_UNAUTHORIZED_ACCESS } from './errors.ts'
 
 /**
  * Authenticator is used to authenticate incoming HTTP requests

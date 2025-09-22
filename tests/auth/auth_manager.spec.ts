@@ -10,10 +10,10 @@
 import { test } from '@japa/runner'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 
-import { AuthManager } from '../../src/auth_manager.js'
-import { FakeGuard } from '../../factories/auth/main.js'
-import { Authenticator } from '../../src/authenticator.js'
-import { AuthenticatorClient } from '../../src/authenticator_client.js'
+import { AuthManager } from '../../src/auth_manager.ts'
+import { FakeGuard } from '../../factories/auth/main.ts'
+import { Authenticator } from '../../src/authenticator.ts'
+import { AuthenticatorClient } from '../../src/authenticator_client.ts'
 
 test.group('Auth manager', () => {
   test('create authenticator from auth manager', async ({ assert, expectTypeOf }) => {

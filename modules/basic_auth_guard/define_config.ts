@@ -10,14 +10,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { ConfigProvider } from '@adonisjs/core/types'
 
-import { BasicAuthGuard } from './guard.js'
-import type { GuardConfigProvider } from '../../src/types.js'
-import { BasicAuthLucidUserProvider } from './user_providers/lucid.js'
+import { BasicAuthGuard } from './guard.ts'
+import type { GuardConfigProvider } from '../../src/types.ts'
+import { BasicAuthLucidUserProvider } from './user_providers/lucid.ts'
 import type {
   LucidAuthenticatable,
   BasicAuthUserProviderContract,
   BasicAuthLucidUserProviderOptions,
-} from './types.js'
+} from './types.ts'
 
 /**
  * Configures basic auth guard for authentication

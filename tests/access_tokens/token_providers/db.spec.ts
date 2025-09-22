@@ -11,9 +11,9 @@ import { test } from '@japa/runner'
 import { Secret } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-import { createDatabase, createTables, timeTravel } from '../../helpers.js'
-import { AccessToken } from '../../../modules/access_tokens_guard/access_token.js'
-import { DbAccessTokensProvider } from '../../../modules/access_tokens_guard/token_providers/db.js'
+import { createDatabase, createTables, timeTravel } from '../../helpers.ts'
+import { AccessToken } from '../../../modules/access_tokens_guard/access_token.ts'
+import { DbAccessTokensProvider } from '../../../modules/access_tokens_guard/token_providers/db.ts'
 
 test.group('Access tokens provider | DB | create', () => {
   test('create token for a user', async ({ assert }) => {

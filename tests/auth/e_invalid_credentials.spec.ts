@@ -12,7 +12,7 @@ import { I18nManagerFactory } from '@adonisjs/i18n/factories'
 import { HttpContextFactory } from '@adonisjs/core/factories/http'
 import { SessionMiddlewareFactory } from '@adonisjs/session/factories'
 
-import { E_INVALID_CREDENTIALS } from '../../src/errors.js'
+import { E_INVALID_CREDENTIALS } from '../../src/errors.ts'
 
 test.group('Errors | E_INVALID_CREDENTIALS', () => {
   test('report error via flash messages and redirect', async ({ assert }) => {

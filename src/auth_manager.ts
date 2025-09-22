@@ -9,9 +9,9 @@
 
 import type { HttpContext } from '@adonisjs/core/http'
 
-import type { GuardFactory } from './types.js'
-import { Authenticator } from './authenticator.js'
-import { AuthenticatorClient } from './authenticator_client.js'
+import type { GuardFactory } from './types.ts'
+import { Authenticator } from './authenticator.ts'
+import { AuthenticatorClient } from './authenticator_client.ts'
 
 /**
  * Auth manager exposes the API to register and manage authentication

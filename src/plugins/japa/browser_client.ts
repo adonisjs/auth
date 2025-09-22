@@ -15,8 +15,8 @@ import { decoratorsCollection } from '@japa/browser-client'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import type { ApplicationService } from '@adonisjs/core/types'
 
-import debug from '../../debug.js'
-import type { Authenticators, GuardContract, GuardFactory } from '../../types.js'
+import debug from '../../debug.ts'
+import type { Authenticators, GuardContract, GuardFactory } from '../../types.ts'
 
 declare module 'playwright' {
   export interface BrowserContext {

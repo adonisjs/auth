@@ -10,14 +10,14 @@
 import { type Secret } from '@adonisjs/core/helpers'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 
-import { type RememberMeToken } from '../remember_me_token.js'
-import { PROVIDER_REAL_USER } from '../../../src/symbols.js'
+import { type RememberMeToken } from '../remember_me_token.ts'
+import { PROVIDER_REAL_USER } from '../../../src/symbols.ts'
 import type {
   SessionGuardUser,
   LucidAuthenticatable,
   SessionLucidUserProviderOptions,
   SessionUserProviderContract,
-} from '../types.js'
+} from '../types.ts'
 
 /**
  * Uses a lucid model to verify access tokens and find a user during

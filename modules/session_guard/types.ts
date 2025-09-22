@@ -12,8 +12,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { Exception } from '@adonisjs/core/exceptions'
 import type { LucidModel } from '@adonisjs/lucid/types/model'
 
-import { type PROVIDER_REAL_USER } from '../../src/symbols.js'
-import type { RememberMeToken } from './remember_me_token.js'
+import { type PROVIDER_REAL_USER } from '../../src/symbols.ts'
+import type { RememberMeToken } from './remember_me_token.ts'
 
 /**
  * Options accepted by the tokens provider that uses lucid
