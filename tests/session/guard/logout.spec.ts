@@ -24,6 +24,7 @@ test.group('Session guard | logout', () => {
   test('delete user session and remember me cookie', async ({ assert }) => {
     const ctx = new HttpContextFactory().create()
     const emitter = createEmitter<SessionGuardEvents<SessionFakeUser>>()
+    const events = emitter.fake()
     const userProvider = new SessionFakeUserProvider()
 
     const guard = new SessionGuard(
@@ -54,11 +55,15 @@ test.group('Session guard | logout', () => {
     const responseCookies = parseCookies(ctx.response.getHeader('set-cookie') as string)
     assert.deepEqual(responseCookies.remember_web.expires, new Date(0))
     assert.deepEqual(responseCookies.remember_web.maxAge, -1)
+
+    events.assertEmittedCount('session_auth:logged_out', 1)
+    assert.equal(events.find('session_auth:logged_out')!.data.user, user!.getOriginal())
   })
 
   test('delete remember me token using user provider', async ({ assert }) => {
     const ctx = new HttpContextFactory().create()
     const emitter = createEmitter<SessionGuardEvents<SessionFakeUser>>()
+    const events = emitter.fake()
     const userProvider = new SessionFakeUserWithTokensProvider()
 
     const guard = new SessionGuard(
@@ -99,6 +104,9 @@ test.group('Session guard | logout', () => {
     assert.deepEqual(responseCookies.remember_web.maxAge, -1)
 
     assert.lengthOf(userProvider.tokens, 0)
+
+    events.assertEmittedCount('session_auth:logged_out', 1)
+    assert.equal(events.find('session_auth:logged_out')!.data.user, user!.getOriginal())
   })
 
   test('do not delete token with storage when no user was authenticated in first place', async ({
@@ -106,6 +114,7 @@ test.group('Session guard | logout', () => {
   }) => {
     const ctx = new HttpContextFactory().create()
     const emitter = createEmitter<SessionGuardEvents<SessionFakeUser>>()
+    const events = emitter.fake()
     const userProvider = new SessionFakeUserWithTokensProvider()
 
     const guard = new SessionGuard(
@@ -145,5 +154,8 @@ test.group('Session guard | logout', () => {
     assert.deepEqual(responseCookies.remember_web.maxAge, -1)
 
     assert.lengthOf(userProvider.tokens, 1)
+
+    events.assertEmittedCount('session_auth:logged_out', 1)
+    assert.isNull(events.find('session_auth:logged_out')!.data.user)
   })
 })
