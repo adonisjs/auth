@@ -54,7 +54,7 @@
     "@adonisjs/assembler": "^8.0.0-next.9",
     "@adonisjs/core": "^7.0.0-next.7",
     "@adonisjs/eslint-config": "^3.0.0-next.1",
-    "@adonisjs/i18n": "^3.0.0-next.0",
+    "@adonisjs/i18n": "^3.0.0-next.1",
     "@adonisjs/lucid": "^22.0.0-next.1",
     "@adonisjs/prettier-config": "^1.4.5",
     "@adonisjs/session": "^8.0.0-next.0",
@@ -103,6 +103,7 @@
   "peerDependencies": {
     "@adonisjs/assembler": "^8.0.0-next.9",
     "@adonisjs/core": "^7.0.0-next.1",
+    "@adonisjs/i18n": "^3.0.0-next.0",
     "@adonisjs/lucid": "^22.0.0-next.0",
     "@adonisjs/session": "^8.0.0-next.0",
     "@japa/api-client": "^3.1.0",
@@ -111,6 +112,9 @@
   },
   "peerDependenciesMeta": {
     "@adonisjs/assembler": {
+      "optional": true
+    },
+    "@adonisjs/i18n": {
       "optional": true
     },
     "@adonisjs/lucid": {
