@@ -468,14 +468,6 @@ export class SessionGuard<
     }
 
     /**
-     * Update local state
-     */
-    this.user = undefined
-    this.viaRemember = false
-    this.isAuthenticated = false
-    this.isLoggedOut = true
-
-    /**
      * Notify the user has been logged out
      */
     this.#emitter.emit('session_auth:logged_out', {
@@ -484,6 +476,14 @@ export class SessionGuard<
       user: this.user || null,
       sessionId: session.sessionId,
     })
+
+    /**
+     * Update local state
+     */
+    this.user = undefined
+    this.viaRemember = false
+    this.isAuthenticated = false
+    this.isLoggedOut = true
   }
 
   /**
