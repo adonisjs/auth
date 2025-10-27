@@ -10,7 +10,7 @@
 import { join } from 'node:path'
 import timekeeper from 'timekeeper'
 import { configDotenv } from 'dotenv'
-import { Hash } from '@adonisjs/core/hash'
+import { Hash, HashManager } from '@adonisjs/core/hash'
 import { mkdir, rm } from 'node:fs/promises'
 import { getActiveTest } from '@japa/runner'
 import { Emitter } from '@adonisjs/core/events'
@@ -33,6 +33,15 @@ configDotenv()
  */
 export function getHasher() {
   return new Hash(new Scrypt({}))
+}
+
+export function getHasherManager() {
+  return new HashManager({
+    default: 'scrypt',
+    list: {
+      scrypt: () => getHasher(),
+    },
+  })
 }
 
 /**

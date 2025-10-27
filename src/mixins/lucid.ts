@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { Hash } from '@adonisjs/core/hash'
+import type { Hash, HashManager } from '@adonisjs/core/hash'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 import { beforeSave, type BaseModel } from '@adonisjs/lucid/orm'
 import type { NormalizeConstructor } from '@adonisjs/core/types/helpers'
@@ -59,12 +59,15 @@ type UserWithUserFinderClass<
  * }
  */
 export function withAuthFinder(
-  hash: () => Hash,
-  options: {
-    uids: string[]
-    passwordColumnName: string
+  hash: (() => Hash) | HashManager<any>,
+  options?: {
+    uids?: string[]
+    passwordColumnName?: string
   }
 ) {
+  let normalizedOptions = { uids: ['email'], passwordColumnName: 'password', ...options }
+  let hashFactory = typeof hash === 'function' ? hash : () => hash.use()
+
   return function <Model extends NormalizeConstructor<typeof BaseModel>>(
     superclass: Model
   ): UserWithUserFinderClass<Model> {
@@ -83,9 +86,9 @@ export function withAuthFinder(
        */
       @beforeSave()
       static async hashPassword<T extends UserWithUserFinderClass>(this: T, user: InstanceType<T>) {
-        if (user.$dirty[options.passwordColumnName]) {
-          ;(user as any)[options.passwordColumnName] = await hash().make(
-            (user as any)[options.passwordColumnName]
+        if (user.$dirty[normalizedOptions.passwordColumnName]) {
+          ;(user as any)[normalizedOptions.passwordColumnName] = await hashFactory().make(
+            (user as any)[normalizedOptions.passwordColumnName]
           )
         }
       }
@@ -136,9 +139,9 @@ export function withAuthFinder(
           throw new E_INVALID_CREDENTIALS('Invalid user credentials')
         }
 
-        const user = await this.findForAuth(options.uids, uid)
+        const user = await this.findForAuth(normalizedOptions.uids, uid)
         if (!user) {
-          await hash().make(password)
+          await hashFactory().make(password)
           throw new E_INVALID_CREDENTIALS('Invalid user credentials')
         }
 
@@ -164,13 +167,13 @@ export function withAuthFinder(
        * }
        */
       verifyPassword(plainPassword: string): Promise<boolean> {
-        const passwordHash = (this as any)[options.passwordColumnName]
+        const passwordHash = (this as any)[normalizedOptions.passwordColumnName]
         if (!passwordHash) {
           throw new RuntimeException(
-            `Cannot verify password. The value for "${options.passwordColumnName}" column is undefined or null`
+            `Cannot verify password. The value for "${normalizedOptions.passwordColumnName}" column is undefined or null`
           )
         }
-        return hash().verify(passwordHash, plainPassword)
+        return hashFactory().verify(passwordHash, plainPassword)
       }
     }
 
