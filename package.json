@@ -101,14 +101,14 @@
     "basic-auth": "^2.0.1"
   },
   "peerDependencies": {
-    "@adonisjs/assembler": "^8.0.0-next.9",
-    "@adonisjs/core": "^7.0.0-next.1",
-    "@adonisjs/i18n": "^3.0.0-next.0",
-    "@adonisjs/lucid": "^22.0.0-next.0",
-    "@adonisjs/session": "^8.0.0-next.0",
-    "@japa/api-client": "^3.1.0",
-    "@japa/browser-client": "^2.1.1",
-    "@japa/plugin-adonisjs": "^5.0.0-next.0"
+    "@adonisjs/assembler": "^8.0.0-next.26",
+    "@adonisjs/core": "^7.0.0-next.16",
+    "@adonisjs/i18n": "^3.0.0-next.2",
+    "@adonisjs/lucid": "^22.0.0-next.1",
+    "@adonisjs/session": "^8.0.0-next.1",
+    "@japa/api-client": "^3.1.1",
+    "@japa/browser-client": "^2.2.0",
+    "@japa/plugin-adonisjs": "^5.1.0-next.0"
   },
   "peerDependenciesMeta": {
     "@adonisjs/assembler": {
