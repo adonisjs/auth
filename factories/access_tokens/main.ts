@@ -49,9 +49,7 @@ const users: AccessTokensFakeUser[] = [
  * @note
  * Should not be exported to the outside world
  */
-export class AccessTokensFakeUserProvider
-  implements AccessTokensUserProviderContract<AccessTokensFakeUser>
-{
+export class AccessTokensFakeUserProvider implements AccessTokensUserProviderContract<AccessTokensFakeUser> {
   declare [PROVIDER_REAL_USER]: AccessTokensFakeUser
   #tokens: {
     id: string

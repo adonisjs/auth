@@ -35,10 +35,11 @@ import type { AccessTokensGuardEvents, AccessTokensUserProviderContract } from '
  * const user = await guard.authenticate()
  * console.log('Authenticated user:', user.email)
  */
-export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderContract<unknown>>
-  implements
-    GuardContract<UserProvider[typeof PROVIDER_REAL_USER] & { currentAccessToken: AccessToken }>
-{
+export class AccessTokensGuard<
+  UserProvider extends AccessTokensUserProviderContract<unknown>,
+> implements GuardContract<
+  UserProvider[typeof PROVIDER_REAL_USER] & { currentAccessToken: AccessToken }
+> {
   /**
    * Events emitted by the guard
    */

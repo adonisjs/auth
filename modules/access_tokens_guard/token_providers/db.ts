@@ -35,9 +35,9 @@ import type {
  *   prefix: 'api_'
  * })
  */
-export class DbAccessTokensProvider<TokenableModel extends LucidModel>
-  implements AccessTokensProviderContract<TokenableModel>
-{
+export class DbAccessTokensProvider<
+  TokenableModel extends LucidModel,
+> implements AccessTokensProviderContract<TokenableModel> {
   /**
    * Create tokens provider instance for a given Lucid model
    *

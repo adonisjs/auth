@@ -34,9 +34,9 @@ import type {
  *   tokenSecretLength: 32
  * })
  */
-export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
-  implements RememberMeTokensProviderContract<TokenableModel>
-{
+export class DbRememberMeTokensProvider<
+  TokenableModel extends LucidModel,
+> implements RememberMeTokensProviderContract<TokenableModel> {
   /**
    * Create tokens provider instance for a given Lucid model
    *

@@ -30,9 +30,9 @@ import type {
  *   model: () => import('#models/user')
  * })
  */
-export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
-  implements SessionUserProviderContract<InstanceType<UserModel>>
-{
+export class SessionLucidUserProvider<
+  UserModel extends LucidAuthenticatable,
+> implements SessionUserProviderContract<InstanceType<UserModel>> {
   declare [PROVIDER_REAL_USER]: InstanceType<UserModel>
 
   /**

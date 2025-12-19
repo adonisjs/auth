@@ -36,8 +36,7 @@ import type {
 export class AccessTokensLucidUserProvider<
   TokenableProperty extends string,
   UserModel extends LucidTokenable<TokenableProperty>,
-> implements AccessTokensUserProviderContract<InstanceType<UserModel>>
-{
+> implements AccessTokensUserProviderContract<InstanceType<UserModel>> {
   declare [PROVIDER_REAL_USER]: InstanceType<UserModel>
 
   /**

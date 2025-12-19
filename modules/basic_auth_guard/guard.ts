@@ -33,9 +33,9 @@ import type { BasicAuthGuardEvents, BasicAuthUserProviderContract } from './type
  * const user = await guard.authenticate()
  * console.log('Authenticated user:', user.email)
  */
-export class BasicAuthGuard<UserProvider extends BasicAuthUserProviderContract<unknown>>
-  implements GuardContract<UserProvider[typeof PROVIDER_REAL_USER]>
-{
+export class BasicAuthGuard<
+  UserProvider extends BasicAuthUserProviderContract<unknown>,
+> implements GuardContract<UserProvider[typeof PROVIDER_REAL_USER]> {
   /**
    * Events emitted by the guard
    */

@@ -27,9 +27,9 @@ import type {
  *   model: () => import('#models/user')
  * })
  */
-export class BasicAuthLucidUserProvider<UserModel extends LucidAuthenticatable>
-  implements BasicAuthUserProviderContract<InstanceType<UserModel>>
-{
+export class BasicAuthLucidUserProvider<
+  UserModel extends LucidAuthenticatable,
+> implements BasicAuthUserProviderContract<InstanceType<UserModel>> {
   declare [PROVIDER_REAL_USER]: InstanceType<UserModel>
 
   /**

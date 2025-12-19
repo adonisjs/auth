@@ -47,8 +47,7 @@ export class SessionGuard<
   UserProvider extends UseRememberTokens extends true
     ? SessionWithTokensUserProviderContract<unknown>
     : SessionUserProviderContract<unknown>,
-> implements GuardContract<UserProvider[typeof PROVIDER_REAL_USER]>
-{
+> implements GuardContract<UserProvider[typeof PROVIDER_REAL_USER]> {
   /**
    * Events emitted by the guard
    */

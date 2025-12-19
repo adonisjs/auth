@@ -168,8 +168,9 @@ export interface SessionUserProviderContract<RealUser> {
 /**
  * The user provider used by session guard with support for tokens
  */
-export interface SessionWithTokensUserProviderContract<RealUser>
-  extends SessionUserProviderContract<RealUser> {
+export interface SessionWithTokensUserProviderContract<
+  RealUser,
+> extends SessionUserProviderContract<RealUser> {
   /**
    * Create a token for a given user. Must be implemented when
    * "supportsRememberMeTokens" flag is true
