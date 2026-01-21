@@ -27,6 +27,7 @@ test.group('Errors | E_UNAUTHORIZED_ACCESS | session', () => {
     })
 
     assert.deepEqual(ctx.session.responseFlashMessages.all(), {
+      error: 'Unauthorized access',
       errorsBag: { E_UNAUTHORIZED_ACCESS: 'Unauthorized access' },
       input: {},
     })
@@ -46,6 +47,7 @@ test.group('Errors | E_UNAUTHORIZED_ACCESS | session', () => {
     })
 
     assert.deepEqual(ctx.session.responseFlashMessages.all(), {
+      error: 'Unauthorized access',
       errorsBag: { E_UNAUTHORIZED_ACCESS: 'Unauthorized access' },
       input: {},
     })

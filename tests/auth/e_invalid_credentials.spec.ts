@@ -25,6 +25,7 @@ test.group('Errors | E_INVALID_CREDENTIALS', () => {
     })
 
     assert.deepEqual(ctx.session.responseFlashMessages.all(), {
+      error: 'Invalid credentials',
       errorsBag: { E_INVALID_CREDENTIALS: 'Invalid credentials' },
       input: {},
     })
