@@ -64,7 +64,7 @@ export async function createDatabase() {
       connection: process.env.DB || 'sqlite',
       connections: {
         sqlite: {
-          client: 'sqlite3',
+          client: 'better-sqlite3',
           connection: {
             filename: join(test.context.fs.basePath, 'db.sqlite3'),
           },
