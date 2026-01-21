@@ -59,6 +59,10 @@ export const E_UNAUTHORIZED_ACCESS = class extends Exception {
         case 'html':
         case null:
           ctx.session.flashExcept(['_csrf'])
+          ctx.session.flash('error', message)
+          /**
+           * The "flashErrors" call must be removed in the future
+           */
           ctx.session.flashErrors({ [error.code!]: message })
           ctx.response.redirect(error.redirectTo || '/', true)
           break
@@ -243,6 +247,10 @@ export const E_INVALID_CREDENTIALS = class extends Exception {
       case null:
         if (ctx.session) {
           ctx.session.flashExcept(['_csrf', '_method', 'password', 'password_confirmation'])
+          ctx.session.flash('error', message)
+          /**
+           * The "flashErrors" call must be removed in the future
+           */
           ctx.session.flashErrors({ [error.code!]: message })
           ctx.response.redirect('back', true)
         } else {
