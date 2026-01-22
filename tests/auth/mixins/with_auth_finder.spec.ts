@@ -315,3 +315,89 @@ test.group('withAuthFinder | verify', () => {
     )
   })
 })
+
+test.group('withAuthFinder | verifyPassword', () => {
+  test('verify if password is valid or invalid', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    const hash = getHasher()
+
+    class User extends compose(
+      BaseModel,
+      withAuthFinder(() => hash, {
+        uids: ['email', 'username'],
+        passwordColumnName: 'password',
+      })
+    ) {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+    }
+
+    const user = await User.create({
+      username: 'virk',
+      email: 'virk@adonisjs.com',
+      password: 'secret',
+    })
+
+    assert.isTrue(await user.verifyPassword('secret'))
+    assert.isFalse(await user.verifyPassword('foo'))
+  })
+
+  test('throw validation like error when password is invalid', async ({ assert }) => {
+    assert.plan(3)
+    const db = await createDatabase()
+    await createTables(db)
+
+    const hash = getHasher()
+
+    class User extends compose(
+      BaseModel,
+      withAuthFinder(() => hash, {
+        uids: ['email', 'username'],
+        passwordColumnName: 'password',
+      })
+    ) {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+    }
+
+    const user = await User.create({
+      username: 'virk',
+      email: 'virk@adonisjs.com',
+      password: 'secret',
+    })
+
+    try {
+      await user.validatePassword('foo')
+    } catch (error) {
+      assert.equal(error.code, 'E_VALIDATION_ERROR')
+      assert.equal(error.status, 422)
+      assert.deepEqual(error.messages, [
+        {
+          field: 'currentPassword',
+          message: 'The current password is incorrect',
+          rule: 'current_password',
+        },
+      ])
+    }
+  })
+})

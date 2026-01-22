@@ -15,6 +15,7 @@ import { E_INVALID_CREDENTIALS } from '../errors.ts'
 
 type UserWithUserFinderRow = {
   verifyPassword(plainPassword: string): Promise<boolean>
+  validatePassword(plainPassword: string, passwordFieldName?: string): Promise<void>
 }
 
 type UserWithUserFinderClass<
@@ -174,6 +175,28 @@ export function withAuthFinder(
           )
         }
         return hashFactory().verify(passwordHash, plainPassword)
+      }
+
+      async validatePassword(plainPassword: string, passwordFieldName?: string): Promise<void> {
+        if (!(await this.verifyPassword(plainPassword))) {
+          const error = new Error('Validation Error')
+          Object.defineProperty(error, 'code', {
+            value: 'E_VALIDATION_ERROR',
+          })
+          Object.defineProperty(error, 'status', {
+            value: 422,
+          })
+          Object.defineProperty(error, 'messages', {
+            value: [
+              {
+                field: passwordFieldName ?? 'currentPassword',
+                message: 'The current password is incorrect',
+                rule: 'current_password',
+              },
+            ],
+          })
+          throw error
+        }
       }
     }
 
