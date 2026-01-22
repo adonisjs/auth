@@ -57,6 +57,10 @@ export class BasicAuthLucidUserProvider<
   /**
    * Imports the model from the provider, returns and caches it
    * for further operations.
+   *
+   * @example
+   * const UserModel = await provider.getModel()
+   * const user = await UserModel.find(1)
    */
   protected async getModel() {
     if (this.model && !('hot' in import.meta)) {
@@ -70,6 +74,12 @@ export class BasicAuthLucidUserProvider<
 
   /**
    * Creates an adapter user for the guard
+   *
+   * @param user - The user model instance
+   *
+   * @example
+   * const guardUser = await provider.createUserForGuard(user)
+   * console.log('User ID:', guardUser.getId())
    */
   async createUserForGuard(
     user: InstanceType<UserModel>
@@ -102,6 +112,15 @@ export class BasicAuthLucidUserProvider<
 
   /**
    * Verifies credentials using the underlying model
+   *
+   * @param uid - The username or user identifier
+   * @param password - The password to verify
+   *
+   * @example
+   * const guardUser = await provider.verifyCredentials('user@example.com', 'secret')
+   * if (guardUser) {
+   *   console.log('Valid credentials')
+   * }
    */
   async verifyCredentials(
     uid: string,

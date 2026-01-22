@@ -19,7 +19,11 @@ import { AuthenticatorClient } from './authenticator_client.ts'
  */
 export class AuthManager<KnownGuards extends Record<string, GuardFactory>> {
   /**
-   * Name of the default guard
+   * Name of the default guard configured in the auth configuration
+   *
+   * @example
+   * const manager = new AuthManager({ default: 'web', guards: {} })
+   * console.log(manager.defaultGuard) // 'web'
    */
   get defaultGuard() {
     return this.config.default

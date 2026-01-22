@@ -58,7 +58,11 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
   #ctx: HttpContext
 
   /**
-   * Name of the default guard
+   * Name of the default guard configured in the auth configuration
+   *
+   * @example
+   * const defaultGuard = auth.defaultGuard
+   * console.log(defaultGuard) // 'web'
    */
   get defaultGuard(): keyof KnownGuards {
     return this.#config.default
@@ -66,7 +70,12 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
 
   /**
    * Reference to the guard using which the current
-   * request has been authenticated.
+   * request has been authenticated. Returns undefined if
+   * authentication has not been attempted or failed.
+   *
+   * @example
+   * await auth.authenticate()
+   * console.log(auth.authenticatedViaGuard) // 'web'
    */
   get authenticatedViaGuard(): keyof KnownGuards | undefined {
     return this.#authenticatedViaGuard
@@ -76,6 +85,10 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
    * A boolean to know if the current request has been authenticated. The
    * property returns false when "authenticate" or "authenticateUsing"
    * methods are not used.
+   *
+   * @example
+   * await auth.authenticate()
+   * console.log(auth.isAuthenticated) // true
    */
   get isAuthenticated(): boolean {
     if (!this.#authenticationAttemptedViaGuard) {
@@ -89,6 +102,10 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
    * Reference to the currently authenticated user. The property returns
    * undefined when "authenticate" or "authenticateUsing" methods are
    * not used.
+   *
+   * @example
+   * await auth.authenticate()
+   * console.log(auth.user?.email)
    */
   get user(): {
     [K in keyof KnownGuards]: ReturnType<KnownGuards[K]>['user']
@@ -105,6 +122,10 @@ export class Authenticator<KnownGuards extends Record<string, GuardFactory>> {
    * the current request. The property returns false when the
    * "authenticate" or "authenticateUsing" methods are not
    * used.
+   *
+   * @example
+   * await auth.check()
+   * console.log(auth.authenticationAttempted) // true
    */
   get authenticationAttempted(): boolean {
     if (!this.#authenticationAttemptedViaGuard) {

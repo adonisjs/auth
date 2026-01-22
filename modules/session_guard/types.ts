@@ -44,23 +44,31 @@ export type DbRememberMeTokensProviderOptions<TokenableModel extends LucidModel>
 }
 
 /**
- * Remember me token providers are used verify a remember me
+ * Remember me token providers are used to verify a remember me
  * token during authentication
  */
 export interface RememberMeTokensProviderContract<Tokenable extends LucidModel> {
   /**
    * Create a token for a given user
+   *
+   * @param user - The user instance to create a token for
+   * @param expiresIn - Token expiration time
    */
   create(user: InstanceType<Tokenable>, expiresIn: string | number): Promise<RememberMeToken>
 
   /**
    * Verifies the remember me token shared as cookie and returns an
    * instance of remember me token
+   *
+   * @param tokenValue - The token value to verify
    */
   verify(tokenValue: Secret<string>): Promise<RememberMeToken | null>
 
   /**
    * Delete token for a user by the token identifier.
+   *
+   * @param user - The user that owns the token
+   * @param identifier - The token identifier to delete
    */
   delete(user: InstanceType<Tokenable>, identifier: string | number | BigInt): Promise<number>
 
@@ -68,6 +76,10 @@ export interface RememberMeTokensProviderContract<Tokenable extends LucidModel> 
    * Recycle an existing token by its id. Recycling tokens helps
    * detect compromised tokens.
    * https://web.archive.org/web/20130214051957/http://jaspan.com/improved_persistent_login_cookie_best_practice
+   *
+   * @param user - The user that owns the token
+   * @param identifier - The token identifier to recycle
+   * @param expiresIn - New expiration time
    */
   recycle(
     user: InstanceType<Tokenable>,
@@ -138,11 +150,18 @@ export type RememberMeTokenDbColumns = {
  * and the guard.
  *
  * The guard is user provider agnostic and therefore it
- * needs a adapter to known some basic info about the
+ * needs an adapter to know some basic info about the
  * user.
  */
 export type SessionGuardUser<RealUser> = {
+  /**
+   * Get the unique identifier for the user
+   */
   getId(): string | number | BigInt
+
+  /**
+   * Get the original user object from the provider
+   */
   getOriginal(): RealUser
 }
 
@@ -156,11 +175,15 @@ export interface SessionUserProviderContract<RealUser> {
   /**
    * Create a user object that acts as an adapter between
    * the guard and real user value.
+   *
+   * @param user - The real user object from the provider
    */
   createUserForGuard(user: RealUser): Promise<SessionGuardUser<RealUser>>
 
   /**
    * Find a user by their id.
+   *
+   * @param identifier - The unique identifier of the user
    */
   findById(identifier: string | number | BigInt): Promise<SessionGuardUser<RealUser> | null>
 }
@@ -174,18 +197,27 @@ export interface SessionWithTokensUserProviderContract<
   /**
    * Create a token for a given user. Must be implemented when
    * "supportsRememberMeTokens" flag is true
+   *
+   * @param user - The user to create a token for
+   * @param expiresIn - Token expiration time
    */
   createRememberToken(user: RealUser, expiresIn: string | number): Promise<RememberMeToken>
 
   /**
    * Verify a token by its publicly shared value. Must be implemented when
    * "supportsRememberMeTokens" flag is true
+   *
+   * @param tokenValue - The token value to verify
    */
   verifyRememberToken(tokenValue: Secret<string>): Promise<RememberMeToken | null>
 
   /**
    * Recycle a token for a user by the token identifier. Must be
    * implemented when "supportsRememberMeTokens" flag is true
+   *
+   * @param user - The user that owns the token
+   * @param tokenIdentifier - The token identifier to recycle
+   * @param expiresIn - New expiration time
    */
   recycleRememberToken(
     user: RealUser,
@@ -196,6 +228,9 @@ export interface SessionWithTokensUserProviderContract<
   /**
    * Delete a token for a user by the token identifier. Must be
    * implemented when "supportsRememberMeTokens" flag is true
+   *
+   * @param user - The user that owns the token
+   * @param tokenIdentifier - The token identifier to delete
    */
   deleteRemeberToken(user: RealUser, tokenIdentifier: string | number | BigInt): Promise<number>
 }

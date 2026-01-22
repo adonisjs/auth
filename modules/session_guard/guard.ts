@@ -359,6 +359,12 @@ export class SessionGuard<
   /**
    * Returns an instance of the authenticated user. Or throws
    * an exception if the request is not authenticated.
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When user is not authenticated
+   *
+   * @example
+   * const user = guard.getUserOrFail()
+   * console.log('User:', user.email)
    */
   getUserOrFail(): UserProvider[typeof PROVIDER_REAL_USER] {
     if (!this.user) {
@@ -374,6 +380,13 @@ export class SessionGuard<
    * Login user using sessions. Optionally, you can also create
    * a remember me token to automatically login user when their
    * session expires.
+   *
+   * @param user - The user to login
+   * @param remember - Whether to create a remember me token
+   *
+   * @example
+   * await guard.login(user, true)
+   * console.log('User logged in with remember me token')
    */
   async login(user: UserProvider[typeof PROVIDER_REAL_USER], remember: boolean = false) {
     const session = this.#getSession()
@@ -433,6 +446,10 @@ export class SessionGuard<
   /**
    * Logout a user by removing its state from the session
    * store and delete the remember me cookie (if any).
+   *
+   * @example
+   * await guard.logout()
+   * console.log('User logged out successfully')
    */
   async logout() {
     const session = this.#getSession()
@@ -486,8 +503,18 @@ export class SessionGuard<
   }
 
   /**
-   * Authenticate the current HTTP request by verifying the bearer
-   * token or fails with an exception
+   * Authenticate the current HTTP request by verifying the session
+   * or remember me token and fails with an exception if authentication fails
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When authentication fails
+   *
+   * @example
+   * try {
+   *   const user = await guard.authenticate()
+   *   console.log('Authenticated as:', user.email)
+   * } catch (error) {
+   *   console.log('Authentication failed')
+   * }
    */
   async authenticate(): Promise<UserProvider[typeof PROVIDER_REAL_USER]> {
     /**
@@ -540,6 +567,12 @@ export class SessionGuard<
   /**
    * Silently check if the user is authenticated or not, without
    * throwing any exceptions
+   *
+   * @example
+   * const isAuthenticated = await guard.check()
+   * if (isAuthenticated) {
+   *   console.log('User is authenticated:', guard.user.email)
+   * }
    */
   async check(): Promise<boolean> {
     try {
@@ -557,6 +590,12 @@ export class SessionGuard<
   /**
    * Returns the session info for the clients to send during
    * an HTTP request to mark the user as logged-in.
+   *
+   * @param user - The user to authenticate as
+   *
+   * @example
+   * const clientAuth = await guard.authenticateAsClient(user)
+   * // Use clientAuth.session in API tests
    */
   async authenticateAsClient(
     user: UserProvider[typeof PROVIDER_REAL_USER]

@@ -177,6 +177,18 @@ export function withAuthFinder(
         return hashFactory().verify(passwordHash, plainPassword)
       }
 
+      /**
+       * Validates a plain password against the user's stored password hash.
+       * Throws a validation error if the password doesn't match.
+       *
+       * @param plainPassword - The plain text password to validate
+       * @param passwordFieldName - Optional field name for the error message (defaults to 'currentPassword')
+       *
+       * @throws {ValidationError} When the password is incorrect
+       *
+       * @example
+       * await user.validatePassword('oldPassword123', 'currentPassword')
+       */
       async validatePassword(plainPassword: string, passwordFieldName?: string): Promise<void> {
         if (!(await this.verifyPassword(plainPassword))) {
           const error = new Error('Validation Error')

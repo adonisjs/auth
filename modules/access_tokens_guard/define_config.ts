@@ -21,6 +21,16 @@ import type {
 
 /**
  * Configures access tokens guard for authentication
+ *
+ * @param config - Configuration object containing the user provider
+ *
+ * @example
+ * const guard = tokensGuard({
+ *   provider: tokensUserProvider({
+ *     model: () => import('#models/user'),
+ *     tokens: 'accessTokens'
+ *   })
+ * })
  */
 export function tokensGuard<
   UserProvider extends AccessTokensUserProviderContract<unknown>,
@@ -40,6 +50,14 @@ export function tokensGuard<
 /**
  * Configures user provider that uses Lucid models to verify
  * access tokens and find users during authentication.
+ *
+ * @param config - Configuration options for the Lucid user provider
+ *
+ * @example
+ * const userProvider = tokensUserProvider({
+ *   model: () => import('#models/user'),
+ *   tokens: 'accessTokens'
+ * })
  */
 export function tokensUserProvider<
   TokenableProperty extends string,

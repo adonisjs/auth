@@ -20,6 +20,9 @@ export type LucidAuthenticatable = LucidModel & {
   /**
    * Verify credentials method should return the user instance
    * or throw an exception
+   *
+   * @param uid - The username or user identifier
+   * @param password - The password to verify
    */
   verifyCredentials(uid: string, password: string): Promise<InstanceType<LucidAuthenticatable>>
 }
@@ -41,11 +44,18 @@ export type BasicAuthLucidUserProviderOptions<Model extends LucidAuthenticatable
  * and the guard.
  *
  * The guard is user provider agnostic and therefore it
- * needs a adapter to known some basic info about the
+ * needs an adapter to know some basic info about the
  * user.
  */
 export type BasicAuthGuardUser<RealUser> = {
+  /**
+   * Get the unique identifier for the user
+   */
   getId(): string | number | BigInt
+
+  /**
+   * Get the original user object from the provider
+   */
   getOriginal(): RealUser
 }
 
@@ -59,12 +69,17 @@ export interface BasicAuthUserProviderContract<RealUser> {
   /**
    * Create a user object that acts as an adapter between
    * the guard and real user value.
+   *
+   * @param user - The real user object from the provider
    */
   createUserForGuard(user: RealUser): Promise<BasicAuthGuardUser<RealUser>>
 
   /**
    * Verify user credentials and must return an instance of the
    * user back or null when the credentials are invalid
+   *
+   * @param uid - The username or user identifier
+   * @param password - The password to verify
    */
   verifyCredentials(uid: string, password: string): Promise<BasicAuthGuardUser<RealUser> | null>
 }

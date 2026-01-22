@@ -32,7 +32,11 @@ export class AuthenticatorClient<KnownGuards extends Record<string, GuardFactory
   #guardsCache: Partial<Record<keyof KnownGuards, unknown>> = {}
 
   /**
-   * Name of the default guard
+   * Name of the default guard configured in the auth configuration
+   *
+   * @example
+   * const client = new AuthenticatorClient({ default: 'web', guards: {} })
+   * console.log(client.defaultGuard) // 'web'
    */
   get defaultGuard(): keyof KnownGuards {
     return this.#config.default

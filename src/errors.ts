@@ -19,7 +19,14 @@ import type { HttpContext } from '@adonisjs/core/http'
  * raised the error.
  */
 export const E_UNAUTHORIZED_ACCESS = class extends Exception {
+  /**
+   * HTTP status code for unauthorized access
+   */
   static status: number = 401
+
+  /**
+   * Error code identifier
+   */
   static code: string = 'E_UNAUTHORIZED_ACCESS'
 
   /**
@@ -202,7 +209,14 @@ export const E_UNAUTHORIZED_ACCESS = class extends Exception {
  * throw new E_INVALID_CREDENTIALS('Invalid email or password')
  */
 export const E_INVALID_CREDENTIALS = class extends Exception {
+  /**
+   * HTTP status code for invalid credentials
+   */
   static status: number = 400
+
+  /**
+   * Error code identifier
+   */
   static code: string = 'E_INVALID_CREDENTIALS'
 
   /**

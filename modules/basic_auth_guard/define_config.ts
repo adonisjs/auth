@@ -20,7 +20,16 @@ import type {
 } from './types.ts'
 
 /**
- * Configures basic auth guard for authentication
+ * Configures basic auth guard for authentication using HTTP Basic Authentication
+ *
+ * @param config - Configuration object containing the user provider
+ *
+ * @example
+ * const guard = basicAuthGuard({
+ *   provider: basicAuthUserProvider({
+ *     model: () => import('#models/user')
+ *   })
+ * })
  */
 export function basicAuthGuard<
   UserProvider extends BasicAuthUserProviderContract<unknown>,
@@ -39,7 +48,14 @@ export function basicAuthGuard<
 
 /**
  * Configures user provider that uses Lucid models to authenticate
- * users using basic auth
+ * users using basic auth credentials
+ *
+ * @param config - Configuration options for the Lucid user provider
+ *
+ * @example
+ * const userProvider = basicAuthUserProvider({
+ *   model: () => import('#models/user')
+ * })
  */
 export function basicAuthUserProvider<Model extends LucidAuthenticatable>(
   config: BasicAuthLucidUserProviderOptions<Model>

@@ -22,7 +22,17 @@ import type {
 } from './types.ts'
 
 /**
- * Configures session tokens guard for authentication
+ * Configures session guard for authentication using HTTP sessions
+ *
+ * @param config - Configuration object containing the user provider and session options
+ *
+ * @example
+ * const guard = sessionGuard({
+ *   useRememberMeTokens: false,
+ *   provider: sessionUserProvider({
+ *     model: () => import('#models/user')
+ *   })
+ * })
  */
 export function sessionGuard<
   UseRememberTokens extends boolean,
@@ -47,6 +57,13 @@ export function sessionGuard<
 /**
  * Configures user provider that uses Lucid models to authenticate
  * users using sessions
+ *
+ * @param config - Configuration options for the Lucid user provider
+ *
+ * @example
+ * const userProvider = sessionUserProvider({
+ *   model: () => import('#models/user')
+ * })
  */
 export function sessionUserProvider<Model extends LucidAuthenticatable>(
   config: SessionLucidUserProviderOptions<Model>

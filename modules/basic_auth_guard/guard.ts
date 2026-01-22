@@ -91,6 +91,22 @@ export class BasicAuthGuard<
    */
   user?: UserProvider[typeof PROVIDER_REAL_USER]
 
+  /**
+   * Creates a new BasicAuthGuard instance
+   *
+   * @param name - Unique name for the guard instance
+   * @param ctx - HTTP context for the current request
+   * @param emitter - Event emitter for guard events
+   * @param userProvider - User provider for credential verification
+   *
+   * @example
+   * const guard = new BasicAuthGuard(
+   *   'basic',
+   *   ctx,
+   *   emitter,
+   *   new BasicAuthLucidUserProvider()
+   * )
+   */
   constructor(
     name: string,
     ctx: HttpContext,
@@ -143,6 +159,12 @@ export class BasicAuthGuard<
   /**
    * Returns an instance of the authenticated user. Or throws
    * an exception if the request is not authenticated.
+   *
+   * @throws {E_UNAUTHORIZED_ACCESS} When user is not authenticated
+   *
+   * @example
+   * const user = guard.getUserOrFail()
+   * console.log('User:', user.email)
    */
   getUserOrFail(): UserProvider[typeof PROVIDER_REAL_USER] {
     if (!this.user) {
@@ -158,7 +180,15 @@ export class BasicAuthGuard<
    * Authenticates the incoming HTTP request by looking for BasicAuth
    * credentials inside the request authorization header.
    *
-   * Returns the authenticated user or throws an exception.
+   * @throws {E_UNAUTHORIZED_ACCESS} When authentication fails
+   *
+   * @example
+   * try {
+   *   const user = await guard.authenticate()
+   *   console.log('Authenticated as:', user.email)
+   * } catch (error) {
+   *   console.log('Authentication failed')
+   * }
    */
   async authenticate(): Promise<UserProvider[typeof PROVIDER_REAL_USER]> {
     /**
@@ -205,6 +235,12 @@ export class BasicAuthGuard<
    *
    * The method returns a boolean indicating if the authentication
    * succeeded or failed.
+   *
+   * @example
+   * const isAuthenticated = await guard.check()
+   * if (isAuthenticated) {
+   *   console.log('User is authenticated:', guard.user.email)
+   * }
    */
   async check(): Promise<boolean> {
     try {
@@ -220,8 +256,15 @@ export class BasicAuthGuard<
   }
 
   /**
-   * Does not support authenticating as client. Instead use "basicAuth"
-   * helper on Japa APIClient
+   * Returns the Authorization header clients can use to authenticate
+   * the request using basic auth.
+   *
+   * @param uid - The username or user identifier
+   * @param password - The user's password
+   *
+   * @example
+   * const clientAuth = await guard.authenticateAsClient('user@example.com', 'secret')
+   * // Use clientAuth.headers.authorization in API tests
    */
   async authenticateAsClient(uid: string, password: string): Promise<AuthClientResponse> {
     return {

@@ -128,12 +128,16 @@ export type AccessTokenDbColumns = {
 }
 
 /**
- * Access token providers are used verify an access token
- * during authentication
+ * Access token providers are used to verify an access token
+ * during authentication and manage token lifecycle
  */
 export interface AccessTokensProviderContract<Tokenable extends LucidModel> {
   /**
    * Create a token for a given user
+   *
+   * @param user - The user instance to create a token for
+   * @param abilities - Optional array of abilities the token should have
+   * @param options - Optional token configuration including name and expiration
    */
   create(
     user: InstanceType<Tokenable>,
@@ -147,11 +151,15 @@ export interface AccessTokensProviderContract<Tokenable extends LucidModel> {
   /**
    * Verifies a publicly shared access token and returns an
    * access token for it.
+   *
+   * @param tokenValue - The token value to verify
    */
   verify(tokenValue: Secret<string>): Promise<AccessToken | null>
 
   /**
    * Invalidates a token identified by its publicly shared token
+   *
+   * @param tokenValue - The token value to invalidate
    */
   invalidate(tokenValue: Secret<string>): Promise<boolean>
 }
@@ -182,11 +190,18 @@ export type AccessTokensLucidUserProviderOptions<
  * and the guard.
  *
  * The guard is user provider agnostic and therefore it
- * needs a adapter to known some basic info about the
+ * needs an adapter to know some basic info about the
  * user.
  */
 export type AccessTokensGuardUser<RealUser> = {
+  /**
+   * Get the unique identifier for the user
+   */
   getId(): string | number | BigInt
+
+  /**
+   * Get the original user object from the provider
+   */
   getOriginal(): RealUser
 }
 
@@ -200,11 +215,17 @@ export interface AccessTokensUserProviderContract<RealUser> {
   /**
    * Create a user object that acts as an adapter between
    * the guard and real user value.
+   *
+   * @param user - The real user object from the provider
    */
   createUserForGuard(user: RealUser): Promise<AccessTokensGuardUser<RealUser>>
 
   /**
    * Create a token for a given user
+   *
+   * @param user - The user to create a token for
+   * @param abilities - Optional array of abilities the token should have
+   * @param options - Optional token configuration including name and expiration
    */
   createToken(
     user: RealUser,
@@ -217,16 +238,22 @@ export interface AccessTokensUserProviderContract<RealUser> {
 
   /**
    * Invalidates a token identified by its publicly shared token.
+   *
+   * @param tokenValue - The token value to invalidate
    */
   invalidateToken(tokenValue: Secret<string>): Promise<boolean>
 
   /**
    * Find a user by the user id.
+   *
+   * @param identifier - The unique identifier of the user
    */
   findById(identifier: string | number | BigInt): Promise<AccessTokensGuardUser<RealUser> | null>
 
   /**
    * Verify a token by its publicly shared value.
+   *
+   * @param tokenValue - The token value to verify
    */
   verifyToken(tokenValue: Secret<string>): Promise<AccessToken | null>
 }
