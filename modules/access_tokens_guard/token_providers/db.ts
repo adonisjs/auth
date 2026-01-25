@@ -326,7 +326,7 @@ export class DbAccessTokensProvider<
    * @param user - The user instance to delete tokens for
    *
    * @example
-   * const deletedCount = await provider.delete(user)
+   * const deletedCount = await provider.deleteAll(user)
    * console.log('Deleted tokens:', deletedCount)
    */
   async deleteAll(user: InstanceType<TokenableModel>): Promise<number> {
