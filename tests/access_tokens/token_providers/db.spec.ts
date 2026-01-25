@@ -722,6 +722,43 @@ test.group('Access tokens provider | DB | all', () => {
   })
 })
 
+test.group('Access tokens provider | DB | deleteAll', () => {
+  test('delete all tokens', async ({ assert }) => {
+    const db = await createDatabase()
+    await createTables(db)
+
+    class User extends BaseModel {
+      @column({ isPrimary: true })
+      declare id: number
+
+      @column()
+      declare username: string
+
+      @column()
+      declare email: string
+
+      @column()
+      declare password: string
+
+      static authTokens = DbAccessTokensProvider.forModel(User)
+    }
+
+    const user = await User.create({
+      email: 'virk@adonisjs.com',
+      username: 'virk',
+      password: 'secret',
+    })
+
+    await User.authTokens.create(user, ['*'], { expiresIn: '20 mins', name: 'List projects' })
+    await User.authTokens.create(user)
+    timeTravel(21 * 60)
+    const numberOfDeletedTokens = await User.authTokens.deleteAll(user)
+
+    assert.equal(numberOfDeletedTokens, 2)
+    assert.isEmpty(await User.authTokens.all(user))
+  })
+})
+
 test.group('Access tokens provider | DB | invalidate', () => {
   test('delete token identified by publicly shared token', async ({ assert }) => {
     const db = await createDatabase()
