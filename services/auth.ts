@@ -8,7 +8,7 @@
  */
 
 import app from '@adonisjs/core/services/app'
-import { AuthService } from '../src/types.js'
+import { type AuthService } from '../src/types.js'
 
 let auth: AuthService
 

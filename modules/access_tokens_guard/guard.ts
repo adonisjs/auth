@@ -14,7 +14,7 @@ import type { EmitterLike } from '@adonisjs/core/types/events'
 import type { AccessToken } from './access_token.js'
 import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.js'
 import type { AuthClientResponse, GuardContract } from '../../src/types.js'
-import { GUARD_KNOWN_EVENTS, PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { GUARD_KNOWN_EVENTS, type PROVIDER_REAL_USER } from '../../src/symbols.js'
 import type { AccessTokensGuardEvents, AccessTokensUserProviderContract } from './types.js'
 
 /**
@@ -22,10 +22,11 @@ import type { AccessTokensGuardEvents, AccessTokensUserProviderContract } from '
  * of verifying tokens is done by the user provider. However, the guard is
  * used to seamlessly integrate with the auth layer of the package.
  */
-export class AccessTokensGuard<UserProvider extends AccessTokensUserProviderContract<unknown>>
-  implements
-    GuardContract<UserProvider[typeof PROVIDER_REAL_USER] & { currentAccessToken: AccessToken }>
-{
+export class AccessTokensGuard<
+  UserProvider extends AccessTokensUserProviderContract<unknown>,
+> implements GuardContract<
+  UserProvider[typeof PROVIDER_REAL_USER] & { currentAccessToken: AccessToken }
+> {
   /**
    * Events emitted by the guard
    */

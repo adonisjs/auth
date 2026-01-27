@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { FakeGuard, FakeUser } from '../../factories/auth/main.js'
+import { FakeGuard, type FakeUser } from '../../factories/auth/main.js'
 import { AuthenticatorClient } from '../../src/authenticator_client.js'
 
 test.group('Authenticator client', () => {

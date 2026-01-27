@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { Secret } from '@adonisjs/core/helpers'
+import { type Secret } from '@adonisjs/core/helpers'
 import type { LucidRow } from '@adonisjs/lucid/types/model'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 
-import { AccessToken } from '../access_token.js'
+import { type AccessToken } from '../access_token.js'
 import { PROVIDER_REAL_USER } from '../../../src/symbols.js'
 import type {
   LucidTokenable,
@@ -27,8 +27,7 @@ import type {
 export class AccessTokensLucidUserProvider<
   TokenableProperty extends string,
   UserModel extends LucidTokenable<TokenableProperty>,
-> implements AccessTokensUserProviderContract<InstanceType<UserModel>>
-{
+> implements AccessTokensUserProviderContract<InstanceType<UserModel>> {
   declare [PROVIDER_REAL_USER]: InstanceType<UserModel>
 
   /**

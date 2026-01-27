@@ -12,7 +12,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { Exception } from '@adonisjs/core/exceptions'
 import type { LucidModel } from '@adonisjs/lucid/types/model'
 
-import { PROVIDER_REAL_USER } from '../../src/symbols.js'
+import { type PROVIDER_REAL_USER } from '../../src/symbols.js'
 import type { RememberMeToken } from './remember_me_token.js'
 
 /**
@@ -168,8 +168,9 @@ export interface SessionUserProviderContract<RealUser> {
 /**
  * The user provider used by session guard with support for tokens
  */
-export interface SessionWithTokensUserProviderContract<RealUser>
-  extends SessionUserProviderContract<RealUser> {
+export interface SessionWithTokensUserProviderContract<
+  RealUser,
+> extends SessionUserProviderContract<RealUser> {
   /**
    * Create a token for a given user. Must be implemented when
    * "supportsRememberMeTokens" flag is true

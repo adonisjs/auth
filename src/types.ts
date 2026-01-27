@@ -139,7 +139,6 @@ export type InferAuthEvents<KnownAuthenticators extends Record<string, GuardFact
  * configured using the config stored within the user
  * app.
  */
-export interface AuthService
-  extends AuthManager<
-    Authenticators extends Record<string, GuardFactory> ? Authenticators : never
-  > {}
+export interface AuthService extends AuthManager<
+  Authenticators extends Record<string, GuardFactory> ? Authenticators : never
+> {}

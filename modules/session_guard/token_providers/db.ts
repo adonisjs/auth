@@ -25,9 +25,9 @@ import type {
  *
  * The user must be an instance of the associated user model.
  */
-export class DbRememberMeTokensProvider<TokenableModel extends LucidModel>
-  implements RememberMeTokensProviderContract<TokenableModel>
-{
+export class DbRememberMeTokensProvider<
+  TokenableModel extends LucidModel,
+> implements RememberMeTokensProviderContract<TokenableModel> {
   /**
    * Create tokens provider instance for a given Lucid model
    */

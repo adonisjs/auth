@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Secret } from '@adonisjs/core/helpers'
+import { type Secret } from '@adonisjs/core/helpers'
 import { RuntimeException } from '@adonisjs/core/exceptions'
 
-import { RememberMeToken } from '../remember_me_token.js'
+import { type RememberMeToken } from '../remember_me_token.js'
 import { PROVIDER_REAL_USER } from '../../../src/symbols.js'
 import type {
   SessionGuardUser,
@@ -23,9 +23,9 @@ import type {
  * Uses a lucid model to verify access tokens and find a user during
  * authentication
  */
-export class SessionLucidUserProvider<UserModel extends LucidAuthenticatable>
-  implements SessionUserProviderContract<InstanceType<UserModel>>
-{
+export class SessionLucidUserProvider<
+  UserModel extends LucidAuthenticatable,
+> implements SessionUserProviderContract<InstanceType<UserModel>> {
   declare [PROVIDER_REAL_USER]: InstanceType<UserModel>
 
   /**

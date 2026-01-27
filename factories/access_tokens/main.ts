@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { Secret } from '@adonisjs/core/helpers'
+import { type Secret } from '@adonisjs/core/helpers'
 import stringHelpers from '@adonisjs/core/helpers/string'
 import { PROVIDER_REAL_USER } from '../../src/symbols.js'
 import { AccessToken } from '../../modules/access_tokens_guard/access_token.js'
-import { AccessTokensUserProviderContract } from '../../modules/access_tokens_guard/types.js'
+import { type AccessTokensUserProviderContract } from '../../modules/access_tokens_guard/types.js'
 
 /**
  * Representation of a fake user used to test
@@ -49,9 +49,7 @@ const users: AccessTokensFakeUser[] = [
  * @note
  * Should not be exported to the outside world
  */
-export class AccessTokensFakeUserProvider
-  implements AccessTokensUserProviderContract<AccessTokensFakeUser>
-{
+export class AccessTokensFakeUserProvider implements AccessTokensUserProviderContract<AccessTokensFakeUser> {
   declare [PROVIDER_REAL_USER]: AccessTokensFakeUser
   #tokens: {
     id: string

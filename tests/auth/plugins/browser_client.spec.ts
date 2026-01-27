@@ -15,9 +15,9 @@ import { browserClient } from '@japa/browser-client'
 import { AppFactory } from '@adonisjs/core/factories/app'
 import type { ApplicationService } from '@adonisjs/core/types'
 
-import { Guards } from './global_types.js'
+import { type Guards } from './global_types.js'
 import { AuthManager } from '../../../src/auth_manager.js'
-import { FakeGuard, FakeUser } from '../../../factories/auth/main.js'
+import { FakeGuard, type FakeUser } from '../../../factories/auth/main.js'
 import { authBrowserClient } from '../../../src/plugins/japa/browser_client.js'
 
 test.group('Browser client | loginAs', (group) => {
