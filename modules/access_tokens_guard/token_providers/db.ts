@@ -321,6 +321,29 @@ export class DbAccessTokensProvider<
   }
 
   /**
+   * Delete all tokens for a given user
+   *
+   * @param user - The user instance to delete tokens for
+   *
+   * @example
+   * const deletedCount = await provider.deleteAll(user)
+   * console.log('Deleted tokens:', deletedCount)
+   */
+  async deleteAll(user: InstanceType<TokenableModel>): Promise<number> {
+    this.#ensureIsPersisted(user)
+
+    const queryClient = await this.getDb()
+    const affectedRows = await queryClient
+      .query<number>()
+      .from(this.table)
+      .where({ tokenable_id: user.$primaryKeyValue, type: this.type })
+      .del()
+      .exec()
+
+    return affectedRows as unknown as number
+  }
+
+  /**
    * Returns all the tokens for a given user
    *
    * @param user - The user instance to get tokens for
