@@ -25,9 +25,9 @@ import type {
  *
  * The user must be an instance of the associated user model.
  */
-export class DbAccessTokensProvider<TokenableModel extends LucidModel>
-  implements AccessTokensProviderContract<TokenableModel>
-{
+export class DbAccessTokensProvider<
+  TokenableModel extends LucidModel,
+> implements AccessTokensProviderContract<TokenableModel> {
   /**
    * Create tokens provider instance for a given Lucid model
    */
@@ -246,7 +246,37 @@ export class DbAccessTokensProvider<TokenableModel extends LucidModel>
   }
 
   /**
-   * Returns all the tokens a given user
+   * Delete all tokens for a given user
+   *
+   * @param user - The user instance to delete tokens for
+   *
+   * @example
+   * const deletedCount = await provider.deleteAll(user)
+   * console.log('Deleted tokens:', deletedCount)
+   */
+  async deleteAll(user: InstanceType<TokenableModel>): Promise<number> {
+    this.#ensureIsPersisted(user)
+
+    const queryClient = await this.getDb()
+    const affectedRows = await queryClient
+      .query<number>()
+      .from(this.table)
+      .where({ tokenable_id: user.$primaryKeyValue, type: this.type })
+      .del()
+      .exec()
+
+    return affectedRows as unknown as number
+  }
+
+  /**
+   * Returns all the tokens for a given user
+   *
+   * @param user - The user instance to get tokens for
+   *
+   * @example
+   * const tokens = await provider.all(user)
+   * console.log('User has', tokens.length, 'tokens')
+   * tokens.forEach(token => console.log(token.name))
    */
   async all(user: InstanceType<TokenableModel>) {
     this.#ensureIsPersisted(user)
