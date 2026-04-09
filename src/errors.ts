@@ -71,7 +71,11 @@ export const E_UNAUTHORIZED_ACCESS = class extends Exception {
            * The "flashErrors" call must be removed in the future
            */
           ctx.session.flashErrors({ [error.code!]: message })
-          ctx.response.redirect(error.redirectTo || '/', true)
+          ctx.response
+            .redirect()
+            .withIntendedUrl()
+            .withQs()
+            .toPath(error.redirectTo || '/')
           break
         case 'json':
           ctx.response.status(error.status).send({

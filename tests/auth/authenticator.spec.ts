@@ -142,7 +142,7 @@ test.group('Authenticator', () => {
 
     try {
       await authenticator.authenticateUsing()
-    } catch (error) {
+    } catch (error: any) {
       assert.instanceOf(error, E_UNAUTHORIZED_ACCESS)
       assert.equal(error.message, 'Unauthorized access')
       assert.equal(error.guardDriverName, 'fake')

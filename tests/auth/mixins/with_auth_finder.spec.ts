@@ -388,7 +388,7 @@ test.group('withAuthFinder | verifyPassword', () => {
 
     try {
       await user.validatePassword('foo')
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.code, 'E_VALIDATION_ERROR')
       assert.equal(error.status, 422)
       assert.deepEqual(error.messages, [
