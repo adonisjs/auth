@@ -54,7 +54,7 @@ test.group('Session guard | logout', () => {
 
     const responseCookies = parseCookies(ctx.response.getHeader('set-cookie') as string)
     assert.deepEqual(responseCookies.remember_web.expires, new Date(0))
-    assert.deepEqual(responseCookies.remember_web.maxAge, -1)
+    assert.deepEqual(responseCookies.remember_web.maxAge, 0)
 
     events.assertEmittedCount('session_auth:logged_out', 1)
     assert.equal(events.find('session_auth:logged_out')!.data.user, user!.getOriginal())
@@ -101,7 +101,7 @@ test.group('Session guard | logout', () => {
 
     const responseCookies = parseCookies(ctx.response.getHeader('set-cookie') as string)
     assert.deepEqual(responseCookies.remember_web.expires, new Date(0))
-    assert.deepEqual(responseCookies.remember_web.maxAge, -1)
+    assert.deepEqual(responseCookies.remember_web.maxAge, 0)
 
     assert.lengthOf(userProvider.tokens, 0)
 
@@ -151,7 +151,7 @@ test.group('Session guard | logout', () => {
 
     const responseCookies = parseCookies(ctx.response.getHeader('set-cookie') as string)
     assert.deepEqual(responseCookies.remember_web.expires, new Date(0))
-    assert.deepEqual(responseCookies.remember_web.maxAge, -1)
+    assert.deepEqual(responseCookies.remember_web.maxAge, 0)
 
     assert.lengthOf(userProvider.tokens, 1)
 
