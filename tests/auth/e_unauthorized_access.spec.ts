@@ -9,8 +9,11 @@
 
 import { test } from '@japa/runner'
 import { I18nManagerFactory } from '@adonisjs/i18n/factories'
-import { HttpContextFactory } from '@adonisjs/core/factories/http'
+import { EncryptionFactory } from '@adonisjs/core/factories/encryption'
 import { SessionMiddlewareFactory } from '@adonisjs/session/factories'
+import { HttpContextFactory, RequestFactory, ResponseFactory } from '@adonisjs/core/factories/http'
+
+const encryption = new EncryptionFactory().create()
 
 import { E_UNAUTHORIZED_ACCESS } from '../../src/errors.ts'
 
@@ -52,6 +55,115 @@ test.group('Errors | E_UNAUTHORIZED_ACCESS | session', () => {
       input: {},
     })
     assert.equal(ctx.response.getHeader('location'), '/login')
+  })
+
+  test('store intended URL in session for GET navigational requests', async ({ assert }) => {
+    const sessionMiddleware = await new SessionMiddlewareFactory().create()
+    const error = new E_UNAUTHORIZED_ACCESS('Unauthorized access', {
+      guardDriverName: 'session',
+      redirectTo: '/login',
+    })
+
+    const request = new RequestFactory()
+      .merge({ encryption, url: '/billing?plan=pro', method: 'GET' })
+      .create()
+    const response = new ResponseFactory().merge({ encryption }).create()
+    response.request.url = request.url(true)
+    const ctx = new HttpContextFactory().merge({ request, response }).create()
+    ctx.route = { pattern: '/billing', handler: {} } as any
+
+    await sessionMiddleware.handle(ctx, async () => {
+      return error.handle(error, ctx)
+    })
+
+    assert.equal(ctx.session.get('redirect.intendedUrl'), '/billing?plan=pro')
+    assert.equal(ctx.response.getHeader('location'), '/login?plan=pro')
+  })
+
+  test('store intended URL for Inertia requests', async ({ assert }) => {
+    const sessionMiddleware = await new SessionMiddlewareFactory().create()
+    const error = new E_UNAUTHORIZED_ACCESS('Unauthorized access', {
+      guardDriverName: 'session',
+      redirectTo: '/login',
+    })
+
+    const request = new RequestFactory()
+      .merge({ encryption, url: '/billing', method: 'GET' })
+      .create()
+    request.request.headers['x-inertia'] = 'true'
+    const response = new ResponseFactory().merge({ encryption }).create()
+    response.request.url = request.url(true)
+    const ctx = new HttpContextFactory().merge({ request, response }).create()
+    ctx.route = { pattern: '/billing', handler: {} } as any
+
+    await sessionMiddleware.handle(ctx, async () => {
+      return error.handle(error, ctx)
+    })
+
+    assert.equal(ctx.session.get('redirect.intendedUrl'), '/billing')
+  })
+
+  test('do not store intended URL for AJAX requests', async ({ assert }) => {
+    const sessionMiddleware = await new SessionMiddlewareFactory().create()
+    const error = new E_UNAUTHORIZED_ACCESS('Unauthorized access', {
+      guardDriverName: 'session',
+      redirectTo: '/login',
+    })
+
+    const request = new RequestFactory()
+      .merge({ encryption, url: '/billing', method: 'GET' })
+      .create()
+    request.request.headers['x-requested-with'] = 'XMLHttpRequest'
+    const response = new ResponseFactory().merge({ encryption }).create()
+    const ctx = new HttpContextFactory().merge({ request, response }).create()
+    ctx.route = { pattern: '/billing', handler: {} } as any
+
+    await sessionMiddleware.handle(ctx, async () => {
+      return error.handle(error, ctx)
+    })
+
+    assert.isNull(ctx.session.get('redirect.intendedUrl', null))
+  })
+
+  test('do not store intended URL for non-GET requests', async ({ assert }) => {
+    const sessionMiddleware = await new SessionMiddlewareFactory().create()
+    const error = new E_UNAUTHORIZED_ACCESS('Unauthorized access', {
+      guardDriverName: 'session',
+      redirectTo: '/login',
+    })
+
+    const request = new RequestFactory()
+      .merge({ encryption, url: '/billing', method: 'POST' })
+      .create()
+    const response = new ResponseFactory().merge({ encryption }).create()
+    const ctx = new HttpContextFactory().merge({ request, response }).create()
+    ctx.route = { pattern: '/billing', handler: {} } as any
+
+    await sessionMiddleware.handle(ctx, async () => {
+      return error.handle(error, ctx)
+    })
+
+    assert.isNull(ctx.session.get('redirect.intendedUrl', null))
+  })
+
+  test('do not store intended URL when no route is matched', async ({ assert }) => {
+    const sessionMiddleware = await new SessionMiddlewareFactory().create()
+    const error = new E_UNAUTHORIZED_ACCESS('Unauthorized access', {
+      guardDriverName: 'session',
+      redirectTo: '/login',
+    })
+
+    const request = new RequestFactory()
+      .merge({ encryption, url: '/not-found', method: 'GET' })
+      .create()
+    const response = new ResponseFactory().merge({ encryption }).create()
+    const ctx = new HttpContextFactory().merge({ request, response }).create()
+
+    await sessionMiddleware.handle(ctx, async () => {
+      return error.handle(error, ctx)
+    })
+
+    assert.isNull(ctx.session.get('redirect.intendedUrl', null))
   })
 
   test('respond with json', async ({ assert }) => {
