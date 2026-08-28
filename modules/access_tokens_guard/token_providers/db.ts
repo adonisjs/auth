@@ -423,11 +423,11 @@ export class DbAccessTokensProvider<
     /**
      * Update last time the token is used
      */
-    dbRow.last_used_at = new Date()
+    const last_used_at = new Date()
     await db
       .from(this.table)
       .where({ id: dbRow.id, type: dbRow.type })
-      .update({ last_used_at: dbRow.last_used_at })
+      .update({ last_used_at: last_used_at })
 
     /**
      * Convert to access token instance
