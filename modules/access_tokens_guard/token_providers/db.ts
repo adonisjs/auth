@@ -432,7 +432,7 @@ export class DbAccessTokensProvider<
     /**
      * Convert to access token instance
      */
-    const accessToken = this.dbRowToAccessToken(dbRow)
+    const accessToken = this.dbRowToAccessToken({ ...dbRow, last_used_at })
 
     /**
      * Ensure the token secret matches the token hash
