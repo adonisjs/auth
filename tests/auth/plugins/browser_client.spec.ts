@@ -101,4 +101,94 @@ test.group('Browser client | loginAs', (group) => {
 
     assert.isTrue(spy.calledOnceWithExactly({ id: 1 }, ['*'], '20 mins'))
   })
+
+  test('wait for the session to be persisted before resolving loginAs', async ({ assert }) => {
+    const fakeGuard = new FakeGuard()
+    const guards: Guards = {
+      web: () => fakeGuard,
+    }
+
+    const authManager = new AuthManager({
+      default: 'web',
+      guards: guards,
+    })
+
+    const app = new AppFactory().create(new URL('./', import.meta.url)) as ApplicationService
+    await app.init()
+
+    app.container.singleton('auth.manager', () => authManager)
+    sinon.stub(fakeGuard, 'authenticateAsClient').resolves({ session: { auth_web: 1 } })
+
+    const persistedStates: boolean[] = []
+
+    await runner()
+      .configure({
+        plugins: [browserClient({}), authBrowserClient(app)],
+        files: ['*'],
+      })
+      .runTest('sample test', async ({ browserContext }) => {
+        /**
+         * Simulate the async cookie write performed by the real setSession
+         */
+        let isSessionPersisted = false
+        browserContext.setSession = async () => {
+          await new Promise(setImmediate)
+          isSessionPersisted = true
+        }
+
+        await browserContext.loginAs({ id: 1 })
+        persistedStates.push(isSessionPersisted)
+
+        isSessionPersisted = false
+        await browserContext.withGuard('web').loginAs({ id: 1 })
+        persistedStates.push(isSessionPersisted)
+      })
+
+    assert.deepEqual(persistedStates, [true, true])
+  })
+
+  test('wait for the cookies to be persisted before resolving loginAs', async ({ assert }) => {
+    const fakeGuard = new FakeGuard()
+    const guards: Guards = {
+      web: () => fakeGuard,
+    }
+
+    const authManager = new AuthManager({
+      default: 'web',
+      guards: guards,
+    })
+
+    const app = new AppFactory().create(new URL('./', import.meta.url)) as ApplicationService
+    await app.init()
+
+    app.container.singleton('auth.manager', () => authManager)
+    sinon.stub(fakeGuard, 'authenticateAsClient').resolves({ cookies: { remember_web: 1 } })
+
+    const persistedStates: boolean[] = []
+
+    await runner()
+      .configure({
+        plugins: [browserClient({}), authBrowserClient(app)],
+        files: ['*'],
+      })
+      .runTest('sample test', async ({ browserContext }) => {
+        /**
+         * Simulate the async write performed by the real setCookie
+         */
+        let isCookiePersisted = false
+        browserContext.setCookie = async () => {
+          await new Promise(setImmediate)
+          isCookiePersisted = true
+        }
+
+        await browserContext.loginAs({ id: 1 })
+        persistedStates.push(isCookiePersisted)
+
+        isCookiePersisted = false
+        await browserContext.withGuard('web').loginAs({ id: 1 })
+        persistedStates.push(isCookiePersisted)
+      })
+
+    assert.deepEqual(persistedStates, [true, true])
+  })
 })
