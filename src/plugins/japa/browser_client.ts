@@ -95,14 +95,14 @@ export const authBrowserClient = (app: ApplicationService) => {
 
               if (requestData.cookies) {
                 debug('defining cookies with browser context %O', requestData.cookies)
-                Object.keys(requestData.cookies).forEach((cookie) => {
-                  context.setCookie(cookie, requestData.cookies![cookie])
-                })
+                for (const cookie of Object.keys(requestData.cookies)) {
+                  await context.setCookie(cookie, requestData.cookies[cookie])
+                }
               }
 
               if (requestData.session) {
                 debug('defining session with browser context %O', requestData.session)
-                context.setSession(requestData.session)
+                await context.setSession(requestData.session)
               }
             },
           }
@@ -124,14 +124,14 @@ export const authBrowserClient = (app: ApplicationService) => {
 
           if (requestData.cookies) {
             debug('defining cookies with browser context %O', requestData.cookies)
-            Object.keys(requestData.cookies).forEach((cookie) => {
-              context.setCookie(cookie, requestData.cookies![cookie])
-            })
+            for (const cookie of Object.keys(requestData.cookies)) {
+              await context.setCookie(cookie, requestData.cookies[cookie])
+            }
           }
 
           if (requestData.session) {
             debug('defining session with browser context %O', requestData.session)
-            context.setSession(requestData.session)
+            await context.setSession(requestData.session)
           }
         }
       },
