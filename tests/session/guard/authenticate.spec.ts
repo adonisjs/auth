@@ -623,6 +623,7 @@ test.group('Session guard | authenticate via remember token', () => {
       RememberMeToken.decode(responseCookies.remember_web.value)?.identifier,
       userProvider.tokens[0].id
     )
+    assert.equal(succeeded!.rememberMeToken?.identifier, userProvider.tokens[0].id)
   })
 })
 
