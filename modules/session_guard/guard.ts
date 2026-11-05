@@ -351,7 +351,7 @@ export class SessionGuard<
     /**
      * Emit event and update local state
      */
-    this.#authenticationSucceeded(sessionId, providerUser.getOriginal(), token)
+    this.#authenticationSucceeded(sessionId, providerUser.getOriginal(), recycledToken)
 
     return this.user!
   }
