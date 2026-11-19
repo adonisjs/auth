@@ -36,9 +36,9 @@ import type {
  */
 export function sessionGuard<
   UseRememberTokens extends boolean,
-  UserProvider extends UseRememberTokens extends true
+  UserProvider extends (UseRememberTokens extends true
     ? SessionWithTokensUserProviderContract<unknown>
-    : SessionUserProviderContract<unknown>,
+    : SessionUserProviderContract<unknown>),
 >(
   config: {
     provider: UserProvider | ConfigProvider<UserProvider>

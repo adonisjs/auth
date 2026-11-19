@@ -44,9 +44,9 @@ import type {
  */
 export class SessionGuard<
   UseRememberTokens extends boolean,
-  UserProvider extends UseRememberTokens extends true
+  UserProvider extends (UseRememberTokens extends true
     ? SessionWithTokensUserProviderContract<unknown>
-    : SessionUserProviderContract<unknown>,
+    : SessionUserProviderContract<unknown>),
 > implements GuardContract<UserProvider[typeof PROVIDER_REAL_USER]> {
   /**
    * Events emitted by the guard
