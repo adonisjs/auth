@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import auth from 'basic-auth'
+import { parse as parseBasicAuth } from 'basic-auth'
 import { base64 } from '@adonisjs/core/helpers'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { EmitterLike } from '@adonisjs/core/types/events'
@@ -210,7 +210,7 @@ export class BasicAuthGuard<
     /**
      * Fetch credentials from the header or fail
      */
-    const credentials = auth(this.#ctx.request.request)
+    const credentials = parseBasicAuth(this.#ctx.request.request.headers.authorization ?? '')
     if (!credentials) {
       throw this.#authenticationFailed()
     }
